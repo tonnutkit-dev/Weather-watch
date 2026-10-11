@@ -53,7 +53,7 @@ export default function MapScene({ direction, theme, location, rain, frame, rece
                     if (layer.type === 'line') {
                         if (/road|highway|railway|bridge|tunnel/.test(key))
                             layer.paint = { ...layer.paint, 'line-color': road, 'line-opacity': .3 };
-                        if (/boundary/.test(key))
+                        if (/boundary|admin/.test(key))
                             layer.paint = { ...layer.paint, 'line-color': text, 'line-opacity': .25 };
                     }
                     if (layer.type === 'symbol') {

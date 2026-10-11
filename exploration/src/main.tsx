@@ -66,7 +66,7 @@ function App() {
         <div className="editorial-meta"><span>WEATHER / 01</span><span>{demo.date}</span></div>
         <button className="location-heading" onClick={() => open('location')}><MapPin size={15}/><h1>{selected.name}</h1><ChevronDown size={15}/></button>
         <p className="location-subtitle">{selected.country === 'TH' ? 'ประเทศไทย' : 'ประเทศจีน'}<span> · </span>อากาศในมุมมองของคุณ</p>
-        <div className="weather-hero"><div className="temperature" data-testid="primary-temperature">{demo.temperature}<span>°</span></div><WeatherArt /></div>
+        <div className="weather-hero"><div className="temperature" aria-label="31 องศาเซลเซียส ข้อมูลตัวอย่าง" data-testid="primary-temperature">{demo.temperature}<span>°</span></div><WeatherArt /></div>
         <div className="condition-line"><p>{demo.condition}</p><span>{demo.high}° <ArrowUp size={12}/> / {demo.low}° <ArrowDown size={12}/></span></div>
         <p className="feels-line">รู้สึกเหมือน {demo.feels}° <span>·</span> ตัวอย่างเพื่อประเมินดีไซน์</p>
         <div className="weather-metrics"><div><Droplets /><span>ความชื้น<strong>{demo.humidity}<small>%</small></strong></span></div><div><Wind /><span>ลมตะวันตกเฉียงใต้<strong>{demo.wind}<small> กม./ชม.</small></strong></span></div></div>
@@ -85,7 +85,7 @@ function App() {
           <div className="radar-timeline"><div><span>เรดาร์ <span className="demo-inline">/ ตัวอย่าง</span></span><time>{frameLabel(frame)}</time></div><input type="range" min="0" max="2" step="1" value={frame} aria-label="เวลาเฟรมตัวอย่าง" onChange={e => { setFrame(Number(e.target.value)); setPlaying(false); }}/></div>
           <button className="icon-button" aria-label="รายละเอียดภาพฝนตัวอย่าง" onClick={() => open('radar')}><Info size={19}/></button>
         </div>
-        <span className="map-caption">พื้นที่สำหรับสำรวจ · ปัด / จีบนิ้ว</span>
+        
       </section>
       <section className="situation-sheet" aria-label="ข้อมูลประกอบอากาศตัวอย่าง">
         <div className="sheet-handle-row" onPointerDown={e => { if ((e.target as Element).closest('button'))
@@ -108,8 +108,8 @@ function App() {
         </div>
       </section>
     </div>
-    <dialog ref={modal} onCancel={() => setDialog(null)} className="modal">
-      <div className="modal-header"><h2>{dialog === 'location' ? 'เลือกสถานที่' : dialog === 'settings' ? 'การแสดงผล' : dialog==='layers' ? 'ชั้นข้อมูล' : 'ภาพฝนตัวอย่าง'}</h2><button className="icon-button" aria-label="ปิด" onClick={() => setDialog(null)}><X /></button></div>
+    <dialog aria-labelledby="prototype-dialog-title" ref={modal} onCancel={() => setDialog(null)} className="modal">
+      <div className="modal-header"><h2 id="prototype-dialog-title">{dialog === 'location' ? 'เลือกสถานที่' : dialog === 'settings' ? 'การแสดงผล' : dialog==='layers' ? 'ชั้นข้อมูล' : 'ภาพฝนตัวอย่าง'}</h2><button className="icon-button" aria-label="ปิด" onClick={() => setDialog(null)}><X /></button></div>
       {dialog === 'location' && <><label className="search-field"><Search size={18}/><input placeholder="ค้นหาสถานที่ในต้นแบบ" aria-label="ค้นหาสถานที่ในต้นแบบ" value={query} onChange={e => setQuery(e.target.value)}/></label><p className="modal-description">ต้นแบบเลือกได้ 5 เมืองเพื่อทดสอบ layout แอปจริงยังคงรองรับ 77 จังหวัดไทย</p><div className="location-results">{demoLocations.filter(l => l.name.includes(query)).map(l => <button key={l.name} onClick={() => { setSelected(l); setDialog(null); }}><MapPin size={18}/><span>{l.name}<small>{l.country === 'TH' ? 'ประเทศไทย' : 'จีน · ' + l.zone}</small></span><ArrowUpRight size={17}/></button>)}</div><p className="modal-description">เปลี่ยนพิกัดแผนที่จริง · ค่าอากาศยังเป็นตัวอย่างชุดเดียว</p></>}
       {dialog === 'settings' && <><p className="modal-description">เลือกโทนภาพสำหรับเปรียบเทียบดีไซน์</p><div className="theme-choices">{[{ value: 'system', label: 'ตามอุปกรณ์' }, { value: 'light', label: 'สว่าง' }, { value: 'dark', label: 'มืด' }].map(t => <button aria-pressed={appearance === t.value} key={t.value} onClick={() => preference(t.value)}>{t.value === 'dark' ? <Moon /> : t.value === 'light' ? <Sun /> : <SlidersHorizontal />}{t.label}</button>)}</div><a className="review-link" href="./index.html"><ArrowLeft size={17}/> กลับหน้าเปรียบเทียบ A / B / C</a></>}
       {dialog === 'layers' && <div className="layer-dialog"><button aria-pressed={rain} onClick={()=>setRain(!rain)}><Droplets size={18}/> ฝนตัวอย่าง <span>{rain?'เปิด':'ปิด'}</span></button><p className="modal-description">สีฝนเป็นภาพประกอบเพื่อประเมินดีไซน์ ไม่ใช่เรดาร์จริง</p></div>}

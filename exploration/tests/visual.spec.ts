@@ -150,7 +150,7 @@ for (const direction of directions) {
         await page.getByRole('button', { name: 'ปิด', exact: true }).click();
         await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
         await expect(page.getByRole('heading', { name: 'ซีอาน', exact: true })).toBeVisible();
-        await page.reload();
+        await page.goto(`prototype.html?direction=${direction}`);
         await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
         await page.getByRole('button', { name: 'การแสดงผล', exact: true }).click();
         await page.getByRole('button', { name: 'ตามอุปกรณ์', exact: true }).click();

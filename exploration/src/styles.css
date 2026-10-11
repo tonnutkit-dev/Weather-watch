@@ -566,14 +566,6 @@ button:hover:not(:disabled){
 .radar-strip .icon-button{
   min-width:44px
 }
-.map-caption{
-  position:absolute;
-  top:105px;
-  left:28px;
-  font-size:10px;
-  color:var(--muted);
-  pointer-events:none
-}
 .maplibregl-ctrl-attrib{
   background:var(--map-control-bg)!important;
   color:var(--muted)!important;
@@ -1139,10 +1131,6 @@ button:hover:not(:disabled){
   left:398px;
   top:38px
 }
-.direction-b .map-caption{
-  left:398px;
-  top:122px
-}
 .direction-b .map-tools{
   top:28px;
   right:28px
@@ -1367,9 +1355,6 @@ button:hover:not(:disabled){
     top:97px!important;
     right:18px!important
   }
-  .map-caption{
-    display:none
-  }
   .situation-sheet{
     padding:0 18px!important
   }
@@ -1581,9 +1566,6 @@ button:hover:not(:disabled){
   }
   .map-context{
     font-size:10px
-  }
-  .map-caption{
-    display:none
   }
   .map-tools,.direction-c .map-tools,.direction-b .map-tools{
     top:12px;
