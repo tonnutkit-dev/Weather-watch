@@ -24,6 +24,7 @@ export default function GLCanvas(props: MapProps) {
       "loading",
     ),
     [radarError, setRadarError] = useState(false),
+    [styleTheme, setStyleTheme] = useState<string | null>(null),
     [retry, setRetry] = useState(0);
   const sync = useRef<() => void>(() => {});
   sync.current = () => {
@@ -223,6 +224,7 @@ export default function GLCanvas(props: MapProps) {
       });
       m.on("style.load", () => {
         styleReady.current = true;
+        setStyleTheme(current.current.theme);
         sync.current();
       });
       m.on("click", (e) =>
@@ -262,6 +264,7 @@ export default function GLCanvas(props: MapProps) {
     const m = map.current;
     if (m) {
       styleReady.current = false;
+      setStyleTheme(null);
       m.setStyle(
         `https://tiles.openfreemap.org/styles/${props.theme === "dark" ? "dark" : "positron"}`,
       );
@@ -313,6 +316,7 @@ export default function GLCanvas(props: MapProps) {
         className="map-canvas"
         aria-label="แผนที่อากาศแบบโต้ตอบ"
         data-map-engine="maplibre"
+        data-theme={styleTheme ?? undefined}
         data-map-status={status}
         data-radar-frame={props.frame?.time}
         data-weather-layer={props.layers.weather}

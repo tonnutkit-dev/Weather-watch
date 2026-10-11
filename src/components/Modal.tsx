@@ -19,7 +19,7 @@ export function Modal({
     d?.showModal();
     return () => {
       d?.close();
-      if (opener instanceof HTMLElement) opener.focus();
+      if (opener instanceof HTMLElement) opener.focus({ preventScroll: true });
     };
   }, []);
   return (

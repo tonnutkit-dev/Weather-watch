@@ -11,6 +11,8 @@ Pages settings must use GitHub Actions. The connector available during preparati
 
 Commands:
 
+Chromium QA also checks actual map style completion and mobile temperature visibility after settings closes. A confirmed mobile wrapper focus-scroll defect was corrected by making the outer sheet a clipping wrapper, preserving the inner scroll surface, and restoring modal focus without scrolling. Real-provider integration cases have one bounded CI retry; transient upstream failures remain visible as flaky results and traces, rather than being replaced with sample data.
+
 ```sh
 npm ci
 npm run typecheck

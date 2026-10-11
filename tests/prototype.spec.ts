@@ -16,6 +16,11 @@ test("live map/weather and appearance/location integrity", async ({
   await page.getByRole("button", { name: "มืด", exact: true }).click();
   await page.getByRole("button", { name: "ปิด", exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.locator(".map-canvas")).toHaveAttribute(
+    "data-theme",
+    "dark",
+    { timeout: 30000 },
+  );
   await testInfo.attach("desktop-dark", {
     body: await page.screenshot(),
     contentType: "image/png",
@@ -60,6 +65,11 @@ test("mobile states and no horizontal overflow", async ({ page }, testInfo) => {
   await page.getByRole("button", { name: "มืด", exact: true }).click();
   await page.getByRole("button", { name: "ปิด", exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.locator(".map-canvas")).toHaveAttribute(
+    "data-theme",
+    "dark",
+    { timeout: 30000 },
+  );
   await testInfo.attach("mobile-dark", {
     body: await page.screenshot({ animations: "disabled" }),
     contentType: "image/png",

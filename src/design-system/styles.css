@@ -2301,7 +2301,8 @@ body {
 
 @supports (overflow: clip) {
   html,
-  body {
+  body,
+  .situation-panel {
     overflow: clip;
   }
 }

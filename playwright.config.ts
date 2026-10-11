@@ -4,7 +4,8 @@ export default defineConfig({
   testDir: "tests",
   timeout: 60000,
   workers: 1,
-  retries: 0,
+  // One retry for intermittent public-provider timeouts; failures/traces remain reported.
+  retries: 1,
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
     baseURL: deployedUrl || "http://127.0.0.1:4173/Weather-watch/",
