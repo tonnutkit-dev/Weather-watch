@@ -22,6 +22,18 @@ const base=(after=true,diagnostic=true)=>`http://127.0.0.1:${after?(diagnostic?4
 async function context({after=true,size={width:390,height:844},fallback=false,cpu=1,slow=false,clock=true,reduced=false}={}) {
   const c=await browser.newContext({viewport:size,isMobile:size.width<760,hasTouch:size.width<760,colorScheme:'light',reducedMotion:reduced?'reduce':'no-preference'});
   await c.addInitScript(installObserver);
+  await c.addInitScript(() => {
+    const rows = [];
+    for (const target of [window, document]) {
+      const listeners = new Map(); rows.push(listeners);
+      const add = target.addEventListener.bind(target), remove = target.removeEventListener.bind(target);
+      target.addEventListener = (type, listener, options) => {
+        if (!listeners.has(type)) listeners.set(type, new Set()); listeners.get(type).add(listener); add(type, listener, options);
+      };
+      target.removeEventListener = (type, listener, options) => { listeners.get(type)?.delete(listener); remove(type, listener, options); };
+    }
+    window.__WW_GLOBAL_LISTENER_COUNTS = () => rows.map(row => Object.fromEntries([...row].map(([type, set]) => [type, set.size])));
+  });
   if(fallback)await c.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(kind,...rest){return /webgl/.test(kind)?null:original.call(this,kind,...rest);};});
   sessions.add(c);
   const page=await c.newPage(), cdp=await c.newCDPSession(page);
@@ -147,11 +159,11 @@ try {
     }await s.c.close();await save('results',results);
   }
   for(const after of [false,true])for(let run=1;run<=3;run++)await check(`${after?'after':'before'}-matched-interaction-${run}`,async()=>{
-    const s=await context({after,clock:false,cpu:4});await open(s);const before=await s.cdp.send('Performance.getMetrics');const start=await s.page.evaluate(()=>performance.now());
+    const s=await context({after,clock:false,cpu:4});await open(s);await s.cdp.send('HeapProfiler.collectGarbage');const listenersBefore=await s.page.evaluate(()=>window.__WW_GLOBAL_LISTENER_COUNTS());const before=await s.cdp.send('Performance.getMetrics');const start=await s.page.evaluate(()=>performance.now());
     for(let i=0;i<4;i++){await s.page.getByRole('button',{name:'ขยายแผง',exact:true}).click();await sleep(250);await s.page.getByRole('button',{name:'ยุบแผง',exact:true}).click();await sleep(250);}
     await s.page.evaluate(()=>window.__WW_MAP.panBy([40,20],{duration:300}));await sleep(400);await select(s,0);await sleep(400);await theme(s,true);await sleep(600);await theme(s,false);await sleep(600);
     const obs=await s.page.evaluate(start=>({frames:window.__WW_AUDIT.frames.filter(x=>x.at>=start),renders:window.__WW_AUDIT.renders,mapCalls:window.__WW_AUDIT.mapCalls}),start),metrics=await s.cdp.send('Performance.getMetrics');
-    const end=await snapshot(s);assert.equal(end.mapInstances,1);await s.c.close();const row={after,run,start,obs,beforeMetrics:before.metrics,afterMetrics:metrics.metrics,end,counts:{weather:s.state.weatherCalls,air:s.state.airCalls,tiles:s.state.tileCalls.length}};results.interactions.push(row);return row;
+    const end=await snapshot(s);assert.equal(end.mapInstances,1);await s.cdp.send('HeapProfiler.collectGarbage');const postGc=await s.cdp.send('Performance.getMetrics');const listenersAfter=await s.page.evaluate(()=>window.__WW_GLOBAL_LISTENER_COUNTS());assert.deepEqual(listenersAfter,listenersBefore);await s.c.close();const row={after,run,start,obs,beforeMetrics:before.metrics,afterMetrics:metrics.metrics,postGcMetrics:postGc.metrics,listenersBefore,listenersAfter,end,counts:{weather:s.state.weatherCalls,air:s.state.airCalls,tiles:s.state.tileCalls.length}};results.interactions.push(row);return row;
   });
 } finally {await save('results',results);await browser.close();servers.forEach(s=>s.kill());}
 console.log('LAB RESULT',results.checks.length,'passed',results.failures.length,'failed');
