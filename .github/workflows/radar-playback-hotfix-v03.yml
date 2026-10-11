@@ -1,0 +1,46 @@
+name: Weather Watch isolated radar playback hotfix QA
+on:
+  push:
+    branches: [work/p0-reliability-correction-v03]
+    paths: [src/**, qa-playback-v03/**, .github/workflows/radar-playback-hotfix-v03.yml]
+  workflow_dispatch:
+    inputs:
+      deployed:
+        description: Verify the updated isolated HTTPS site (never deploy)
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  hotfix-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      WW_E2E_BASE_URL: ${{ inputs.deployed && 'https://weather-watch-v03-p0-owner-qa-ton.tonnutkit.chatgpt.site/' || '' }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: { node-version: 24, cache: npm }
+      - name: Protect main, providers and existing design
+        run: |
+          test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
+          git diff --exit-code acab1e4e56cd2ec935144d0ad180973c6c30113c HEAD -- src/providers src/radar/budget.ts src/maps src/design-system DESIGN.md package.json package-lock.json vite.config.ts .github/workflows/pages.yml
+      - run: npm ci
+      - run: npm run typecheck && npm test && npm run build && npm run verify:pages
+      - run: npx playwright install --with-deps chromium
+      - name: Original browser regressions
+        run: npm run test:e2e
+      - name: Actual automatic Play/Pause with real radar and unchanged budget
+        if: always()
+        run: npx playwright test --config qa-playback-v03/playwright.config.ts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: radar-playback-v03-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+            qa-playback-v03/browser-report/
+            qa-playback-v03/test-results/
+          retention-days: 90

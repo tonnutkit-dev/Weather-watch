@@ -28,7 +28,7 @@ import {
 import type { MapLayers } from "../maps/MapCanvas";
 import { getWeather } from "../providers/weather";
 import { getAirQuality } from "../providers/airQuality";
-import { getRadar, nextFrame } from "../providers/radar";
+import { getRadar } from "../providers/radar";
 import { useTheme } from "../shared/theme";
 import { readFavorites, saveFavorites } from "../shared/preferences";
 import { LocationSearch } from "../components/LocationSearch";
@@ -41,6 +41,7 @@ import { freshness } from "../reliability/freshness";
 import { useSourceClock } from "../reliability/useFreshness";
 import { recordRefresh, useBoundedRefresh, automaticRefreshAllowed } from "../reliability/useRefresh";
 import { radarRequestKey, RadarPresentationStore } from "../radar/presentation";
+import { useRadarPlayback } from "../radar/usePlayback";
 import { value } from "../shared/time";
 const MapCanvas = lazy(() => import("../maps/MapCanvas"));
 function initialLocation() {
@@ -75,19 +76,10 @@ export default function App() {
       coverage: false,
     });
   const [opacity, setOpacity] = useState(0.65),
-    [index, setIndex] = useState(0),
-    [playing, setPlaying] = useState(false),
     [message, setMessage] = useState(""),
     [geoLoading, setGeoLoading] = useState(false),
     [mapAction, setMapAction] = useState(0),
     [online, setOnline] = useState(navigator.onLine);
-  useEffect(() => {
-    if (
-      sheet !== "collapsed" &&
-      window.matchMedia("(max-width: 759px)").matches
-    )
-      setPlaying(false);
-  }, [sheet]);
   const weatherKey = ["weather", location.country, location.latitude, location.longitude, location.timezone];
   const airKey = ["air", location.country, location.latitude, location.longitude, location.timezone];
   const weather = useQuery({
@@ -114,25 +106,8 @@ export default function App() {
     staleTime: 300000,
     enabled: layers.radar || layers.coverage,
   });
-  useEffect(() => {
-    setIndex(Math.max(0, (radar.data?.frames.length || 1) - 1));
-    setPlaying(false);
-  }, [radar.dataUpdatedAt, radar.data?.frames.length]);
-  useEffect(() => {
-    if (!playing || !layers.radar || !radar.data?.frames.length) return;
-    const id = setInterval(() => {
-      if (!document.hidden)
-        setIndex((i) => nextFrame(i, radar.data!.frames.length));
-    }, 15000);
-    const hidden = () => {
-      if (document.hidden) setPlaying(false);
-    };
-    document.addEventListener("visibilitychange", hidden);
-    return () => {
-      clearInterval(id);
-      document.removeEventListener("visibilitychange", hidden);
-    };
-  }, [playing, layers.radar, radar.data]);
+  const { index, playing, controller: playback } = useRadarPlayback(radar.data, layers.radar,
+    radar.isFetching, radar.isError, i => radarRequestKey({ frame: radar.data?.frames[i], location, theme: theme.theme, layers }), radarPresentationStore);
   useEffect(() => {
     const yes = () => setOnline(true),
       no = () => setOnline(false);
@@ -154,7 +129,7 @@ export default function App() {
       return;
     }
     setLocation(l);
-    setPlaying(false);
+    playback.stop("location-changed");
     try {
       if (l.kind === "province" || l.kind === "city")
         localStorage.setItem("ww-last-preset", l.id);
@@ -162,7 +137,7 @@ export default function App() {
     } catch {
       /*optional preference*/
     }
-  }, []);
+  }, [playback]);
   const locate = useCallback(() => {
     if (!navigator.geolocation) {
       setMessage(
@@ -200,7 +175,7 @@ export default function App() {
   }, [select]);
   const toggle = (key: keyof MapLayers) => {
     setLayers((v) => ({ ...v, [key]: !v[key] }));
-    if (key === "radar") setPlaying(false);
+    if (key === "radar") playback.stop("layer-changed");
   };
   const favorite = favorites.some((f) => f.id === location.id);
   const save = () => {
@@ -411,17 +386,12 @@ export default function App() {
                 requestKey={presentationKey}
                 index={index}
                 playing={playing}
-                onIndex={(n) => {
-                  setPlaying(false);
-                  setIndex(n);
-                }}
-                onPlay={() => setPlaying((v) => !v)}
-                onRefresh={() => {
-                  setPlaying(false);
-                  void radar.refetch();
-                }}
+                playback={playback}
+                onIndex={playback.scrub}
+                onPlay={playback.toggle}
+                onRefresh={() => { void radar.refetch(); }}
                 onHide={() => {
-                  setPlaying(false);
+                  playback.stop("layer-hidden");
                   setLayers((v) => ({ ...v, radar: false }));
                 }}
                 timezone={location.timezone}

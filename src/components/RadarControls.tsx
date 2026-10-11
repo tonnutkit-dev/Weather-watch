@@ -4,8 +4,10 @@ import type { Radar } from "../radar/types";
 import { timeLabel } from "../shared/time";
 import { isRadarStale } from "../providers/radar";
 import { Modal } from "./Modal";
+import type { RadarPlayback } from "../radar/playback";
 import type { RadarPresentationStore } from "../radar/presentation";
 interface Props {
+  playback?: RadarPlayback;
   presentationStore?: RadarPresentationStore;
   requestKey?: string;
   radar?: Radar;
@@ -25,6 +27,8 @@ const noSnapshot = () => undefined;
 export function RadarControls(p: Props) {
   const snapshot = useSyncExternalStore(p.presentationStore?.subscribe ?? noSubscribe,
     p.presentationStore?.getSnapshot ?? noSnapshot);
+  const playback = useSyncExternalStore(p.playback?.subscribe ?? noSubscribe, p.playback?.getSnapshot ?? noSnapshot);
+  const playbackText = playback?.phase === "budget" ? "รอโควตาไทล์ · " : playback?.phase === "suspended" ? "พักเมื่อซ่อนแท็บ · " : playback?.playing ? "เล่น · " : "";
   const presentation = snapshot?.key === p.requestKey ? snapshot : undefined;
   const [details, setDetails] = useState(false);
   const [now, setNow] = useState(() => Date.now() / 1000);
@@ -56,6 +60,7 @@ export function RadarControls(p: Props) {
       <div className="radar-controls" aria-label="ควบคุมเรดาร์ย้อนหลัง">
         <div className="radar-caption">
           <span data-testid="radar-presentation" data-status={presentation?.status ?? 'pending'}>
+            <span data-testid="radar-playback" data-phase={playback?.phase ?? 'paused'} role="status">{playbackText}</span>
             {presentation?.status === 'failed' ? 'ภาพโหลดไม่สำเร็จ' :
               presentation?.status === 'unverified' ? 'ภาพยังไม่ยืนยัน' :
                 presentation?.status === 'cancelled' ? 'พักการโหลดภาพ' : 'รอภาพเรดาร์'}</span>
@@ -88,7 +93,8 @@ export function RadarControls(p: Props) {
           <button
             className="play-button"
             aria-label={p.playing ? "หยุดเรดาร์" : "เล่นเรดาร์ย้อนหลัง"}
-            disabled={!frames.length || p.error}
+            aria-pressed={p.playing}
+            disabled={frames.length < 2 || p.error}
             onClick={p.onPlay}
           >
             {p.playing ? (
