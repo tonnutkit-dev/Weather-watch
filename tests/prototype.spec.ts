@@ -61,9 +61,27 @@ test("mobile states and no horizontal overflow", async ({ page }, testInfo) => {
   await page.getByRole("button", { name: "ปิด", exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await testInfo.attach("mobile-dark", {
-    body: await page.screenshot(),
+    body: await page.screenshot({ animations: "disabled" }),
     contentType: "image/png",
   });
+  const layout = await page.locator(".panel-scroll").evaluate((el) => ({
+    scrollLeft: el.scrollLeft,
+    scrollTop: el.scrollTop,
+    width: el.clientWidth,
+    scrollWidth: el.scrollWidth,
+    temperature: el
+      .querySelector('[data-testid="temperature"]')
+      ?.getBoundingClientRect()
+      .toJSON(),
+    panel: el.getBoundingClientRect().toJSON(),
+  }));
+  await testInfo.attach("mobile-layout", {
+    body: Buffer.from(JSON.stringify(layout, null, 2)),
+    contentType: "application/json",
+  });
+  await expect(page.getByTestId("temperature")).toBeInViewport({ ratio: 1 });
+  expect(layout.scrollLeft).toBe(0);
+  expect(layout.scrollWidth).toBeLessThanOrEqual(layout.width);
 });
 test("subdirectory assets, real radar imagery and playback", async ({
   page,
