@@ -1,0 +1,79 @@
+[
+  {
+    "id": 38136782887,
+    "sha": "6e0fc36f5554c3fa49578c79e35ef017a7c47e3e",
+    "status": "completed",
+    "result": "success",
+    "url": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38136782887"
+  },
+  {
+    "id": 38136032953,
+    "sha": "56995ae03f430171c5dfbd7d8ed3ebf778535ba0",
+    "status": "completed",
+    "result": "failure",
+    "url": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38136032953"
+  },
+  {
+    "id": 38135783677,
+    "sha": "fcc59ddf268147664ff1a261c39a0c21bd5bf3e8",
+    "status": "completed",
+    "result": "cancelled",
+    "url": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38135783677"
+  },
+  {
+    "id": 38135487545,
+    "sha": "a3b8d31172049e40a3db81187fe9e52e51c6a177",
+    "status": "completed",
+    "result": "failure",
+    "url": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38135487545"
+  },
+  {
+    "id": 38135044769,
+    "sha": "c018ac5d842a2d29a179be5689c71509a911dc66",
+    "status": "completed",
+    "result": "cancelled",
+    "url": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38135044769"
+  },
+  {
+    "id": 38134693181,
+    "sha": "6d4cecac014a524ce69aeed83dbeb5db970faeae",
+    "status": "completed",
+    "result": "failure",
+    "url": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38134693181"
+  },
+  {
+    "id": 38134444159,
+    "sha": "f98a9aad7ac37fab19b2bb03301f18367bf3de7a",
+    "status": "completed",
+    "result": "success",
+    "url": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38134444159"
+  },
+  {
+    "id": 38134202137,
+    "sha": "4a71782f548e481d698ee07a42e8e92a512f5100",
+    "status": "completed",
+    "result": "cancelled",
+    "url": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38134202137"
+  },
+  {
+    "id": 38133932958,
+    "sha": "14cc36341200ec8341fb52b0b889dbf9e4b47b94",
+    "status": "completed",
+    "result": "failure",
+    "url": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38133932958"
+  },
+  {
+    "id": 38133826526,
+    "sha": "8b321cc9494d4fad8efba69a2b70a96731f77e83",
+    "status": "completed",
+    "result": "cancelled",
+    "url": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38133826526"
+  },
+  {
+    "id": 38133507333,
+    "sha": "fccfaa906782bb7d333a7eb0e4194e6225f6952b",
+    "status": "completed",
+    "result": "failure",
+    "url": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38133507333"
+  }
+]

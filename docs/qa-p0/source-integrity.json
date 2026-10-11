@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-10-11T11:54:49.671461+00:00",
+  "startingMain": "2036e2ac788cb31d25fd387cb40520ad95c408a6",
+  "testedCorrection": "6e0fc36f5554c3fa49578c79e35ef017a7c47e3e",
+  "audit": "d4280133a31305656114961709d1710a26bd0872",
+  "designC": "19ec27ce5abc338a65cf368d17f6d3abbf884840",
+  "branch": "work/p0-reliability-correction-v03",
+  "protectedPathsUnchanged": [
+    "src/providers",
+    "src/radar/budget.ts",
+    "src/design-system",
+    "DESIGN.md",
+    "package.json",
+    "package-lock.json",
+    "vite.config.ts",
+    ".github/workflows/pages.yml"
+  ],
+  "publicQARelease": {
+    "project": "Weather Watch",
+    "version": "0.2.0",
+    "commit": "2036e2ac788cb31d25fd387cb40520ad95c408a6",
+    "base": "/Weather-watch/",
+    "site": "https://tonnutkit-dev.github.io/Weather-watch/",
+    "builtAt": "2026-10-11T05:12:05.577Z",
+    "channel": "public-qa"
+  },
+  "mergePerformed": false,
+  "deploymentPerformed": false,
+  "forcePushPerformed": false,
+  "productionDependenciesChanged": false,
+  "secretsAdded": false
+}
