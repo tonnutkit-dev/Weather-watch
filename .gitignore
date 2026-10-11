@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+playwright-report/
+test-results/
+*.tsbuildinfo
+
+# Raw provider documentation HTML is transient audit input, not distributable application source.
+evidence/*.html
