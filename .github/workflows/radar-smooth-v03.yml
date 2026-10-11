@@ -1,0 +1,39 @@
+name: Weather Watch smooth radar baseline and regression QA
+on:
+  push:
+    branches: [work/radar-smooth-playback-v03]
+    paths: [src/**, qa-smooth-v03/**, .github/workflows/radar-smooth-v03.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smooth-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      WW_SMOOTH_PHASE: baseline
+      WW_EXPECT_INTERVAL: 5000
+      WW_E2E_BASE_URL: https://weather-watch-v03-p0-owner-qa-ton.tonnutkit.chatgpt.site/
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: { node-version: 24, cache: npm }
+      - name: Protect main, providers and approved design
+        run: |
+          test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
+          git diff --exit-code 97d700346783590d4c75f7e7bb6a972447c2d627 HEAD -- src/providers src/maps src/radar/budget.ts src/radar/presentation.ts src/reliability src/design-system DESIGN.md package.json package-lock.json vite.config.ts .github/workflows/pages.yml
+      - run: npm ci
+      - run: npm run typecheck && npm test && npm run build && npm run verify:pages
+      - id: browsers
+        run: npx playwright install --with-deps chromium webkit
+      - name: Real frames, perceptible imagery and interval measurements
+        run: npx playwright test --config qa-smooth-v03/playwright.config.ts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: radar-smooth-v03-${{ github.run_id }}
+          path: |
+            qa-smooth-v03/browser-report/
+            qa-smooth-v03/test-results/
+          retention-days: 90
