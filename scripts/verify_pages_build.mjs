@@ -3,6 +3,7 @@ import { resolve, relative } from "node:path";
 import { execFileSync } from "node:child_process";
 
 const base = "/Weather-watch/";
+const { version } = JSON.parse(await readFile("package.json", "utf8"));
 const root = resolve("dist");
 const html = await readFile(resolve(root, "index.html"), "utf8");
 const refs = [...html.matchAll(/(?:src|href)="([^"]+)"/g)].map((m) => m[1]);
@@ -28,7 +29,7 @@ await writeFile(
   JSON.stringify(
     {
       project: "Weather Watch",
-      version: "0.1.0",
+      version,
       commit: sha,
       base,
       site: "https://tonnutkit-dev.github.io/Weather-watch/",

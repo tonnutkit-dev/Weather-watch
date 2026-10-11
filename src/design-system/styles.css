@@ -14,8 +14,6 @@
   --warning: #99620b;
   --danger: #b43d3d;
   --map-surface: #dcecf4;
-  --sheet: 174px;
-  --header: 138px;
   font-synthesis: none;
 }
 :root[data-theme="dark"] {
@@ -43,6 +41,10 @@ body,
   margin: 0;
   height: 100%;
   width: 100%;
+}
+html,
+body {
+  overflow: hidden;
 }
 body {
   color: var(--text);
@@ -420,20 +422,26 @@ input[type="checkbox"] {
 }
 .map-locate,
 .map-recenter {
-  position: absolute;
-  right: 18px;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background: var(--glass);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
   border-radius: 12px;
 }
 .map-locate {
+  position: absolute;
+  right: 18px;
   top: 118px;
 }
-.map-recenter {
-  top: 165px;
+.map-toolbar {
+  position: absolute;
+  right: 18px;
+  top: 170px;
+  z-index: 2;
+}
+.mobile-layer-button {
+  display: none;
 }
 .maplibregl-ctrl-top-right {
   right: 8px;
@@ -509,20 +517,105 @@ input[type="checkbox"] {
   color: var(--danger);
   font-size: 12px;
 }
-.radar-legend {
+.radar-controls {
   position: absolute;
-  bottom: 192px;
-  left: 26px;
+  bottom: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(600px, calc(100% - 52px));
+  height: 76px;
   background: var(--glass);
-  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 6px 12px;
+  z-index: 2;
+}
+.radar-caption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 18px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.radar-caption > span:first-child {
+  color: var(--text);
+  font-weight: 500;
+}
+.radar-caption time {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+.radar-freshness {
+  font-size: 11px;
+}
+.stale {
+  color: var(--warning);
+}
+.radar-playline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+}
+.radar-playline input {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  height: 44px;
+  margin: 0;
+}
+.play-button {
+  width: 44px;
+  height: 44px;
+  background: var(--blue);
+  color: var(--surface);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+:root[data-theme="dark"] .play-button {
+  color: #08121f;
+}
+.radar-details {
+  display: grid;
+  gap: 16px;
+  font-size: 14px;
+}
+.radar-details dl {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+.radar-details dl > div {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.radar-details dt {
+  color: var(--muted);
+}
+.radar-details dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.radar-detail-actions {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.radar-legend {
+  padding: 14px;
+  background: var(--raised);
   border: 1px solid var(--border);
   border-radius: 12px;
-  width: 165px;
-  box-shadow: var(--shadow);
-  font-size: 12px;
 }
 .legend-spectrum {
-  height: 7px;
+  height: 8px;
   border-radius: 4px;
   background: linear-gradient(
     90deg,
@@ -533,100 +626,34 @@ input[type="checkbox"] {
     #c10000,
     #ff77ff
   );
-  margin: 7px 0 4px;
+  margin: 10px 0 6px;
 }
 .radar-legend > div:last-of-type {
   display: flex;
   justify-content: space-between;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 .radar-legend small {
   display: block;
   color: var(--muted);
-  font-size: 10px;
-  margin-top: 5px;
+  margin-top: 6px;
 }
-.radar-controls {
-  position: absolute;
-  bottom: 56px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(600px, calc(100% - 52px));
-  background: var(--glass);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
-  padding: 10px 16px 11px;
-  z-index: 2;
+.summary-message {
+  display: none;
 }
-.radar-topline {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  font-weight: 500;
+.secondary-locations {
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
 }
-.radar-topline > small {
-  margin-left: auto;
-  font-weight: 400;
+.secondary-locations summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 12px 0;
   color: var(--muted);
 }
-.radar-topline .icon-button {
-  height: 28px;
-  width: 28px;
-  min-width: 28px;
-}
-.radar-playline {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.play-button {
-  width: 44px;
-  height: 44px;
-  background: var(--blue);
-  color: var(--surface);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-:root[data-theme="dark"] .play-button {
-  color: #08121f;
-}
-.radar-slider {
-  flex: 1;
-  min-width: 0;
-}
-.radar-slider input {
-  margin: 0;
-  height: 28px;
-  min-height: 28px;
-}
-.radar-slider > div {
-  display: flex;
-  justify-content: space-between;
-  color: var(--muted);
-  font-size: 10px;
-  font-variant-numeric: tabular-nums;
-}
-.radar-slider > div > span:nth-child(2) {
-  margin: 0 4px;
-}
-.radar-caveat {
-  font-size: 10px;
-  color: var(--muted);
-  line-height: 1.6;
-  margin-top: 8px;
-}
-.radar-caveat.stale {
-  color: var(--warning);
-}
-.refresh-radar {
-  width: 34px;
-  height: 34px;
+.secondary-locations .china-options {
+  margin: 0 0 12px;
 }
 .point-notice,
 .china-radar-note {
@@ -734,7 +761,11 @@ input[type="checkbox"] {
   align-items: center;
   margin: 15px 0 18px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+.current-metadata > span:last-child {
+  flex-basis: 100%;
 }
 .data-tag {
   font-size: 9px;
@@ -1391,6 +1422,83 @@ input[type="checkbox"] {
   text-decoration: underline;
   padding: 0 10px;
 }
+/* Raster fallback only when WebGL is unavailable. Radar palette is never filtered. */
+.leaflet-container {
+  background: var(--map-surface) !important;
+  font: inherit !important;
+  z-index: 0;
+}
+.ww-basemap {
+  filter: saturate(0.48) brightness(1.025);
+}
+.raster-map[data-theme="dark"] .ww-basemap {
+  filter: invert(1) hue-rotate(180deg) saturate(0.35) brightness(0.72);
+}
+.leaflet-control-zoom {
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: var(--shadow) !important;
+}
+.leaflet-control-zoom a {
+  width: 38px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.leaflet-top.leaflet-right {
+  right: 8px;
+  top: 12px;
+}
+.leaflet-control-attribution {
+  background: var(--glass) !important;
+  color: var(--muted) !important;
+  font-size: 9px !important;
+}
+.leaflet-control-attribution a {
+  color: var(--muted) !important;
+}
+.point-weather > span,
+.point-air > span {
+  display: block;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  background: var(--glass);
+  color: var(--text);
+  padding: 4px 8px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.point-air > span {
+  font-size: 12px;
+}
+.fallback-note {
+  position: absolute;
+  top: 190px;
+  right: 18px;
+  font-size: 9px;
+  color: var(--muted);
+  background: var(--glass);
+  padding: 5px 8px;
+  border-radius: 7px;
+  pointer-events: none;
+  z-index: 1;
+}
+.basemap-note {
+  position: absolute;
+  right: 18px;
+  top: 216px;
+  font-size: 10px;
+  background: var(--surface);
+  padding: 5px 8px;
+  border-radius: 7px;
+  color: var(--warning);
+}
 @media (min-width: 1500px) {
   .workspace {
     grid-template-columns: minmax(0, 1fr) 390px;
@@ -1478,10 +1586,6 @@ input[type="checkbox"] {
   }
   .radar-controls {
     width: calc(100% - 36px);
-    padding: 10px 12px;
-  }
-  .radar-topline > small > span {
-    display: none;
   }
 }
 @media (max-width: 950px) and (min-width: 760px) {
@@ -1496,75 +1600,80 @@ input[type="checkbox"] {
     gap: 10px;
     padding: 10px;
   }
-  .radar-legend {
-    bottom: 185px;
-    left: 18px;
-    width: 145px;
-  }
-  .radar-slider > div > span:nth-child(2) {
-    display: none;
-  }
   .map-heading .eyebrow {
     font-size: 9px;
   }
-  .radar-topline {
-    font-size: 11px;
-  }
   .radar-playline {
     gap: 7px;
-  }
-  .radar-controls .refresh-radar {
-    display: none;
   }
   .region-bar {
     padding: 0 20px;
   }
 }
+/* Mobile composition: one header, one map toolbar, one summary sheet.
+   Sheet size is the sole source for radar/attribution placement. */
 @media (max-width: 759px) {
-  :root {
-    --header: 124px;
+  .app {
+    --mobile-header-height: 56px;
+    --sheet-collapsed-size: 148px;
+    --overlay-gap: 12px;
+    --radar-height: 76px;
+    --sheet: calc(var(--sheet-collapsed-size) + env(safe-area-inset-bottom));
+  }
+  .sheet-state-half {
+    --sheet: min(
+      52dvh,
+      calc(
+        100dvh - var(--mobile-header-height) - env(safe-area-inset-top) - 130px
+      )
+    );
+  }
+  .sheet-state-expanded {
+    --sheet: min(
+      82dvh,
+      calc(
+        100dvh - var(--mobile-header-height) - env(safe-area-inset-top) - 130px
+      )
+    );
   }
   .app-header {
-    height: 65px;
-    padding: calc(env(safe-area-inset-top) + 0px) 16px 0;
+    height: calc(var(--mobile-header-height) + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) 12px 0;
+    gap: 8px;
+  }
+  .brand {
     gap: 8px;
   }
   .brand-icon {
-    width: 33px;
-    height: 33px;
+    width: 32px;
+    height: 32px;
     border-radius: 10px;
   }
   .brand-icon svg {
     width: 23px;
     height: 23px;
   }
-  .brand {
-    gap: 8px;
-  }
   .brand strong {
-    font-size: 19px;
-    letter-spacing: -0.6px;
+    font-size: 18px;
+    letter-spacing: -0.5px;
   }
-  .brand small {
-    display: none;
-  }
-  .header-nav {
+  .brand small,
+  .header-nav,
+  .header-actions > .icon-button:nth-child(2),
+  .region-bar {
     display: none;
   }
   .header-actions {
-    gap: 1px;
+    gap: 0;
   }
-  .header-actions > .icon-button:nth-child(2) {
-    display: none;
-  }
-  .header-actions .icon-button {
-    width: 38px;
-    height: 42px;
+  .header-actions .icon-button,
+  .search-button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
   }
   .search-button {
-    width: 38px;
-    height: 42px;
-    min-width: 0;
     padding: 0;
     border: 0;
     background: none;
@@ -1572,194 +1681,131 @@ input[type="checkbox"] {
     margin: 0;
     color: var(--text);
   }
-  .search-button > span {
+  .search-button span,
+  .search-button kbd {
     display: none;
-  }
-  .region-bar {
-    height: 54px;
-    padding: 0 13px;
-    gap: 3px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    white-space: nowrap;
-  }
-  .region-chip {
-    padding: 7px 9px;
-    font-size: 12px;
-    gap: 6px;
-  }
-  .region-chip small {
-    display: none;
-  }
-  .region-divider {
-    margin: 0 4px;
-    height: 20px;
-  }
-  .secondary-label {
-    display: none;
-  }
-  .city-chip {
-    font-size: 12px;
-    padding: 7px 9px;
-    gap: 5px;
-    min-height: 38px;
-  }
-  .city-chip > span {
-    font-size: 15px;
   }
   .workspace {
     display: block;
     position: relative;
     padding: 0;
-    min-height: 0;
   }
   .map-section {
-    position: absolute;
-    inset: 0;
+    height: 100%;
     border: 0;
     border-radius: 0;
     box-shadow: none;
   }
-  .map-heading {
-    top: 15px;
-    left: 14px;
-  }
-  .map-heading .eyebrow {
+  .map-heading,
+  .map-layer-chips,
+  .map-locate,
+  .point-notice,
+  .china-radar-note {
     display: none;
   }
-  .map-location {
-    font-size: 14px;
-    padding: 9px 12px;
-    border-radius: 12px;
-    max-width: 255px;
-    min-height: 43px;
+  .map-toolbar {
+    top: var(--overlay-gap);
+    right: var(--overlay-gap);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    background: var(--glass);
+    box-shadow: var(--shadow);
   }
-  .map-heading > small {
-    font-size: 10px;
-    margin-top: 5px;
-    max-width: 250px;
+  .map-toolbar .icon-button {
+    width: 44px;
+    height: 44px;
   }
-  .map-layer-chips {
-    top: 102px;
-    left: 14px;
-    gap: 5px;
-  }
-  .map-layer-chips button {
-    min-height: 40px;
-    font-size: 12px;
-    padding: 7px 10px;
-  }
-  .maplibregl-ctrl-top-right {
-    top: 4px;
-    right: 4px;
-  }
-  .maplibregl-ctrl-group button {
-    height: 40px !important;
-    width: 36px !important;
-  }
-  .map-locate,
-  .map-recenter {
-    right: 14px;
-    width: 38px;
-    height: 40px;
-  }
-  .map-locate {
-    top: 102px;
+  .mobile-layer-button {
+    display: inline-flex;
+    color: var(--blue);
   }
   .map-recenter {
-    top: 149px;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .maplibregl-ctrl-top-right,
+  .leaflet-control-zoom {
+    display: none;
   }
   .situation-panel {
     position: absolute;
-    bottom: 0;
+    z-index: 4;
     left: 0;
     right: 0;
+    bottom: 0;
     height: var(--sheet);
-    border-radius: 24px 24px 0 0;
-    box-shadow: 0 -8px 30px #102c4a0d;
+    border-radius: 22px 22px 0 0;
     border-bottom: 0;
-    z-index: 4;
+    box-shadow: 0 -8px 30px #12233e12;
     transition: height 0.24s ease;
-    overflow: hidden;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  .sheet-state-collapsed {
-    --sheet: 174px;
-  }
-  .sheet-state-half {
-    --sheet: 52dvh;
-  }
-  .sheet-state-expanded {
-    --sheet: min(82dvh, calc(100dvh - 128px));
   }
   .sheet-handle {
-    position: relative;
     display: flex;
-    height: 29px;
+    height: 44px;
     align-items: center;
     justify-content: center;
+    position: relative;
     touch-action: none;
-    flex-shrink: 0;
   }
   .handle-button {
-    width: 120px;
-    height: 29px;
+    width: 100px;
+    height: 44px;
     display: grid;
     place-items: center;
     padding: 0;
     touch-action: none;
   }
   .handle-button span {
+    width: 32px;
     height: 4px;
-    width: 36px;
     border-radius: 4px;
     background: var(--border);
   }
   .sheet-state-controls {
     position: absolute;
-    right: 16px;
+    right: 12px;
     top: 0;
     display: flex;
-    gap: 1px;
   }
   .sheet-state-controls button {
-    width: 33px;
-    height: 29px;
-    border-radius: 7px;
+    width: 44px;
+    height: 44px;
     display: grid;
     place-items: center;
     color: var(--muted);
-    padding: 0;
     touch-action: manipulation;
   }
   .panel-scroll {
-    height: calc(100% - 29px);
-    padding-bottom: 10px;
-  }
-  .sheet-collapsed .panel-scroll {
-    overflow: hidden;
+    height: calc(100% - 44px);
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    overflow-x: hidden;
+    overflow-y: auto;
   }
   .current-section {
-    padding: 1px 22px 0;
+    padding: 0 16px;
   }
   .location-title h1 {
     font-size: 17px;
   }
-  .location-title > svg {
-    width: 15px;
-    margin-top: 3px;
-  }
   .location-title span {
-    font-size: 10px;
+    font-size: 12px;
   }
   .favorite-button {
-    width: 40px;
-    height: 40px;
-    margin-top: -4px;
+    width: 44px;
+    height: 44px;
   }
   .current-weather {
-    margin: 8px 0 0;
-    gap: 13px;
+    margin: 12px 0;
+    gap: 16px;
+  }
+  .current-weather .weather-icon {
+    width: 64px;
+    height: 64px;
   }
   .temperature {
     font-size: 48px;
@@ -1768,70 +1814,38 @@ input[type="checkbox"] {
   .temperature > span {
     font-size: 20px;
   }
-  .current-weather .weather-icon {
-    width: 67px;
-    height: 67px;
-  }
   .current-weather p {
-    font-size: 12px;
-    margin-top: 3px;
-  }
-  .current-weather small {
-    font-size: 11px;
-    margin-top: 2px;
-  }
-  .current-metadata {
-    font-size: 10px;
-    margin: 10px 0 12px;
-  }
-  .current-metadata .data-tag {
-    font-size: 9px;
-  }
-  .sheet-collapsed .current-metadata {
-    display: none;
-  }
-  .sheet-collapsed .location-title {
-    margin-top: 1px;
-  }
-  .sheet-collapsed .location-title span {
-    display: block;
-  }
-  .sheet-collapsed .current-weather {
+    font-size: 14px;
     margin-top: 4px;
   }
-  .sheet-collapsed .temperature {
-    font-size: 42px;
+  .current-weather small {
+    font-size: 12px;
   }
-  .sheet-collapsed .current-weather .weather-icon {
-    width: 61px;
-    height: 61px;
-  }
-  .sheet-collapsed .weather-metrics,
-  .sheet-collapsed .verdict,
-  .sheet-collapsed .panel-tabs {
-    display: none;
+  .current-metadata {
+    font-size: 12px;
+    margin: 12px 0;
   }
   .weather-metrics {
-    gap: 13px;
-    padding: 15px 0;
-  }
-  .weather-metrics strong {
-    font-size: 16px;
+    padding: 14px 0;
+    gap: 10px;
   }
   .weather-metrics span {
-    font-size: 11px;
+    font-size: 12px;
+  }
+  .weather-metrics strong {
+    font-size: 17px;
   }
   .weather-metrics strong small {
-    font-size: 10px;
+    font-size: 11px;
   }
   .verdict {
-    margin: 15px 22px 0;
+    margin: 16px 16px 0;
   }
   .verdict strong {
-    font-size: 13px;
+    font-size: 14px;
   }
   .verdict p {
-    font-size: 12px;
+    font-size: 13px;
   }
   .panel-tabs button {
     font-size: 13px;
@@ -1839,466 +1853,265 @@ input[type="checkbox"] {
   }
   .forecast-section,
   .environment-section {
-    padding: 20px 22px;
-  }
-  .resolution {
-    font-size: 12px;
+    padding: 18px 16px;
   }
   .hour-card {
-    min-width: 65px;
+    min-width: 68px;
   }
   .hour-card > span,
-  .hour-card small {
-    font-size: 11px;
-  }
-  .hour-card > strong {
-    font-size: 18px;
+  .hour-card small,
+  .resolution {
+    font-size: 12px;
   }
   .daily-row {
     font-size: 13px;
     grid-template-columns: 53px 34px 51px 1fr 48px;
   }
-  .daily-row small {
-    font-size: 11px;
-  }
-  .data-tag {
-    font-size: 10px;
-  }
-  .micro {
-    font-size: 12px;
-  }
+  .daily-row small,
   .data-footer,
   .data-footer a {
-    font-size: 11px;
+    font-size: 12px;
+  }
+  .data-footer {
+    padding: 5px 16px 22px;
   }
   .air-values strong {
-    font-size: 29px;
+    font-size: 28px;
   }
   .air-values span,
   .air-values small,
-  .air-card .micro {
-    font-size: 11px;
-  }
+  .air-card .micro,
   .aq-trend span {
-    font-size: 11px;
+    font-size: 12px;
   }
   .blocked-card p {
     font-size: 13px;
   }
   .blocked-card > a {
-    font-size: 13px;
     min-height: 44px;
+    font-size: 13px;
+  }
+  .sheet-collapsed .panel-scroll {
+    overflow: hidden;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .sheet-collapsed .location-title {
+    height: 24px;
+  }
+  .sheet-collapsed .location-title h1 {
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sheet-collapsed .location-title > svg {
+    width: 15px;
+    margin-top: 0;
+    align-self: center;
+  }
+  .sheet-collapsed .location-title span,
+  .sheet-collapsed .favorite-button {
+    display: none;
+  }
+  .sheet-collapsed .current-weather {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 12px;
+    height: 52px;
+    margin: 0;
+  }
+  .sheet-collapsed .current-weather .weather-icon {
+    width: 48px;
+    height: 48px;
+  }
+  .sheet-collapsed .current-weather > div {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+  }
+  .sheet-collapsed .temperature {
+    font-size: 38px;
+    letter-spacing: -1.5px;
+  }
+  .sheet-collapsed .temperature > span {
+    font-size: 17px;
+  }
+  .sheet-collapsed .current-weather p {
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .sheet-collapsed .current-weather small,
+  .sheet-collapsed .current-metadata,
+  .sheet-collapsed .weather-metrics,
+  .sheet-collapsed .verdict,
+  .sheet-collapsed .panel-tabs,
+  .sheet-collapsed .forecast-section,
+  .sheet-collapsed .environment-section,
+  .sheet-collapsed .data-footer {
+    display: none;
+  }
+  .sheet-collapsed .summary-message {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0 16px;
+    height: 20px;
+    font-size: 12px;
+    line-height: 20px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .summary-message .verdict-dot {
+    width: 5px;
+    height: 5px;
+    flex-shrink: 0;
+  }
+  .weather-loading {
+    min-height: 110px;
+  }
+  .sheet-collapsed .weather-loading {
+    height: 52px;
+    min-height: 0;
+    gap: 0;
+  }
+  .sheet-collapsed .weather-loading .skeleton {
+    display: none;
+  }
+  .sheet-collapsed .data-error {
+    padding: 0;
+    height: 52px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sheet-collapsed .data-error p {
+    display: none;
   }
   .radar-controls {
-    bottom: calc(var(--sheet) + 42px);
-    left: 12px;
-    right: 12px;
+    bottom: calc(var(--sheet) + 48px);
+    left: var(--overlay-gap);
+    right: var(--overlay-gap);
     width: auto;
+    height: var(--radar-height);
     transform: none;
     transition: bottom 0.24s ease;
-    padding: 8px 11px 9px;
-    border-radius: 17px;
   }
-  .radar-topline {
-    font-size: 11px;
-    gap: 5px;
-    min-height: 25px;
-  }
-  .radar-topline > small {
-    font-size: 11px;
-  }
-  .radar-topline > small > span {
-    display: none;
-  }
-  .radar-topline .icon-button {
-    width: 27px;
-    height: 27px;
-  }
-  .radar-playline {
-    gap: 10px;
-  }
-  .play-button {
-    width: 40px;
-    height: 40px;
-  }
-  .radar-slider input {
-    min-height: 27px;
-    height: 27px;
-  }
-  .radar-slider > div {
-    font-size: 10px;
-  }
-  .radar-slider > div > span:nth-child(2) {
-    display: none;
-  }
-  .refresh-radar {
-    width: 30px;
-    height: 34px;
-  }
-  .radar-caveat {
-    font-size: 10px;
-    line-height: 1.5;
-    margin-top: 5px;
-  }
-  .radar-legend {
-    left: 14px;
-    bottom: calc(var(--sheet) + 163px);
-    width: 126px;
-    padding: 9px;
-    transition: bottom 0.24s ease;
-    font-size: 11px;
-  }
-  .radar-legend small {
-    font-size: 9px;
-  }
-  .sheet-state-expanded .radar-legend {
-    display: none;
-  }
+  .sheet-state-half .radar-controls,
   .sheet-state-expanded .radar-controls {
     display: none;
   }
-  .sheet-state-expanded .map-layer-chips {
-    display: none;
-  }
-  .sheet-state-half .radar-legend {
-    display: none;
-  }
-  .maplibregl-ctrl-bottom-right {
-    bottom: calc(var(--sheet) + 3px);
-    transition: bottom 0.24s ease;
+  .app .maplibregl-ctrl-bottom-right,
+  .app .maplibregl-ctrl-bottom-left {
+    bottom: calc(var(--sheet) + 4px);
     max-width: 100%;
+    transition: bottom 0.24s ease;
     z-index: 1;
   }
   .maplibregl-ctrl-attrib {
-    font-size: 9px !important;
+    font-size: 10px !important;
     max-width: 100%;
-    line-height: 18px !important;
+    line-height: 16px !important;
   }
-  .map-source {
-    bottom: calc(var(--sheet) + 25px);
-    font-size: 9px;
-    right: 4px;
+  .leaflet-bottom {
+    bottom: calc(var(--sheet) + 4px) !important;
+    transition: bottom 0.24s ease;
+    max-width: 100%;
   }
-  .maplibregl-ctrl-bottom-left {
-    bottom: calc(var(--sheet) + 4px);
+  .leaflet-control-attribution {
+    font-size: 9px !important;
+    line-height: 15px;
+    max-width: 100%;
   }
-  .point-notice {
-    top: 197px;
-    left: 14px;
-    right: 14px;
-    max-width: none;
-    font-size: 11px;
+  .fallback-note {
+    top: 74px;
+    right: 12px;
+    max-width: calc(100% - 24px);
+    font-size: 10px;
   }
-  .china-radar-note {
-    top: 228px;
-    font-size: 11px;
-    left: 14px;
-  }
-  .tile-error {
-    left: 14px;
-    right: 14px;
-    bottom: calc(var(--sheet) + 158px);
-    font-size: 11px;
-  }
-  .sheet-state-half .tile-error,
-  .sheet-state-expanded .tile-error {
+  .basemap-note {
     display: none;
   }
-  .map-status {
-    top: 38%;
-    font-size: 13px;
+  .tile-error {
+    left: 12px;
+    right: 12px;
+    bottom: calc(var(--sheet) + 134px);
+    font-size: 12px;
+  }
+  .sheet-state-half .tile-error,
+  .sheet-state-expanded .tile-error,
+  .sheet-state-half .fallback-note,
+  .sheet-state-expanded .fallback-note {
+    display: none;
   }
   .modal {
-    padding: 20px;
-    border-radius: 21px;
-    width: calc(100vw - 28px);
-    max-height: 88dvh;
+    padding: 18px;
+    border-radius: 20px;
+    max-height: calc(
+      100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+    );
+    width: calc(100vw - 24px);
+  }
+  .modal-header {
+    position: sticky;
+    top: -18px;
+    padding: 8px 0;
+    background: var(--surface);
+    z-index: 2;
   }
   .modal-header h2 {
-    font-size: 19px;
+    font-size: 18px;
   }
   .search-results {
-    max-height: 48dvh;
+    max-height: 42dvh;
+  }
+  .search-note,
+  .settings-note {
+    font-size: 12px;
+  }
+  .appearance-options button {
+    font-size: 13px;
   }
   .toast {
     bottom: calc(env(safe-area-inset-bottom) + 20px);
-    width: max-content;
-    max-width: calc(100% - 30px);
+    max-width: calc(100% - 24px);
     font-size: 12px;
   }
   .offline-banner {
     font-size: 12px;
   }
-  .appearance-options button {
-    font-size: 12px;
-  }
-  .weather-loading {
-    min-height: 110px;
-  }
-  .data-error {
-    padding: 10px 0;
-  }
-  .brand strong {
-    white-space: nowrap;
-  }
 }
-@media (max-width: 365px) {
+@media (max-width: 359px) {
   .brand strong {
-    font-size: 17px;
+    font-size: 16px;
   }
   .brand-icon {
-    width: 29px;
-    height: 29px;
+    width: 28px;
+    height: 28px;
   }
-  .app-header {
-    padding-left: 12px;
-    padding-right: 10px;
+  .sheet-collapsed .current-weather > div {
+    gap: 8px;
   }
-  .header-actions .icon-button,
-  .search-button {
-    width: 34px;
+  .sheet-collapsed .temperature {
+    font-size: 34px;
   }
-  .city-chip {
-    padding: 6px 7px;
-  }
-  .region-chip {
-    padding: 6px 7px;
-  }
-  .map-location {
-    max-width: 215px;
-  }
-  .map-heading > small {
-    max-width: 230px;
-  }
-  .current-section,
-  .forecast-section,
-  .environment-section {
-    padding-left: 17px;
-    padding-right: 17px;
-  }
-  .current-weather small {
-    font-size: 10px;
+  .summary-message {
+    font-size: 11px;
   }
   .daily-row {
     grid-template-columns: 45px 30px 44px 1fr 40px;
     font-size: 12px;
   }
-  .radar-topline > span {
-    font-size: 10px;
-  }
-  .radar-controls {
-    padding: 7px 9px;
-  }
-  .radar-topline > small {
-    font-size: 10px;
-  }
-  .weather-metrics {
-    gap: 6px;
-  }
-  .weather-metrics svg {
-    width: 12px;
-  }
-  .appearance-options {
-    gap: 7px;
-  }
 }
-@media (max-height: 650px) and (max-width: 759px) {
-  .radar-legend {
-    display: none;
-  }
-  .radar-controls {
-    bottom: calc(var(--sheet) + 35px);
-  }
-  .sheet-state-half .radar-controls {
-    display: none;
-  }
-  .map-heading > small {
-    display: none;
-  }
-  .map-layer-chips {
-    top: 70px;
-  }
-  .point-notice,
-  .china-radar-note {
-    display: none;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *:before,
-  *:after {
-    transition: none !important;
-    animation: none !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Raster fallback only when WebGL is unavailable. Radar palette is never filtered. */
-.leaflet-container {
-  background: var(--map-surface) !important;
-  font: inherit !important;
-  z-index: 0;
-}
-.ww-basemap {
-  filter: saturate(0.48) brightness(1.025);
-}
-.raster-map[data-theme="dark"] .ww-basemap {
-  filter: invert(1) hue-rotate(180deg) saturate(0.35) brightness(0.72);
-}
-.leaflet-control-zoom {
-  border: 1px solid var(--border) !important;
-  border-radius: 12px !important;
-  overflow: hidden;
-  box-shadow: var(--shadow) !important;
-}
-.leaflet-control-zoom a {
-  width: 38px !important;
-  height: 40px !important;
-  line-height: 40px !important;
-  background: var(--surface) !important;
-  color: var(--text) !important;
-  border-color: var(--border) !important;
-}
-.leaflet-top.leaflet-right {
-  right: 8px;
-  top: 12px;
-}
-.leaflet-control-attribution {
-  background: var(--glass) !important;
-  color: var(--muted) !important;
-  font-size: 9px !important;
-}
-.leaflet-control-attribution a {
-  color: var(--muted) !important;
-}
-.point-weather > span,
-.point-air > span {
-  display: block;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 600;
-  background: var(--glass);
-  color: var(--text);
-  padding: 4px 8px;
-  border-radius: 10px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
-  white-space: nowrap;
-}
-.point-air > span {
-  font-size: 12px;
-}
-.fallback-note {
-  position: absolute;
-  top: 190px;
-  right: 18px;
-  font-size: 9px;
-  color: var(--muted);
-  background: var(--glass);
-  padding: 5px 8px;
-  border-radius: 7px;
-  pointer-events: none;
-  z-index: 1;
-}
-.basemap-note {
-  position: absolute;
-  right: 18px;
-  top: 216px;
-  font-size: 10px;
-  background: var(--surface);
-  padding: 5px 8px;
-  border-radius: 7px;
-  color: var(--warning);
-}
-@media (max-width: 759px) {
-  .leaflet-top.leaflet-right {
-    top: 4px;
-    right: 4px;
-  }
-  .leaflet-bottom {
-    bottom: calc(var(--sheet) + 3px) !important;
-    transition: bottom 0.24s ease;
-  }
-  .leaflet-control-attribution {
-    font-size: 8px !important;
-    max-width: 100%;
-    line-height: 17px;
+@media (max-height: 600px) and (max-width: 759px) {
+  .app {
+    --overlay-gap: 8px;
   }
   .fallback-note {
-    top: 196px;
-    right: 14px;
-    font-size: 8px;
-    max-width: 125px;
-  }
-  .basemap-note {
-    top: 219px;
-    right: 14px;
-    max-width: 125px;
-  }
-  .sheet-state-expanded .fallback-note,
-  .sheet-state-half .fallback-note {
     display: none;
   }
 }
-html,
-body {
-  overflow: hidden;
-}
-@media (max-width: 759px) {
-  .radar-caveat {
-    font-size: 11px;
-  }
-  .radar-slider > div {
-    font-size: 11px;
-  }
-  .location-title span {
-    font-size: 11px;
-  }
-  .current-metadata {
-    font-size: 11px;
-  }
-  .weather-metrics span {
-    font-size: 12px;
-  }
-  .weather-metrics strong small {
-    font-size: 11px;
-  }
-  .sheet-state-controls button {
-    width: 44px;
-  }
-  .sheet-handle {
-    height: 36px;
-  }
-  .handle-button {
-    height: 36px;
-  }
-  .sheet-state-controls button {
-    height: 36px;
-  }
-  .panel-scroll {
-    height: calc(100% - 36px);
-  }
-}
-
-.current-metadata {
-  flex-wrap: wrap;
-}
-.current-metadata > span:last-child {
-  flex-basis: 100%;
-}
-.radar-latest {
-  display: block;
-  margin-top: 2px;
-}
-.radar-legend {
-  bottom: 207px;
-}
-@media (max-width: 759px) {
-  .radar-legend {
-    bottom: calc(var(--sheet) + 180px);
-  }
-}
-
 @supports (overflow: clip) {
   html,
   body,
@@ -2306,70 +2119,12 @@ body {
     overflow: clip;
   }
 }
-
-.current-metadata {
-  font-size: 12px;
-}
-@media (max-width: 759px) {
-  .sheet-state-collapsed {
-    --sheet: calc(200px + env(safe-area-inset-bottom));
-  }
-  .location-title span,
-  .current-weather small,
-  .current-metadata,
-  .air-values span,
-  .air-values small,
-  .air-card .micro,
-  .aq-trend span,
-  .hour-card > span,
-  .hour-card small,
-  .daily-row small,
-  .data-footer,
-  .data-footer a,
-  .radar-topline,
-  .radar-topline > small,
-  .radar-slider > div,
-  .radar-caveat,
-  .radar-legend {
-    font-size: 12px;
-  }
-  .radar-legend {
-    bottom: calc(var(--sheet) + 205px);
-  }
-  .header-actions .icon-button,
-  .search-button,
-  .favorite-button,
-  .map-locate,
-  .map-recenter,
-  .sheet-state-controls button,
-  .map-layer-chips button,
-  .radar-topline .icon-button,
-  .refresh-radar {
-    min-width: 44px;
-    min-height: 44px;
-  }
-  .map-locate {
-    top: 110px;
-  }
-  .map-recenter {
-    top: 160px;
-  }
-  .leaflet-control-zoom a {
-    width: 44px !important;
-    height: 44px !important;
-    line-height: 44px !important;
-  }
-  .sheet-handle,
-  .handle-button,
-  .sheet-state-controls button {
-    height: 44px;
-  }
-  .panel-scroll {
-    height: calc(100% - 44px);
-  }
-  .radar-slider input {
-    min-height: 44px;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
   }
 }
-
-@media(max-width:759px){.app-header{height:calc(65px + env(safe-area-inset-top))}}

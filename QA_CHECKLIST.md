@@ -11,7 +11,7 @@ Actual execution results belong in QA_REPORT.md, this file is not a PASS report.
 - [ ] Stale/missing/blank imagery caveat; latest frame generation time visible; no future nowcast.
 - [ ] Layer switches change actual map content; unavailable flood layer is honestly disabled.
 - [ ] System appearance reacts to OS change; light/dark choice survives reload, location unchanged.
-- [ ] Mobile 390×844 and narrow 320px, desktop 1440×900; no horizontal scroll or covered controls.
+- [ ] Mobile 375×667, 390×844, 430×932, tablet 820×1180 and desktop; no horizontal scroll or covered controls.
 - [ ] Three sheet states with touch dragging, keyboard and button alternative; map usable.
 - [ ] Geolocation not prompted at startup; denied/unavailable/outside-region handling.
 - [ ] Offline/500/timeout weather and AQ show readable errors; blocked P1 does not break map.
@@ -21,3 +21,13 @@ Actual execution results belong in QA_REPORT.md, this file is not a PASS report.
 - [ ] Visible provider/source/map/font license attribution; no private credentials.
 - [ ] Required actual implementation screenshots: desktop/mobile light/dark, radar, forecast.
 - [ ] Physical iPhone Safari and Chrome (NOT TESTED until owner device verification).
+
+## V0.2 composition regression
+
+- [ ] All three mobile sheet states in Light/Dark: temperature and condition fully visible, controls do not intersect, attribution above sheet.
+- [ ] Collapsed sheet 130–160px before safe area, compact radar 64–88px; unobstructed central map band >220px at required short viewport.
+- [ ] Actual touch pinch, keyboard +/- zoom, pan and recenter; gestures do not fight sheet.
+- [ ] Radar detail dialog, refresh and coverage/staleness notices; hidden strip pauses when mobile sheet expands.
+- [ ] Location search keeps opt-in GPS prominent and all 77 Thai provinces plus 3 China cities available.
+- [ ] Expanded content scrolls; collapse resets inner scroll and restores primary summary.
+- [ ] Exact deployed release SHA and real HTTPS browser suite; screenshots labeled preview versus deployed.

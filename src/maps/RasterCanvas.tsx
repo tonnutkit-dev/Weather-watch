@@ -5,6 +5,7 @@ import type { MapProps } from "./MapCanvas";
 import { radarTiles } from "../providers/radar";
 import { radarImage } from "../radar/budget";
 import { value } from "../shared/time";
+import { mapBottomInset, observeMapLayout } from "./layout";
 class BoundedRadarLayer extends L.TileLayer {
   controllers = new Map<HTMLElement, AbortController>();
   constructor(url: string, options: L.TileLayerOptions) {
@@ -82,7 +83,7 @@ export default function RasterCanvas(p: MapProps) {
       scrollWheelZoom: true,
     });
     map.current = m;
-    if (host.current.clientWidth < 760) m.panBy([0, 120], { animate: false });
+
     m.attributionControl.setPrefix(false);
     L.control.zoom({ position: "topright" }).addTo(m);
     base.current = L.tileLayer(
@@ -114,15 +115,21 @@ export default function RasterCanvas(p: MapProps) {
         h.dataset.center = `${m.getCenter().lat.toFixed(4)},${m.getCenter().lng.toFixed(4)}`;
       }
     });
-    const observer = new ResizeObserver(() => m.invalidateSize({ pan: false }));
-    observer.observe(host.current);
+    let previousInset = 0;
+    const disconnectLayout = observeMapLayout(host.current, () => {
+      m.invalidateSize({ pan: false });
+      const inset = host.current ? mapBottomInset(host.current) : 0;
+      if (inset !== previousInset)
+        m.panBy([0, (inset - previousInset) / 2], { animate: false });
+      previousInset = inset;
+    });
     const deadline = setTimeout(
       () => setStatus((s) => (s === "loading" ? "error" : s)),
       15000,
     );
     return () => {
       clearTimeout(deadline);
-      observer.disconnect();
+      disconnectLayout();
       m.remove();
       map.current = null;
       radar.current = null;
@@ -207,11 +214,11 @@ export default function RasterCanvas(p: MapProps) {
     if (initial.current !== p.location.id || p.location.country === "CN") {
       m.setView([p.location.latitude, p.location.longitude], 8, {
         animate:
-          (host.current?.clientWidth ?? 0) >= 760 &&
+          !window.matchMedia("(max-width: 759px)").matches &&
           !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
       });
-      if ((host.current?.clientWidth ?? 0) < 760)
-        m.panBy([0, 120], { animate: false });
+      if (host.current)
+        m.panBy([0, mapBottomInset(host.current) / 2], { animate: false });
       initial.current = p.location.id;
     }
   }, [p.location]);
@@ -219,11 +226,13 @@ export default function RasterCanvas(p: MapProps) {
     if (p.mapAction > 0) {
       map.current?.setView([p.location.latitude, p.location.longitude], 9, {
         animate:
-          (host.current?.clientWidth ?? 0) >= 760 &&
+          !window.matchMedia("(max-width: 759px)").matches &&
           !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
       });
-      if ((host.current?.clientWidth ?? 0) < 760)
-        map.current?.panBy([0, 120], { animate: false });
+      if (host.current)
+        map.current?.panBy([0, mapBottomInset(host.current) / 2], {
+          animate: false,
+        });
     }
   }, [p.mapAction, p.location]);
   useEffect(() => {

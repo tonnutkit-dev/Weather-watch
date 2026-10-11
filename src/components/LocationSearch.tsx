@@ -55,6 +55,20 @@ export function LocationSearch({
       >
         <Navigation size={17} /> ใช้ตำแหน่งของฉัน
       </button>
+      {!query && (
+        <details className="secondary-locations">
+          <summary>เมืองเสริมในจีน · 3 เมือง</summary>
+          <div className="china-options">
+            {chinaCities.map((l) => (
+              <button key={l.id} onClick={() => select(l)}>
+                <span>🇨🇳</span>
+                {l.name}
+                <small>{l.english}</small>
+              </button>
+            ))}
+          </div>
+        </details>
+      )}
       <div className="search-results">
         {!query && favorites.length > 0 && (
           <>
@@ -119,22 +133,6 @@ export function LocationSearch({
                 ไม่พบชื่อในฐานข้อมูล ลองชื่อภาษาอังกฤษหรือเลือกบนแผนที่
               </p>
             )}
-          </>
-        )}
-        {!query && (
-          <>
-            <h3>
-              เมืองเสริมในจีน <span>3 เมือง</span>
-            </h3>
-            <div className="china-options">
-              {chinaCities.map((l) => (
-                <button key={l.id} onClick={() => select(l)}>
-                  <span>🇨🇳</span>
-                  {l.name}
-                  <small>{l.english}</small>
-                </button>
-              ))}
-            </div>
           </>
         )}
       </div>
