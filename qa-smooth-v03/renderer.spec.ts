@@ -53,7 +53,10 @@ test('LAB distinct decoded imagery, delayed dwell, corrupt PNG and viewport/reso
   expect(await map.getAttribute('data-radar-displayed-frame')).toBe('');await expect(map).toHaveAttribute('data-map-status','ready');
   // Real map zoom cancellation followed by hiding the radar must release all owned image URLs.
   const slider=page.getByRole('slider',{name:'เฟรมเรดาร์ย้อนหลัง',exact:true});await slider.focus();await slider.press('Home');
-  await page.mouse.move(180,270);await page.mouse.wheel(0,-400);await page.waitForTimeout(1200);
+  const zoomAttribute=fallback?'data-zoom':'data-map-zoom',beforeZoom=await map.getAttribute(zoomAttribute);
+  if(info.project.name==='webkit'){await page.locator('.maplibregl-canvas').focus();await page.keyboard.press('Equal');}
+  else{await page.mouse.move(180,270);await page.mouse.wheel(0,-400);}
+  await expect.poll(()=>map.getAttribute(zoomAttribute),{timeout:5000}).not.toBe(beforeZoom);await page.waitForTimeout(1200);
   await page.getByRole('button',{name:'เลือกชั้นข้อมูล'}).click();await page.getByRole('checkbox',{name:/เรดาร์ย้อนหลัง/}).uncheck();await page.getByRole('button',{name:'ปิด',exact:true}).click();await page.waitForTimeout(3500);
   if(fallback) expect(await page.evaluate(()=>(window as any).__RADAR_URLS.size)).toBe(0);
   await info.attach('LAB-initial-test-imagery',{body:initial,contentType:'image/png'});await info.attach('LAB-delayed-test-imagery',{body:first,contentType:'image/png'});await info.attach('LAB-next-test-imagery',{body:second,contentType:'image/png'});
