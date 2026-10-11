@@ -1,4 +1,5 @@
-// Audit-only transport tests against the unchanged production radar module.
+vi.mock('../radar/decode',()=>({decodeRadarImage:vi.fn(async()=>{})}));
+// Isolated transport mechanics: decoder has separate lifecycle/corruption tests.
 // Synthetic binary bytes test cache mechanics; never used in product views.
 import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest';
 const url=(n:number)=>`https://tilecache.rainviewer.com/v2/radar/audit-${n}/512/5/25/15/2/1_0.png`;
@@ -53,4 +54,11 @@ describe('unchanged radar budget/cache contracts',()=>{
     await expect(radarImage('http://tilecache.rainviewer.com/tile.png',new AbortController().signal)).rejects.toThrow('Untrusted');
     expect(transport).not.toHaveBeenCalled();
   });
+});
+
+it('cached images return immediately at zero capacity without a new network start',async()=>{
+  const {radarImage,remainingBudget}=await import('../radar/budget');
+  await Promise.all(Array.from({length:80},(_,i)=>radarImage(url(i),new AbortController().signal)));
+  expect(remainingBudget()).toBe(0);await radarImage(url(0),new AbortController().signal);
+  expect(transport).toHaveBeenCalledTimes(80);expect(remainingBudget()).toBe(0);
 });

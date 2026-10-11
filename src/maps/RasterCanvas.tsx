@@ -3,56 +3,10 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { MapProps } from "./MapCanvas";
 import { radarTiles } from "../providers/radar";
-import { RadarPresentationGate, radarRequestKey, registerRadarGate, taggedRadarUrl, radarTransport } from "../radar/presentation";
-import { radarImage } from "../radar/budget";
+import { RadarPresentationGate, radarRequestKey, registerRadarGate, taggedRadarUrl } from "../radar/presentation";
 import { value } from "../shared/time";
 import { mapBottomInset, observeMapLayout } from "./layout";
-class BoundedRadarLayer extends L.TileLayer {
-  controllers = new Map<HTMLElement, AbortController>();
-  constructor(url: string, options: L.TileLayerOptions) {
-    super(url, options);
-    this.on("tileunload", (event: L.TileEvent) => {
-      this.controllers.get(event.tile)?.abort();
-      this.controllers.delete(event.tile);
-      if (
-        event.tile instanceof HTMLImageElement &&
-        event.tile.src.startsWith("blob:")
-      )
-        URL.revokeObjectURL(event.tile.src);
-    });
-  }
-  override createTile(coords: L.Coords, done: L.DoneCallback): HTMLElement {
-    const img = document.createElement("img");
-    img.alt = "";
-    img.setAttribute("role", "presentation");
-    const controller = new AbortController();
-    this.controllers.set(img, controller);
-    const request = radarTransport(this.getTileUrl(coords));
-    controller.signal.addEventListener('abort', () => request.finish('aborted'), { once: true });
-    radarImage(request.url, controller.signal)
-      .then((data) => {
-        if (controller.signal.aborted) return;
-        const blob = URL.createObjectURL(
-          new Blob([data], { type: "image/png" }),
-        );
-        img.onload = () => { if (controller.signal.aborted) return;
-          request.finish('success'); done(undefined, img); };
-        img.onerror = () => { request.finish('failed'); done(new Error("Radar image decoding failed"), img); };
-        img.src = blob;
-      })
-      .catch((error) => {
-        request.finish(controller.signal.aborted ? 'aborted' : 'failed');
-        if (!controller.signal.aborted)
-          done(
-            error instanceof Error
-              ? error
-              : new Error("Radar tile unavailable"),
-            img,
-          );
-      });
-    return img;
-  }
-}
+import { BoundedRadarLayer } from "./BoundedRadarLayer";
 export default function RasterCanvas(p: MapProps) {
   const host = useRef<HTMLDivElement>(null),
     map = useRef<L.Map | null>(null),

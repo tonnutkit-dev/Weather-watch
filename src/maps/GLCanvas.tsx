@@ -266,7 +266,7 @@ export default function GLCanvas(props: MapProps) {
           sourceId === "ww-coverage" ||
           e.error?.message?.includes("Radar")
         )
-          setRadarError(true);
+          { setRadarError(true); if(sourceId === "ww-radar") gate.current!.reject("maplibre-raster-decode-or-render-error;viewport-pixels-unverified"); }
         else if (!m.isStyleLoaded()) setStatus("error");
       });
       const disconnectLayout = observeMapLayout(host.current, () => {

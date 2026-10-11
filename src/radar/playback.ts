@@ -78,7 +78,7 @@ export class RadarPlayback {
     const p = e.presentation?.key === e.key ? e.presentation : undefined;
     if (p?.status === 'failed') { this.stop('tiles-failed', 'failed'); return; }
     const qualified = this.observeReadiness(e);
-    if (e.remaining === 0) this.publish('budget', 'rolling-minute');
+    if (!qualified && e.remaining === 0) this.publish('budget', 'rolling-minute');
     else if (!qualified) this.publish('buffering', e.refreshing ? 'metadata-refresh' : 'tiles-unverified');
     else {
       this.publish('playing', 'transport-qualified-not-pixels');

@@ -21,7 +21,7 @@ jobs:
       - name: Protect main, providers and approved design
         run: |
           test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
-          git diff --exit-code 97d700346783590d4c75f7e7bb6a972447c2d627 HEAD -- src/providers src/maps src/radar/budget.ts src/radar/presentation.ts src/reliability src/design-system DESIGN.md package.json package-lock.json vite.config.ts .github/workflows/pages.yml
+          git diff --exit-code 97d700346783590d4c75f7e7bb6a972447c2d627 HEAD -- src/providers src/maps/MapCanvas.tsx src/maps/layout.ts src/radar/presentation.ts src/reliability src/design-system DESIGN.md package.json package-lock.json vite.config.ts .github/workflows/pages.yml
       - run: npm ci
       - run: npm run typecheck && npm test && npm run build && npm run verify:pages
       - id: browsers

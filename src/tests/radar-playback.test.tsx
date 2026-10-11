@@ -51,9 +51,16 @@ describe('radar automatic playback contract', () => {
     expect(selected).not.toHaveBeenCalled(); expect(vi.getTimerCount()).toBe(0);
   });
   it('zero remaining budget holds the frame until admission returns', () => {
-    const { player, selected, e } = fixture(); player.play(); e.remaining = 0;
+    const { player, selected, e } = fixture(); e.presentation!.status='pending'; player.play(); e.remaining = 0;
     vi.advanceTimersByTime(30000); expect(selected).not.toHaveBeenCalled(); expect(player.getSnapshot().phase).toBe('budget');
-    e.remaining = 1; vi.advanceTimersByTime(500); expect(selected).toHaveBeenCalledTimes(1); player.dispose();
+    e.remaining = 1; e.presentation!.status='unverified'; vi.advanceTimersByTime(1500); expect(selected).toHaveBeenCalledTimes(1); player.dispose();
+  });
+  it('qualified cached frames can advance at zero network capacity; missing imagery then waits', () => {
+    const { player, selected, e } = fixture(); e.remaining=0; player.play();
+    vi.advanceTimersByTime(1500); expect(selected).toHaveBeenCalledTimes(1);
+    vi.advanceTimersByTime(FRAME_INTERVAL_MS); expect(selected).toHaveBeenCalledTimes(2);
+    e.presentation!.status='pending'; vi.advanceTimersByTime(10000);
+    expect(selected).toHaveBeenCalledTimes(2); expect(player.getSnapshot().phase).toBe('budget'); player.dispose();
   });
   it('background clears the timer; resume waits, never catches up missed frames', () => {
     const { player, selected, e } = fixture(); player.play(); e.hidden = true; player.visibility();
