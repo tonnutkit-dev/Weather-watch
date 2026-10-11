@@ -19,6 +19,10 @@ try {
     while (items.length) {
       const item = items.shift(); const response = await get(item.path);
       const bytes = Buffer.from(await response.arrayBuffer());
+      if (createHash('sha256').update(bytes).digest('hex') !== item.sha256) {
+        await mkdir('qa-owner-v03/raw', { recursive: true });
+        await writeFile(`qa-owner-v03/raw/mismatch-${item.path.replaceAll('/', '_')}.txt`, bytes);
+      }
       assert.equal(createHash('sha256').update(bytes).digest('hex'), item.sha256, item.path);
       result.assets.push({ path: item.path, http: response.status, mime: response.headers.get('content-type'), sha256Matched: true });
     }

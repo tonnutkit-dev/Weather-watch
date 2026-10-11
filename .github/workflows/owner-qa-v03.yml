@@ -28,7 +28,9 @@ jobs:
       - name: Anonymous HTTPS, exact release and all deployed asset hashes
         run: node qa-owner-v03/verify-http.mjs
       - run: npx playwright install --with-deps chromium
+        if: always()
       - name: Existing unmodified live browser regressions against new HTTPS site
+        if: always()
         run: npm run test:e2e
       - name: Deployed Owner QA and source-expiry checks
         if: always()
