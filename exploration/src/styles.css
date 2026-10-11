@@ -913,6 +913,8 @@ button:hover:not(:disabled){
   font-size:20px;
   font-weight:500
 }
+.layer-dialog>button{display:flex;align-items:center;gap:10px;width:100%;min-height:52px;margin-top:16px;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--raised)}
+.layer-dialog>button>span{margin-left:auto;color:var(--accent)}
 .modal-description{
   font-size:12px;
   line-height:1.8;
@@ -1401,7 +1403,10 @@ button:hover:not(:disabled){
 /* One mobile system: weather first, unobstructed map second, expandable outlook third. */
 @media(max-width:759px){
   .prototype{
-    --header-h:calc(56px + env(safe-area-inset-top));
+    --safe-top:env(safe-area-inset-top,0px);
+    --safe-bottom:env(safe-area-inset-bottom,0px);
+    --sheet-row:calc(var(--sheet-height) + var(--safe-bottom));
+    --header-h:calc(56px + var(--safe-top));
     --notice-h:25px;
     --hero-h:177px;
     --sheet-height:138px;
@@ -1413,7 +1418,7 @@ button:hover:not(:disabled){
   }
   .app-header{
     height:var(--header-h);
-    padding:env(safe-area-inset-top) 18px 0;
+    padding:var(--safe-top) 18px 0;
     border-bottom:0;
     gap:8px
   }
@@ -1461,7 +1466,7 @@ button:hover:not(:disabled){
     min-height:0;
     display:grid;
     grid-template-columns:1fr;
-    grid-template-rows:var(--hero-h) minmax(0,1fr) var(--sheet-height);
+    grid-template-rows:var(--hero-h) minmax(0,1fr) var(--sheet-row);
     gap:0;
     position:relative;
     padding:0;
@@ -1671,13 +1676,13 @@ button:hover:not(:disabled){
     z-index:4;
     width:auto;
     margin:0;
-    padding:0 24px env(safe-area-inset-bottom);
+    padding:0 24px var(--safe-bottom);
     border:1px solid var(--border);
     border-bottom:0;
     border-radius:22px 22px 0 0;
     background:var(--surface);
     box-shadow:0 -4px 16px rgb(22 46 59 / 4%);
-    height:calc(var(--sheet-height) + env(safe-area-inset-bottom));
+    height:var(--sheet-row);
   }
   .sheet-handle-row{
     height:44px;
@@ -1775,10 +1780,10 @@ button:hover:not(:disabled){
     z-index:3
   }
   .sheet-half .maplibregl-ctrl-bottom-left,.sheet-expanded .maplibregl-ctrl-bottom-left{
-    bottom:calc(var(--sheet-half) - var(--sheet-height) + 5px)!important
+    bottom:calc(var(--sheet-half) - var(--sheet-row) + 5px)!important
   }
   .sheet-expanded .maplibregl-ctrl-bottom-left{
-    bottom:calc(var(--sheet-expanded) - var(--sheet-height) + 5px)!important
+    bottom:calc(var(--sheet-expanded) - var(--sheet-row) + 5px)!important
   }
   .sheet-half .maplibregl-ctrl-bottom-right,.sheet-expanded .maplibregl-ctrl-bottom-right{
     display:none

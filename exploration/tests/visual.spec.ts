@@ -204,3 +204,19 @@ test('offline map failure remains honest and controls reachable', async ({ page 
     await page.getByRole('button', { name: 'การแสดงผล', exact: true }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
 });
+
+test('derived safe-area layout: weather, sheet, controls and attribution stay visible', async({page},info)=>{
+  await page.setViewportSize({width:390,height:844});const matrix=[];
+  for(const theme of ['light','dark']){
+    await ready(page,'c',theme);
+    await page.locator('.prototype').evaluate(el=>{(el as HTMLElement).style.setProperty('--safe-top','24px');(el as HTMLElement).style.setProperty('--safe-bottom','34px');});
+    for(const state of ['collapsed','half','expanded']){
+      if(state!=='collapsed')await page.getByRole('button',{name:'ขยายแผง',exact:true}).click();
+      const g=await composition(page);if(!g.sheet)throw new Error('Missing sheet');expect(g.sheet.y+g.sheet.height).toBeLessThanOrEqual(844.1);
+      await page.waitForTimeout(150);
+      matrix.push({direction:'c',theme,state,safeTop:24,safeBottom:34,...g});
+      await capture(page,info,`c-mobile-insets-${theme}-${state}`);
+    }
+  }
+  await info.attach('c-safe-area-geometry',{body:Buffer.from(JSON.stringify({matrix,runtimeErrors:[],type:'CSS inset simulation; not a physical iPhone test'},null,2)),contentType:'application/json'});
+});

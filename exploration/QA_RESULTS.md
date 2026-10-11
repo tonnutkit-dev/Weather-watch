@@ -31,7 +31,7 @@ Main and public QA remain at `2036e2ac788cb31d25fd387cb40520ad95c408a6`. Origina
 | Runtime | Zero page exceptions and zero console errors in healthy matrix views |
 | Offline map | Honest unavailable state; demo summary and settings stay reachable |
 
-**80 named screenshots** are produced: 54 mobile sheet-state captures, 24 tablet/desktop default/detail captures, and 2 comparison captures. Screenshots are real rendered browser views, not generated concept art. JSON attachments preserve geometry, contrast ratios and interaction checks.
+The original matrix produces **80 named screenshots**: 54 mobile sheet-state captures, 24 tablet/desktop default/detail captures, and 2 comparison captures. The final expanded suite adds one safe-area regression case and six inset screenshots. Screenshots are real rendered browser views, not generated concept art. JSON attachments preserve geometry, contrast ratios and interaction checks.
 
 ## Defects identified and corrected during work
 
@@ -42,7 +42,7 @@ Main and public QA remain at `2036e2ac788cb31d25fd387cb40520ad95c408a6`. Origina
 5. Short-screen marker labels could compete with the radar dock; moved camera center and added a marker/dock collision regression.
 6. Expanded mobile layer menu could sit behind the sheet; it now uses an accessible modal.
 7. Secondary C text on paper needed higher contrast; refined the token and added ratio tests.
-8. Final tablet detail screenshot review found B/C hero icon rules bleeding into forecast icons and B temperature wrapping its degree symbol. Scoped hero rules, constrained tablet hero proportions, kept numerals unbroken and added icon-size, temperature/art and internal scroll-overflow regressions. A final follow-up run verifies these fixes; inspect the latest branch commit Actions result.
+8. Final tablet detail screenshot review found B/C hero icon rules bleeding into forecast icons and B temperature wrapping its degree symbol. Scoped hero rules, constrained tablet hero proportions, kept numerals unbroken and added icon-size, temperature/art and internal scroll-overflow regressions. A final follow-up run also verifies top/bottom inset arithmetic using CSS simulation (not physical iPhone testing); inspect the latest branch commit Actions result.
 
 ## Limits and owner checks
 
