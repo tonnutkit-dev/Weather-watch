@@ -80,6 +80,27 @@ test.describe("Mobile V0.2 composition", () => {
       await expect(page.locator(".map-heading")).toBeHidden();
       await expect(page.locator(".map-layer-chips")).toBeHidden();
       await expect(page.locator(".radar-legend")).toHaveCount(0);
+      if (size.width === 375) {
+        // System appearance follows OS changes; manual Dark remains persistent.
+        await page.emulateMedia({ colorScheme: "dark" });
+        await expect(page.locator("html")).toHaveAttribute(
+          "data-theme",
+          "dark",
+        );
+        await expect(page.locator(".map-canvas")).toHaveAttribute(
+          "data-theme",
+          "dark",
+        );
+        await page.emulateMedia({ colorScheme: "light" });
+        await expect(page.locator("html")).toHaveAttribute(
+          "data-theme",
+          "light",
+        );
+        await expect(page.locator(".map-canvas")).toHaveAttribute(
+          "data-theme",
+          "light",
+        );
+      }
       const measurements: unknown[] = [];
       for (const mode of ["light", "dark"] as const) {
         if (mode === "dark") await theme(page, mode);
@@ -164,10 +185,35 @@ test.describe("Mobile V0.2 composition", () => {
         gestureSourceType: "touch",
         relativeSpeed: 300,
       });
-      await cdp.detach();
+
       await expect
         .poll(() => map.getAttribute("data-map-zoom"), { timeout: 10000 })
         .not.toBe(beforeZoom);
+      // Touch-drag the sheet, then use accessible buttons to restore the map.
+      const handle = page.getByRole("button", {
+        name: "ปรับความสูงแผงสถานการณ์",
+      });
+      const box = await handle.boundingBox();
+      if (!box) throw new Error("Sheet drag handle is missing");
+      const touch = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchStart",
+        touchPoints: [touch],
+      });
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchMove",
+        touchPoints: [{ ...touch, y: touch.y - 100 }],
+      });
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchEnd",
+        touchPoints: [],
+      });
+      await expect(page.locator(".sheet-half")).toBeVisible();
+      await page.getByRole("button", { name: "ยุบแผง", exact: true }).click();
+      await expect(page.getByTestId("temperature")).toBeInViewport({
+        ratio: 1,
+      });
+      await cdp.detach();
       const afterPinch = await map.getAttribute("data-map-zoom");
       await canvas.focus();
       await page.keyboard.press("Equal");
@@ -245,6 +291,24 @@ test("tablet layout retains map, forecast, geography and both themes", async ({
     await info.attach(`tablet-${mode}`, {
       body: await page.screenshot({ animations: "disabled" }),
       contentType: "image/png",
+    });
+    const bounds = await page.evaluate(() => ({
+      viewportWidth: innerWidth,
+      documentWidth: document.documentElement.scrollWidth,
+      overflowing: Array.from(document.querySelectorAll<HTMLElement>("body *"))
+        .map((el) => ({
+          tag: el.tagName,
+          className: typeof el.className === "string" ? el.className : "",
+          rect: el.getBoundingClientRect().toJSON(),
+          overflow: getComputedStyle(el).overflow,
+        }))
+        .filter(
+          (el) => el.rect.right > innerWidth + 0.5 || el.rect.left < -0.5,
+        ),
+    }));
+    await info.attach(`tablet-${mode}-bounds`, {
+      body: Buffer.from(JSON.stringify(bounds, null, 2)),
+      contentType: "application/json",
     });
     expect(
       await page.evaluate(

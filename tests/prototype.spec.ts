@@ -155,6 +155,7 @@ test("subdirectory assets, real radar imagery and playback", async ({
   });
   expect(failures).toEqual([]);
   expect(errors).toEqual([]);
+  expect(consoleErrors).toEqual([]);
 });
 test("provider connection failure preserves independent map", async ({
   page,

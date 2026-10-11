@@ -322,6 +322,7 @@ input[type="checkbox"] {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 370px;
   flex: 1;
+  min-width: 0;
   min-height: 0;
   padding: 18px;
   gap: 18px;
@@ -672,6 +673,7 @@ input[type="checkbox"] {
   top: 230px;
 }
 .situation-panel {
+  min-width: 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 24px;
