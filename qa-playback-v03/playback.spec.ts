@@ -25,7 +25,7 @@ test('real automatic Play/Pause, scrub, sheet, theme and budget on mobile', asyn
   await page.getByRole('button', { name: 'หยุดเรดาร์', exact: true }).click();
   const paused = await page.getByTestId('radar-time').getAttribute('datetime');
   await page.waitForTimeout(6500); expect(await page.getByTestId('radar-time').getAttribute('datetime')).toBe(paused);
-  const slider = page.getByRole('slider', { name: 'เฟรมเรดาร์ย้อนหลัง', exact: true }); await slider.fill('1');
+  const slider = page.getByRole('slider', { name: 'เฟรมเรดาร์ย้อนหลัง', exact: true }); await slider.focus(); await slider.press('End');
   expect(await page.getByTestId('radar-time').getAttribute('datetime')).not.toBe(paused);
   await expect(page.getByRole('button', { name: 'เล่นเรดาร์ย้อนหลัง', exact: true })).toHaveAttribute('aria-pressed', 'false');
   await page.getByRole('button', { name: 'เล่นเรดาร์ย้อนหลัง', exact: true }).click();
@@ -48,3 +48,4 @@ test('real automatic Play/Pause, scrub, sheet, theme and budget on mobile', asyn
   await info.attach('paused-dark-mobile', { body: await page.screenshot(), contentType: 'image/png' });
   expect(errors).toEqual([]);
 });
+
