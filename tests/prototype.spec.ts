@@ -100,6 +100,11 @@ test("subdirectory assets, real radar imagery and playback", async ({
   });
   await expect.poll(() => radarImages, { timeout: 40000 }).toBeGreaterThan(0);
   const frame = page.locator(".map-canvas");
+  const originalZoom = await frame.getAttribute("data-map-zoom");
+  await page.getByRole("button", { name: "Zoom in", exact: true }).click();
+  await expect
+    .poll(() => frame.getAttribute("data-map-zoom"), { timeout: 10000 })
+    .not.toBe(originalZoom);
   const originalFrame = await frame.getAttribute("data-radar-frame");
   const temperature = await page.getByTestId("temperature").innerText();
   await page
@@ -142,7 +147,11 @@ test("provider connection failure preserves independent map", async ({
 });
 test("offline error is meaningful", async ({ page, context }) => {
   await page.goto("./");
-  await expect(page.getByTestId("temperature")).toBeVisible({ timeout: 30000 });
+  // Offline indication must work even when a provider is already slow/unavailable.
+  // Other integration cases independently require actual successful weather data.
+  await expect(
+    page.getByRole("heading", { name: "กรุงเทพมหานคร", exact: true }),
+  ).toBeVisible();
   await context.setOffline(true);
   await expect(
     page.getByText("ไม่มีการเชื่อมต่ออินเทอร์เน็ต", { exact: false }),

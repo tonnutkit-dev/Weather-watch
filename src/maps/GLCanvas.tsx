@@ -199,6 +199,14 @@ export default function GLCanvas(props: MapProps) {
         renderWorldCopies: false,
       });
       map.current = m;
+      const recordView = () => {
+        if (!host.current) return;
+        host.current.dataset.mapZoom = m.getZoom().toFixed(2);
+        const c = m.getCenter();
+        host.current.dataset.mapCenter = `${c.lat.toFixed(4)},${c.lng.toFixed(4)}`;
+      };
+      recordView();
+      m.on("moveend", recordView);
       m.setPadding({
         top: 0,
         left: 0,
