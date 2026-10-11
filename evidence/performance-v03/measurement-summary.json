@@ -1,0 +1,5288 @@
+{
+  "environment": {
+    "baseline": "2036e2ac788cb31d25fd387cb40520ad95c408a6",
+    "auditCommit": "9933e4383e899be752667021fa3dd24e6f067a1d",
+    "startedAt": "2026-10-11T07:45:56.224Z",
+    "browser": "156.0.8078.4",
+    "node": "v24.21.0",
+    "platform": "linux",
+    "osRelease": "6.17.0-1022-azure",
+    "cpu": "AMD EPYC 7763 64-Core Processor",
+    "logicalCpus": 4,
+    "totalMemory": 16766410752,
+    "runner": "GitHub Actions ubuntu-latest",
+    "softwareGPU": true,
+    "physicalIphone": false,
+    "notes": [
+      "CDP virtual network and CPU throttling; not a physical iPhone",
+      "Network transfer is CDP encodedDataLength, not decompressed bundle size",
+      "INP not certified: automated interactions are not field RUM",
+      "Diagnostic builds expose observation hooks; startup uses unchanged production dist"
+    ],
+    "finishedAt": "2026-10-11T08:03:52.156Z"
+  },
+  "loadProfiles": [
+    {
+      "profile": "desktop-normal",
+      "cache": "cold",
+      "runs": 3,
+      "FCP": {
+        "n": 3,
+        "median": 140,
+        "min": 124,
+        "max": 176
+      },
+      "LCP": {
+        "n": 3,
+        "median": 140,
+        "min": 124,
+        "max": 176
+      },
+      "CLS": {
+        "n": 3,
+        "median": 0.06893401088384934,
+        "min": 0.010053106146918404,
+        "max": 0.0753951384217062
+      },
+      "windowedBlockingMs": {
+        "n": 3,
+        "median": 845,
+        "min": 814,
+        "max": 873
+      },
+      "longTaskCount": {
+        "n": 3,
+        "median": 13,
+        "min": 12,
+        "max": 14
+      },
+      "transferredBytes": {
+        "n": 3,
+        "median": 2353302,
+        "min": 2208566,
+        "max": 2358561
+      },
+      "jsTransferBytes": {
+        "n": 3,
+        "median": 418300,
+        "min": 418300,
+        "max": 418300
+      },
+      "requestCount": {
+        "n": 3,
+        "median": 78,
+        "min": 66,
+        "max": 78
+      },
+      "cacheHits": {
+        "n": 3,
+        "median": 2,
+        "min": 2,
+        "max": 2
+      },
+      "weatherVisibleMs": {
+        "n": 2,
+        "median": 784.4499999999971,
+        "min": 726.8999999999942,
+        "max": 842
+      },
+      "mapReadyMs": {
+        "n": 3,
+        "median": 2144.5999999999913,
+        "min": 2073.300000000003,
+        "max": 2146.600000000006
+      },
+      "weatherVisibleWithinWindow": 2,
+      "mapReadyWithinWindow": 3,
+      "pageErrors": 0
+    },
+    {
+      "profile": "desktop-normal",
+      "cache": "warm",
+      "runs": 3,
+      "FCP": {
+        "n": 3,
+        "median": 72,
+        "min": 68,
+        "max": 80
+      },
+      "LCP": {
+        "n": 3,
+        "median": 72,
+        "min": 68,
+        "max": 80
+      },
+      "CLS": {
+        "n": 3,
+        "median": 0.06348724574713059,
+        "min": 0.010532517104914159,
+        "max": 0.06519340654538003
+      },
+      "windowedBlockingMs": {
+        "n": 3,
+        "median": 673,
+        "min": 637,
+        "max": 859
+      },
+      "longTaskCount": {
+        "n": 3,
+        "median": 12,
+        "min": 11,
+        "max": 15
+      },
+      "transferredBytes": {
+        "n": 3,
+        "median": 9920,
+        "min": 5103,
+        "max": 159819
+      },
+      "jsTransferBytes": {
+        "n": 3,
+        "median": 716,
+        "min": 716,
+        "max": 716
+      },
+      "requestCount": {
+        "n": 3,
+        "median": 66,
+        "min": 66,
+        "max": 78
+      },
+      "cacheHits": {
+        "n": 3,
+        "median": 48,
+        "min": 48,
+        "max": 48
+      },
+      "weatherVisibleMs": {
+        "n": 2,
+        "median": 197.95000000000437,
+        "min": 191.70000000001164,
+        "max": 204.1999999999971
+      },
+      "mapReadyMs": {
+        "n": 3,
+        "median": 1540.3999999999942,
+        "min": 1478.7000000000116,
+        "max": 1868.5
+      },
+      "weatherVisibleWithinWindow": 2,
+      "mapReadyWithinWindow": 3,
+      "pageErrors": 0
+    },
+    {
+      "profile": "mobile-normal",
+      "cache": "cold",
+      "runs": 3,
+      "FCP": {
+        "n": 3,
+        "median": 96,
+        "min": 92,
+        "max": 104
+      },
+      "LCP": {
+        "n": 3,
+        "median": 684,
+        "min": 680,
+        "max": 1020
+      },
+      "CLS": {
+        "n": 3,
+        "median": 0.01148146191382459,
+        "min": 0.00011323119124423566,
+        "max": 0.01148146191382459
+      },
+      "windowedBlockingMs": {
+        "n": 3,
+        "median": 269,
+        "min": 250,
+        "max": 306
+      },
+      "longTaskCount": {
+        "n": 3,
+        "median": 4,
+        "min": 4,
+        "max": 5
+      },
+      "transferredBytes": {
+        "n": 3,
+        "median": 1972589,
+        "min": 1843103,
+        "max": 1974263
+      },
+      "jsTransferBytes": {
+        "n": 3,
+        "median": 418300,
+        "min": 418300,
+        "max": 418300
+      },
+      "requestCount": {
+        "n": 3,
+        "median": 54,
+        "min": 48,
+        "max": 54
+      },
+      "cacheHits": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "weatherVisibleMs": {
+        "n": 3,
+        "median": 649.7000000000116,
+        "min": 610.8000000000175,
+        "max": 992.6999999999825
+      },
+      "mapReadyMs": {
+        "n": 3,
+        "median": 1326,
+        "min": 1278.7999999999884,
+        "max": 1333.2000000000116
+      },
+      "weatherVisibleWithinWindow": 3,
+      "mapReadyWithinWindow": 3,
+      "pageErrors": 0
+    },
+    {
+      "profile": "mobile-normal",
+      "cache": "warm",
+      "runs": 3,
+      "FCP": {
+        "n": 3,
+        "median": 52,
+        "min": 44,
+        "max": 56
+      },
+      "LCP": {
+        "n": 3,
+        "median": 196,
+        "min": 192,
+        "max": 288
+      },
+      "CLS": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0.0056832534894941545
+      },
+      "windowedBlockingMs": {
+        "n": 3,
+        "median": 236,
+        "min": 234,
+        "max": 251
+      },
+      "longTaskCount": {
+        "n": 3,
+        "median": 5,
+        "min": 4,
+        "max": 5
+      },
+      "transferredBytes": {
+        "n": 3,
+        "median": 115319,
+        "min": 113616,
+        "max": 140167
+      },
+      "jsTransferBytes": {
+        "n": 3,
+        "median": 716,
+        "min": 716,
+        "max": 716
+      },
+      "requestCount": {
+        "n": 3,
+        "median": 60,
+        "min": 60,
+        "max": 60
+      },
+      "cacheHits": {
+        "n": 3,
+        "median": 37,
+        "min": 31,
+        "max": 37
+      },
+      "weatherVisibleMs": {
+        "n": 3,
+        "median": 187.60000000000582,
+        "min": 179.39999999999418,
+        "max": 196.79999999998836
+      },
+      "mapReadyMs": {
+        "n": 3,
+        "median": 1017.8999999999942,
+        "min": 865,
+        "max": 1048.7000000000116
+      },
+      "weatherVisibleWithinWindow": 3,
+      "mapReadyWithinWindow": 3,
+      "pageErrors": 0
+    },
+    {
+      "profile": "mobile-4g-cpu4",
+      "cache": "cold",
+      "runs": 3,
+      "FCP": {
+        "n": 3,
+        "median": 1260,
+        "min": 1248,
+        "max": 1268
+      },
+      "LCP": {
+        "n": 3,
+        "median": 1904,
+        "min": 1260,
+        "max": 12352
+      },
+      "CLS": {
+        "n": 3,
+        "median": 0.011368230722580355,
+        "min": 0.011368230722580355,
+        "max": 0.011368230722580355
+      },
+      "windowedBlockingMs": {
+        "n": 3,
+        "median": 926,
+        "min": 920,
+        "max": 937
+      },
+      "longTaskCount": {
+        "n": 3,
+        "median": 12,
+        "min": 11,
+        "max": 13
+      },
+      "transferredBytes": {
+        "n": 3,
+        "median": 1465606,
+        "min": 1465359,
+        "max": 1537337
+      },
+      "jsTransferBytes": {
+        "n": 3,
+        "median": 418300,
+        "min": 418300,
+        "max": 418300
+      },
+      "requestCount": {
+        "n": 3,
+        "median": 54,
+        "min": 53,
+        "max": 54
+      },
+      "cacheHits": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "weatherVisibleMs": {
+        "n": 2,
+        "median": 7095.449999999997,
+        "min": 1889.2999999999884,
+        "max": 12301.600000000006
+      },
+      "mapReadyMs": {
+        "n": 0,
+        "median": null,
+        "min": null,
+        "max": null
+      },
+      "weatherVisibleWithinWindow": 2,
+      "mapReadyWithinWindow": 0,
+      "pageErrors": 0
+    },
+    {
+      "profile": "mobile-4g-cpu4",
+      "cache": "warm",
+      "runs": 3,
+      "FCP": {
+        "n": 3,
+        "median": 584,
+        "min": 580,
+        "max": 588
+      },
+      "LCP": {
+        "n": 3,
+        "median": 896,
+        "min": 580,
+        "max": 904
+      },
+      "CLS": {
+        "n": 3,
+        "median": 0.01148146191382459,
+        "min": 0.011368230722580355,
+        "max": 0.01148146191382459
+      },
+      "windowedBlockingMs": {
+        "n": 3,
+        "median": 598,
+        "min": 585,
+        "max": 598
+      },
+      "longTaskCount": {
+        "n": 3,
+        "median": 11,
+        "min": 10,
+        "max": 11
+      },
+      "transferredBytes": {
+        "n": 3,
+        "median": 430173,
+        "min": 366829,
+        "max": 430176
+      },
+      "jsTransferBytes": {
+        "n": 3,
+        "median": 716,
+        "min": 716,
+        "max": 716
+      },
+      "requestCount": {
+        "n": 3,
+        "median": 54,
+        "min": 53,
+        "max": 54
+      },
+      "cacheHits": {
+        "n": 3,
+        "median": 31,
+        "min": 31,
+        "max": 32
+      },
+      "weatherVisibleMs": {
+        "n": 2,
+        "median": 892.7499999999709,
+        "min": 888.7999999999884,
+        "max": 896.6999999999534
+      },
+      "mapReadyMs": {
+        "n": 3,
+        "median": 4082,
+        "min": 3762.1999999999825,
+        "max": 4139.099999999977
+      },
+      "weatherVisibleWithinWindow": 2,
+      "mapReadyWithinWindow": 3,
+      "pageErrors": 0
+    }
+  ],
+  "network": {
+    "totalRequests": 2285,
+    "radarRequests": 556,
+    "radarMaxRolling60sAcrossTestContexts": 112,
+    "perSession": [
+      {
+        "file": "map-interactions-raw.json",
+        "requests": 86,
+        "maxRolling60s": 78,
+        "successful": 82,
+        "failed": 4,
+        "browserCacheHits": 0,
+        "repeatedURLs": 0
+      },
+      {
+        "file": "offline-recovery-raw.json",
+        "requests": 6,
+        "maxRolling60s": 6,
+        "successful": 6,
+        "failed": 0,
+        "browserCacheHits": 0,
+        "repeatedURLs": 0
+      },
+      {
+        "file": "fallback-raw.json",
+        "requests": 9,
+        "maxRolling60s": 9,
+        "successful": 3,
+        "failed": 3,
+        "browserCacheHits": 0,
+        "repeatedURLs": 0
+      },
+      {
+        "file": "sustained-raw.json",
+        "requests": 130,
+        "maxRolling60s": 30,
+        "successful": 99,
+        "failed": 31,
+        "browserCacheHits": 7,
+        "repeatedURLs": 8
+      }
+    ],
+    "byGroup": {
+      "app": 476,
+      "weather": 49,
+      "air": 46,
+      "radar-meta-or-coverage": 35,
+      "other": 19,
+      "basemap": 1092,
+      "radar-tile": 556,
+      "fallback-basemap": 12
+    }
+  },
+  "radarTruth": [
+    {
+      "file": "radar-truth-1.json",
+      "frames": [
+        {
+          "requestedFrame": "1791697800",
+          "labelAtMs": 459.9000000000233,
+          "sourceCompleteCandidateAtMs": null,
+          "gapMs": null,
+          "radarErrorsBeforeCandidate": 8,
+          "candidateIsPixelProof": false
+        },
+        {
+          "requestedFrame": "1791705000",
+          "labelAtMs": 465.9000000000233,
+          "sourceCompleteCandidateAtMs": 1472.5,
+          "gapMs": 1006.5999999999767,
+          "radarErrorsBeforeCandidate": 0,
+          "candidateIsPixelProof": false
+        },
+        {
+          "requestedFrame": "1791704400",
+          "labelAtMs": 5705.600000000035,
+          "sourceCompleteCandidateAtMs": 9952.899999999965,
+          "gapMs": 4247.29999999993,
+          "radarErrorsBeforeCandidate": 0,
+          "candidateIsPixelProof": false
+        },
+        {
+          "requestedFrame": "1791703200",
+          "labelAtMs": 11820.399999999965,
+          "sourceCompleteCandidateAtMs": null,
+          "gapMs": null,
+          "radarErrorsBeforeCandidate": 8,
+          "candidateIsPixelProof": false
+        }
+      ],
+      "renderCandidates": 2,
+      "radarErrors": 8
+    },
+    {
+      "file": "radar-truth-2.json",
+      "frames": [
+        {
+          "requestedFrame": "1791697800",
+          "labelAtMs": 550,
+          "sourceCompleteCandidateAtMs": null,
+          "gapMs": null,
+          "radarErrorsBeforeCandidate": 8,
+          "candidateIsPixelProof": false
+        },
+        {
+          "requestedFrame": "1791705000",
+          "labelAtMs": 591.8999999999069,
+          "sourceCompleteCandidateAtMs": 1430,
+          "gapMs": 838.1000000000931,
+          "radarErrorsBeforeCandidate": 0,
+          "candidateIsPixelProof": false
+        },
+        {
+          "requestedFrame": "1791704400",
+          "labelAtMs": 5564.29999999993,
+          "sourceCompleteCandidateAtMs": 9813.5,
+          "gapMs": 4249.20000000007,
+          "radarErrorsBeforeCandidate": 0,
+          "candidateIsPixelProof": false
+        },
+        {
+          "requestedFrame": "1791703200",
+          "labelAtMs": 11634.5,
+          "sourceCompleteCandidateAtMs": null,
+          "gapMs": null,
+          "radarErrorsBeforeCandidate": 8,
+          "candidateIsPixelProof": false
+        }
+      ],
+      "renderCandidates": 2,
+      "radarErrors": 8
+    }
+  ],
+  "memory": {
+    "elapsedMs": 600444,
+    "samples": 31,
+    "heapFirstBytes": 10935360,
+    "heapLastBytes": 16097572,
+    "heapDeltaBytes": 5162212,
+    "lastFiveHeapBytes": [
+      15827680,
+      16332308,
+      16500708,
+      15623264,
+      16097572
+    ],
+    "nodesFirst": 356,
+    "nodesLast": 1241,
+    "listenersFirst": 247,
+    "listenersLast": 251,
+    "canvasFirst": 1,
+    "canvasLast": 1,
+    "mapInstancesLast": 1,
+    "networkRequestsLast": 212,
+    "radarRequestsLast": 130,
+    "frameTotals": {
+      "samples": 29820,
+      "over33": 2456,
+      "over50": 1237,
+      "missed": 6454,
+      "max": 200
+    },
+    "note": "Mixed workload and bounded telemetry; post-GC JS heap and DOM are not GPU-memory or leak proof."
+  },
+  "reliability": [
+    {
+      "name": "success",
+      "mode": "CONTROLLED replay of live captured payloads/failure injection, not live availability statistics",
+      "elapsedMs": 2724,
+      "at": "2026-10-11T07:51:48.979Z",
+      "dom": {
+        "documents": 7,
+        "nodes": 1306,
+        "jsEventListeners": 357
+      },
+      "performance": {
+        "Timestamp": 441.215702,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 7,
+        "Frames": 4,
+        "JSEventListeners": 357,
+        "LayoutObjects": 142,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 1306,
+        "Resources": 72,
+        "ContextLifecycleStateObservers": 23,
+        "V8PerContextDatas": 4,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 9,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 2,
+        "ArrayBufferContents": 2216,
+        "LayoutCount": 11,
+        "RecalcStyleCount": 16,
+        "LayoutDuration": 0.015713,
+        "RecalcStyleDuration": 0.005122,
+        "DevToolsCommandDuration": 0.024506,
+        "ScriptDuration": 0.278953,
+        "V8CompileDuration": 8.4e-05,
+        "TaskDuration": 1.146119,
+        "TaskOtherDuration": 0.821741,
+        "ThreadTime": 0.546281,
+        "ProcessTime": 1.39,
+        "JSHeapUsedSize": 13673492,
+        "JSHeapTotalSize": 21897216,
+        "FirstMeaningfulPaint": 438.606753,
+        "DomContentLoaded": 438.556473,
+        "NavigationStart": 438.497376
+      },
+      "engine": "maplibre",
+      "status": "ready",
+      "temperature": "30°C",
+      "condition": "มีฝน",
+      "location": "th-01",
+      "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+      "radarFrame": "1791704400",
+      "radarLabel": "2026-10-11T07:40:00.000Z",
+      "radarNotice": "",
+      "canvasCount": 1,
+      "overflow": false,
+      "visibility": "visible",
+      "theme": "light",
+      "mapInstances": 1,
+      "mapCalls": {
+        "setPadding": 3,
+        "resize": 2,
+        "setStyle": 1,
+        "addSource": 3,
+        "addLayer": 6,
+        "setData": 1
+      },
+      "query": [
+        {
+          "key": [
+            "weather",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 1791705106395,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "MODELED",
+          "sourceTime": 1791704700
+        },
+        {
+          "key": [
+            "air",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 1791705106396,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "MODELED",
+          "sourceTime": 1791702000
+        },
+        {
+          "key": [
+            "radar"
+          ],
+          "dataUpdatedAt": 1791705106396,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "OBSERVED"
+        }
+      ],
+      "ui": "กรุงเทพมหานคร\n30°C\n\nมีฝน\n\nแบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+      "requestAttempts": 1
+    },
+    {
+      "name": "slow-weather",
+      "mode": "CONTROLLED replay of live captured payloads/failure injection, not live availability statistics",
+      "elapsedMs": 5680,
+      "at": "2026-10-11T07:51:54.755Z",
+      "dom": {
+        "documents": 7,
+        "nodes": 1306,
+        "jsEventListeners": 388
+      },
+      "performance": {
+        "Timestamp": 446.991433,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 7,
+        "Frames": 4,
+        "JSEventListeners": 388,
+        "LayoutObjects": 142,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 1306,
+        "Resources": 72,
+        "ContextLifecycleStateObservers": 23,
+        "V8PerContextDatas": 4,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 9,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 2,
+        "ArrayBufferContents": 2240,
+        "LayoutCount": 13,
+        "RecalcStyleCount": 18,
+        "LayoutDuration": 0.015974,
+        "RecalcStyleDuration": 0.005077,
+        "DevToolsCommandDuration": 0.02622,
+        "ScriptDuration": 0.273346,
+        "V8CompileDuration": 7.7e-05,
+        "TaskDuration": 1.2898,
+        "TaskOtherDuration": 0.969106,
+        "ThreadTime": 0.578018,
+        "ProcessTime": 1.45,
+        "JSHeapUsedSize": 17657288,
+        "JSHeapTotalSize": 23470080,
+        "FirstMeaningfulPaint": 441.414891,
+        "DomContentLoaded": 441.369394,
+        "NavigationStart": 441.316915
+      },
+      "engine": "maplibre",
+      "status": "ready",
+      "temperature": "30°C",
+      "condition": "มีฝน",
+      "location": "th-01",
+      "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+      "radarFrame": "1791704400",
+      "radarLabel": "2026-10-11T07:40:00.000Z",
+      "radarNotice": "",
+      "canvasCount": 1,
+      "overflow": false,
+      "visibility": "visible",
+      "theme": "light",
+      "mapInstances": 1,
+      "mapCalls": {
+        "setPadding": 3,
+        "resize": 2,
+        "setStyle": 1,
+        "addSource": 6,
+        "addLayer": 12,
+        "setData": 2
+      },
+      "query": [
+        {
+          "key": [
+            "weather",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 1791705113185,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "MODELED",
+          "sourceTime": 1791704700
+        },
+        {
+          "key": [
+            "air",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 1791705109202,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "MODELED",
+          "sourceTime": 1791702000
+        },
+        {
+          "key": [
+            "radar"
+          ],
+          "dataUpdatedAt": 1791705109203,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "OBSERVED"
+        }
+      ],
+      "ui": "กรุงเทพมหานคร\n30°C\n\nมีฝน\n\nแบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+      "requestAttempts": 1
+    },
+    {
+      "name": "timeout-weather",
+      "mode": "CONTROLLED replay of live captured payloads/failure injection, not live availability statistics",
+      "elapsedMs": 28175,
+      "at": "2026-10-11T07:52:23.051Z",
+      "dom": {
+        "documents": 7,
+        "nodes": 441,
+        "jsEventListeners": 375
+      },
+      "performance": {
+        "Timestamp": 475.288112,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 7,
+        "Frames": 4,
+        "JSEventListeners": 375,
+        "LayoutObjects": 138,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 441,
+        "Resources": 73,
+        "ContextLifecycleStateObservers": 23,
+        "V8PerContextDatas": 4,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 9,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 2,
+        "ArrayBufferContents": 2203,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 16,
+        "LayoutDuration": 0.014564,
+        "RecalcStyleDuration": 0.00449,
+        "DevToolsCommandDuration": 0.031002,
+        "ScriptDuration": 0.25519,
+        "V8CompileDuration": 0.000111,
+        "TaskDuration": 1.254781,
+        "TaskOtherDuration": 0.949424,
+        "ThreadTime": 0.683961,
+        "ProcessTime": 1.72,
+        "JSHeapUsedSize": 14290176,
+        "JSHeapTotalSize": 21110784,
+        "FirstMeaningfulPaint": 447.21999,
+        "DomContentLoaded": 447.168219,
+        "NavigationStart": 447.117534
+      },
+      "engine": "maplibre",
+      "status": "ready",
+      "location": "th-01",
+      "summary": "แบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+      "radarFrame": "1791704400",
+      "radarLabel": "2026-10-11T07:40:00.000Z",
+      "radarNotice": "",
+      "canvasCount": 1,
+      "overflow": false,
+      "visibility": "visible",
+      "theme": "light",
+      "mapInstances": 1,
+      "mapCalls": {
+        "setPadding": 3,
+        "resize": 2,
+        "setStyle": 1,
+        "addSource": 3,
+        "addLayer": 6,
+        "setData": 1
+      },
+      "query": [
+        {
+          "key": [
+            "weather",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 0,
+          "errorUpdatedAt": 1791705139973,
+          "status": "error",
+          "fetchStatus": "idle",
+          "staleByTime": true
+        },
+        {
+          "key": [
+            "air",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 1791705115007,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "MODELED",
+          "sourceTime": 1791702000
+        },
+        {
+          "key": [
+            "radar"
+          ],
+          "dataUpdatedAt": 1791705115007,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "OBSERVED"
+        }
+      ],
+      "ui": "กรุงเทพมหานคร\nโหลดข้อมูลอากาศไม่ได้\nลองใหม่\n\nแบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+      "requestAttempts": 2
+    },
+    {
+      "name": "503-weather",
+      "mode": "CONTROLLED replay of live captured payloads/failure injection, not live availability statistics",
+      "elapsedMs": 4679,
+      "at": "2026-10-11T07:52:27.860Z",
+      "dom": {
+        "documents": 7,
+        "nodes": 439,
+        "jsEventListeners": 372
+      },
+      "performance": {
+        "Timestamp": 480.096395,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 7,
+        "Frames": 4,
+        "JSEventListeners": 372,
+        "LayoutObjects": 138,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 439,
+        "Resources": 73,
+        "ContextLifecycleStateObservers": 23,
+        "V8PerContextDatas": 4,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 9,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 2,
+        "ArrayBufferContents": 2215,
+        "LayoutCount": 11,
+        "RecalcStyleCount": 16,
+        "LayoutDuration": 0.016222,
+        "RecalcStyleDuration": 0.005234,
+        "DevToolsCommandDuration": 0.027058,
+        "ScriptDuration": 0.229093,
+        "V8CompileDuration": 8.1e-05,
+        "TaskDuration": 1.129497,
+        "TaskOtherDuration": 0.851809,
+        "ThreadTime": 0.539812,
+        "ProcessTime": 1.37,
+        "JSHeapUsedSize": 15842064,
+        "JSHeapTotalSize": 21635072,
+        "FirstMeaningfulPaint": 475.515699,
+        "DomContentLoaded": 475.47423,
+        "NavigationStart": 475.422907
+      },
+      "engine": "maplibre",
+      "status": "ready",
+      "location": "th-01",
+      "summary": "แบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+      "radarFrame": "1791704400",
+      "radarLabel": "2026-10-11T07:40:00.000Z",
+      "radarNotice": "",
+      "canvasCount": 1,
+      "overflow": false,
+      "visibility": "visible",
+      "theme": "light",
+      "mapInstances": 1,
+      "mapCalls": {
+        "setPadding": 3,
+        "resize": 2,
+        "setStyle": 1,
+        "addSource": 6,
+        "addLayer": 12,
+        "setData": 1
+      },
+      "query": [
+        {
+          "key": [
+            "weather",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 0,
+          "errorUpdatedAt": 1791705144532,
+          "status": "error",
+          "fetchStatus": "idle",
+          "staleByTime": true
+        },
+        {
+          "key": [
+            "air",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 1791705143300,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "MODELED",
+          "sourceTime": 1791702000
+        },
+        {
+          "key": [
+            "radar"
+          ],
+          "dataUpdatedAt": 1791705143301,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "OBSERVED"
+        }
+      ],
+      "ui": "กรุงเทพมหานคร\nโหลดข้อมูลอากาศไม่ได้\nลองใหม่\n\nแบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+      "requestAttempts": 2
+    },
+    {
+      "name": "disconnected-provider",
+      "mode": "CONTROLLED replay of live captured payloads/failure injection, not live availability statistics",
+      "elapsedMs": 4679,
+      "at": "2026-10-11T07:52:32.641Z",
+      "dom": {
+        "documents": 7,
+        "nodes": 439,
+        "jsEventListeners": 375
+      },
+      "performance": {
+        "Timestamp": 484.878049,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 7,
+        "Frames": 4,
+        "JSEventListeners": 375,
+        "LayoutObjects": 138,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 439,
+        "Resources": 73,
+        "ContextLifecycleStateObservers": 23,
+        "V8PerContextDatas": 4,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 9,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 2,
+        "ArrayBufferContents": 2208,
+        "LayoutCount": 12,
+        "RecalcStyleCount": 16,
+        "LayoutDuration": 0.017438,
+        "RecalcStyleDuration": 0.005526,
+        "DevToolsCommandDuration": 0.026254,
+        "ScriptDuration": 0.231046,
+        "V8CompileDuration": 8e-05,
+        "TaskDuration": 1.112555,
+        "TaskOtherDuration": 0.832211,
+        "ThreadTime": 0.521321,
+        "ProcessTime": 1.34,
+        "JSHeapUsedSize": 14479272,
+        "JSHeapTotalSize": 21110784,
+        "FirstMeaningfulPaint": 480.297793,
+        "DomContentLoaded": 480.257094,
+        "NavigationStart": 480.204719
+      },
+      "engine": "maplibre",
+      "status": "ready",
+      "location": "th-01",
+      "summary": "แบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+      "radarFrame": "1791704400",
+      "radarLabel": "2026-10-11T07:40:00.000Z",
+      "radarNotice": "",
+      "canvasCount": 1,
+      "overflow": false,
+      "visibility": "visible",
+      "theme": "light",
+      "mapInstances": 1,
+      "mapCalls": {
+        "setPadding": 3,
+        "resize": 2,
+        "setStyle": 1,
+        "addSource": 3,
+        "addLayer": 6,
+        "setData": 1
+      },
+      "query": [
+        {
+          "key": [
+            "weather",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 0,
+          "errorUpdatedAt": 1791705149319,
+          "status": "error",
+          "fetchStatus": "idle",
+          "staleByTime": true
+        },
+        {
+          "key": [
+            "air",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 1791705148085,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "MODELED",
+          "sourceTime": 1791702000
+        },
+        {
+          "key": [
+            "radar"
+          ],
+          "dataUpdatedAt": 1791705148085,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "OBSERVED"
+        }
+      ],
+      "ui": "กรุงเทพมหานคร\nโหลดข้อมูลอากาศไม่ได้\nลองใหม่\n\nแบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+      "requestAttempts": 2
+    },
+    {
+      "name": "partial-air-failure",
+      "mode": "CONTROLLED replay of live captured payloads/failure injection, not live availability statistics",
+      "elapsedMs": 4208,
+      "at": "2026-10-11T07:52:36.955Z",
+      "dom": {
+        "documents": 7,
+        "nodes": 1266,
+        "jsEventListeners": 393
+      },
+      "performance": {
+        "Timestamp": 489.191185,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 7,
+        "Frames": 4,
+        "JSEventListeners": 393,
+        "LayoutObjects": 142,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 1266,
+        "Resources": 73,
+        "ContextLifecycleStateObservers": 23,
+        "V8PerContextDatas": 4,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 9,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 2,
+        "ArrayBufferContents": 2240,
+        "LayoutCount": 11,
+        "RecalcStyleCount": 17,
+        "LayoutDuration": 0.015505,
+        "RecalcStyleDuration": 0.004984,
+        "DevToolsCommandDuration": 0.0221,
+        "ScriptDuration": 0.280806,
+        "V8CompileDuration": 8e-05,
+        "TaskDuration": 1.276593,
+        "TaskOtherDuration": 0.953118,
+        "ThreadTime": 0.573985,
+        "ProcessTime": 1.45,
+        "JSHeapUsedSize": 17966780,
+        "JSHeapTotalSize": 23994368,
+        "FirstMeaningfulPaint": 485.085102,
+        "DomContentLoaded": 485.03738,
+        "NavigationStart": 484.988611
+      },
+      "engine": "maplibre",
+      "status": "ready",
+      "temperature": "30°C",
+      "condition": "มีฝน",
+      "location": "th-01",
+      "summary": "แบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+      "radarFrame": "1791704400",
+      "radarLabel": "2026-10-11T07:40:00.000Z",
+      "radarNotice": "",
+      "canvasCount": 1,
+      "overflow": false,
+      "visibility": "visible",
+      "theme": "light",
+      "mapInstances": 1,
+      "mapCalls": {
+        "setPadding": 3,
+        "resize": 2,
+        "setStyle": 1,
+        "addSource": 6,
+        "addLayer": 12,
+        "setData": 1
+      },
+      "query": [
+        {
+          "key": [
+            "weather",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 1791705152874,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "MODELED",
+          "sourceTime": 1791704700
+        },
+        {
+          "key": [
+            "air",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 0,
+          "errorUpdatedAt": 1791705154137,
+          "status": "error",
+          "fetchStatus": "idle",
+          "staleByTime": true
+        },
+        {
+          "key": [
+            "radar"
+          ],
+          "dataUpdatedAt": 1791705152875,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "OBSERVED"
+        }
+      ],
+      "ui": "กรุงเทพมหานคร\n30°C\n\nมีฝน\n\nแบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+      "requestAttempts": 1
+    },
+    {
+      "name": "radar-metadata-failure",
+      "mode": "CONTROLLED replay of live captured payloads/failure injection, not live availability statistics",
+      "elapsedMs": 4708,
+      "at": "2026-10-11T07:52:41.801Z",
+      "dom": {
+        "documents": 5,
+        "nodes": 1288,
+        "jsEventListeners": 349
+      },
+      "performance": {
+        "Timestamp": 494.037081,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 5,
+        "Frames": 4,
+        "JSEventListeners": 349,
+        "LayoutObjects": 135,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 1288,
+        "Resources": 67,
+        "ContextLifecycleStateObservers": 21,
+        "V8PerContextDatas": 4,
+        "WorkerGlobalScopes": 1,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 7,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 2,
+        "ArrayBufferContents": 2151,
+        "LayoutCount": 11,
+        "RecalcStyleCount": 16,
+        "LayoutDuration": 0.017552,
+        "RecalcStyleDuration": 0.004918,
+        "DevToolsCommandDuration": 0.023197,
+        "ScriptDuration": 0.25621,
+        "V8CompileDuration": 9.3e-05,
+        "TaskDuration": 1.003602,
+        "TaskOtherDuration": 0.701632,
+        "ThreadTime": 0.522234,
+        "ProcessTime": 1.36,
+        "JSHeapUsedSize": 14544272,
+        "JSHeapTotalSize": 21635072,
+        "FirstMeaningfulPaint": 489.434428,
+        "DomContentLoaded": 489.38724,
+        "NavigationStart": 489.334297
+      },
+      "engine": "maplibre",
+      "status": "ready",
+      "temperature": "30°C",
+      "condition": "มีฝน",
+      "location": "th-01",
+      "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+      "radarLabel": null,
+      "radarNotice": "โหลดไม่ได้",
+      "canvasCount": 1,
+      "overflow": false,
+      "visibility": "visible",
+      "theme": "light",
+      "mapInstances": 1,
+      "mapCalls": {
+        "setPadding": 3,
+        "resize": 2,
+        "setStyle": 1,
+        "addSource": 1,
+        "addLayer": 4,
+        "setData": 1
+      },
+      "query": [
+        {
+          "key": [
+            "weather",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 1791705157223,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "MODELED",
+          "sourceTime": 1791704700
+        },
+        {
+          "key": [
+            "air",
+            "TH",
+            13.7563,
+            100.5018,
+            "Asia/Bangkok"
+          ],
+          "dataUpdatedAt": 1791705157223,
+          "errorUpdatedAt": 0,
+          "status": "success",
+          "fetchStatus": "idle",
+          "staleByTime": false,
+          "dataType": "MODELED",
+          "sourceTime": 1791702000
+        },
+        {
+          "key": [
+            "radar"
+          ],
+          "dataUpdatedAt": 0,
+          "errorUpdatedAt": 1791705158411,
+          "status": "error",
+          "fetchStatus": "idle",
+          "staleByTime": true
+        }
+      ],
+      "ui": "กรุงเทพมหานคร\n30°C\n\nมีฝน\n\nแบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+      "requestAttempts": 1
+    },
+    {
+      "name": "long-open-clock-1",
+      "clockSimulationMs": 10801000,
+      "initial": {
+        "at": "2026-10-11T07:52:44.121Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 1310,
+          "jsEventListeners": 390
+        },
+        "performance": {
+          "Timestamp": 496.357606,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 390,
+          "LayoutObjects": 142,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 1310,
+          "Resources": 72,
+          "ContextLifecycleStateObservers": 23,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2213,
+          "LayoutCount": 11,
+          "RecalcStyleCount": 15,
+          "LayoutDuration": 0.015822,
+          "RecalcStyleDuration": 0.006997,
+          "DevToolsCommandDuration": 0.026813,
+          "ScriptDuration": 0.278572,
+          "V8CompileDuration": 7.9e-05,
+          "TaskDuration": 1.152031,
+          "TaskOtherDuration": 0.823748,
+          "ThreadTime": 0.557135,
+          "ProcessTime": 1.36,
+          "JSHeapUsedSize": 15309324,
+          "JSHeapTotalSize": 21897216,
+          "FirstMeaningfulPaint": 494.222387,
+          "DomContentLoaded": 494.180323,
+          "NavigationStart": 494.129121
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 3,
+          "addLayer": 6,
+          "setData": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705162011,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705162073,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705162074,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "aged": {
+        "at": "2026-10-11T07:52:44.625Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 1310,
+          "jsEventListeners": 390
+        },
+        "performance": {
+          "Timestamp": 496.862421,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 390,
+          "LayoutObjects": 142,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 1310,
+          "Resources": 72,
+          "ContextLifecycleStateObservers": 23,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2213,
+          "LayoutCount": 11,
+          "RecalcStyleCount": 15,
+          "LayoutDuration": 0.015822,
+          "RecalcStyleDuration": 0.006997,
+          "DevToolsCommandDuration": 0.028222,
+          "ScriptDuration": 0.280524,
+          "V8CompileDuration": 7.9e-05,
+          "TaskDuration": 1.156611,
+          "TaskOtherDuration": 0.824967,
+          "ThreadTime": 0.563943,
+          "ProcessTime": 1.37,
+          "JSHeapUsedSize": 15566076,
+          "JSHeapTotalSize": 21897216,
+          "FirstMeaningfulPaint": 494.222387,
+          "DomContentLoaded": 494.180323,
+          "NavigationStart": 494.129121
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 3,
+          "addLayer": 6,
+          "setData": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705162011,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705162073,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705162074,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "restored": {
+        "at": "2026-10-11T07:52:45.130Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 1311,
+          "jsEventListeners": 391
+        },
+        "performance": {
+          "Timestamp": 497.366714,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 391,
+          "LayoutObjects": 143,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 1311,
+          "Resources": 72,
+          "ContextLifecycleStateObservers": 23,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2213,
+          "LayoutCount": 12,
+          "RecalcStyleCount": 16,
+          "LayoutDuration": 0.016031,
+          "RecalcStyleDuration": 0.007059,
+          "DevToolsCommandDuration": 0.029278,
+          "ScriptDuration": 0.282901,
+          "V8CompileDuration": 7.9e-05,
+          "TaskDuration": 1.161843,
+          "TaskOtherDuration": 0.826495,
+          "ThreadTime": 0.571532,
+          "ProcessTime": 1.38,
+          "JSHeapUsedSize": 15806848,
+          "JSHeapTotalSize": 21897216,
+          "FirstMeaningfulPaint": 494.222387,
+          "DomContentLoaded": 494.180323,
+          "NavigationStart": 494.129121
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "ภาพล่าสุดเกิน 30 นาที",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 3,
+          "addLayer": 6,
+          "setData": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705162011,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705162073,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705162074,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "refreshed": {
+        "at": "2026-10-11T07:52:45.891Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 1481,
+          "jsEventListeners": 498
+        },
+        "performance": {
+          "Timestamp": 498.128488,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 498,
+          "LayoutObjects": 200,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 1481,
+          "Resources": 74,
+          "ContextLifecycleStateObservers": 23,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2213,
+          "LayoutCount": 18,
+          "RecalcStyleCount": 35,
+          "LayoutDuration": 0.017462,
+          "RecalcStyleDuration": 0.010792,
+          "DevToolsCommandDuration": 0.044016,
+          "ScriptDuration": 0.322862,
+          "V8CompileDuration": 7.9e-05,
+          "TaskDuration": 1.233302,
+          "TaskOtherDuration": 0.838091,
+          "ThreadTime": 0.647087,
+          "ProcessTime": 1.49,
+          "JSHeapUsedSize": 18591672,
+          "JSHeapTotalSize": 24256512,
+          "FirstMeaningfulPaint": 494.222387,
+          "DomContentLoaded": 494.180323,
+          "NavigationStart": 494.129121
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "ภาพล่าสุดเกิน 30 นาที",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 3,
+          "addLayer": 6,
+          "setData": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791715966281,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791715966282,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705162074,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "weatherRequests": {
+        "initial": 1,
+        "aged": 1,
+        "restored": 1,
+        "refreshed": 2
+      }
+    },
+    {
+      "name": "long-open-clock-2",
+      "clockSimulationMs": 10801000,
+      "initial": {
+        "at": "2026-10-11T07:52:48.167Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 1304,
+          "jsEventListeners": 360
+        },
+        "performance": {
+          "Timestamp": 500.403856,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 360,
+          "LayoutObjects": 142,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 1304,
+          "Resources": 72,
+          "ContextLifecycleStateObservers": 23,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2278,
+          "LayoutCount": 11,
+          "RecalcStyleCount": 16,
+          "LayoutDuration": 0.016584,
+          "RecalcStyleDuration": 0.005689,
+          "DevToolsCommandDuration": 0.028111,
+          "ScriptDuration": 0.254545,
+          "V8CompileDuration": 7.7e-05,
+          "TaskDuration": 1.181695,
+          "TaskOtherDuration": 0.876689,
+          "ThreadTime": 0.538743,
+          "ProcessTime": 1.36,
+          "JSHeapUsedSize": 16861360,
+          "JSHeapTotalSize": 22421504,
+          "FirstMeaningfulPaint": 498.282413,
+          "DomContentLoaded": 498.241797,
+          "NavigationStart": 498.190518
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 6,
+          "addLayer": 12,
+          "setData": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705166072,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705166072,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705166078,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "aged": {
+        "at": "2026-10-11T07:52:48.670Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 1304,
+          "jsEventListeners": 360
+        },
+        "performance": {
+          "Timestamp": 500.907408,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 360,
+          "LayoutObjects": 142,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 1304,
+          "Resources": 72,
+          "ContextLifecycleStateObservers": 23,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2278,
+          "LayoutCount": 11,
+          "RecalcStyleCount": 16,
+          "LayoutDuration": 0.016584,
+          "RecalcStyleDuration": 0.005689,
+          "DevToolsCommandDuration": 0.029454,
+          "ScriptDuration": 0.256718,
+          "V8CompileDuration": 7.7e-05,
+          "TaskDuration": 1.186438,
+          "TaskOtherDuration": 0.877916,
+          "ThreadTime": 0.545769,
+          "ProcessTime": 1.36,
+          "JSHeapUsedSize": 17114816,
+          "JSHeapTotalSize": 22683648,
+          "FirstMeaningfulPaint": 498.282413,
+          "DomContentLoaded": 498.241797,
+          "NavigationStart": 498.190518
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 6,
+          "addLayer": 12,
+          "setData": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705166072,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705166072,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705166078,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "restored": {
+        "at": "2026-10-11T07:52:49.174Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 1305,
+          "jsEventListeners": 361
+        },
+        "performance": {
+          "Timestamp": 501.411383,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 361,
+          "LayoutObjects": 143,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 1305,
+          "Resources": 72,
+          "ContextLifecycleStateObservers": 23,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2278,
+          "LayoutCount": 12,
+          "RecalcStyleCount": 17,
+          "LayoutDuration": 0.016805,
+          "RecalcStyleDuration": 0.005752,
+          "DevToolsCommandDuration": 0.030519,
+          "ScriptDuration": 0.259343,
+          "V8CompileDuration": 7.7e-05,
+          "TaskDuration": 1.19204,
+          "TaskOtherDuration": 0.879544,
+          "ThreadTime": 0.553817,
+          "ProcessTime": 1.38,
+          "JSHeapUsedSize": 17349484,
+          "JSHeapTotalSize": 22945792,
+          "FirstMeaningfulPaint": 498.282413,
+          "DomContentLoaded": 498.241797,
+          "NavigationStart": 498.190518
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "ภาพล่าสุดเกิน 30 นาที",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 6,
+          "addLayer": 12,
+          "setData": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705166072,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705166072,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705166078,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "refreshed": {
+        "at": "2026-10-11T07:52:49.931Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 1475,
+          "jsEventListeners": 468
+        },
+        "performance": {
+          "Timestamp": 502.168526,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 468,
+          "LayoutObjects": 200,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 1475,
+          "Resources": 74,
+          "ContextLifecycleStateObservers": 23,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2277,
+          "LayoutCount": 18,
+          "RecalcStyleCount": 36,
+          "LayoutDuration": 0.018155,
+          "RecalcStyleDuration": 0.009492,
+          "DevToolsCommandDuration": 0.045534,
+          "ScriptDuration": 0.298253,
+          "V8CompileDuration": 7.7e-05,
+          "TaskDuration": 1.263324,
+          "TaskOtherDuration": 0.891813,
+          "ThreadTime": 0.628742,
+          "ProcessTime": 1.49,
+          "JSHeapUsedSize": 14502552,
+          "JSHeapTotalSize": 25567232,
+          "FirstMeaningfulPaint": 498.282413,
+          "DomContentLoaded": 498.241797,
+          "NavigationStart": 498.190518
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "ภาพล่าสุดเกิน 30 นาที",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 6,
+          "addLayer": 12,
+          "setData": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791715970331,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791715970331,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705166078,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "weatherRequests": {
+        "initial": 1,
+        "aged": 1,
+        "restored": 1,
+        "refreshed": 2
+      }
+    },
+    {
+      "name": "offline-recovery-failed-refresh",
+      "offline": {
+        "at": "2026-10-11T07:52:52.617Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 3262,
+          "jsEventListeners": 431
+        },
+        "performance": {
+          "Timestamp": 504.847917,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 431,
+          "LayoutObjects": 147,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 3262,
+          "Resources": 72,
+          "ContextLifecycleStateObservers": 27,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2244,
+          "LayoutCount": 14,
+          "RecalcStyleCount": 18,
+          "LayoutDuration": 0.022175,
+          "RecalcStyleDuration": 0.006557,
+          "DevToolsCommandDuration": 0.094086,
+          "ScriptDuration": 0.290723,
+          "V8CompileDuration": 4.8e-05,
+          "TaskDuration": 1.265074,
+          "TaskOtherDuration": 0.851485,
+          "ThreadTime": 0.653916,
+          "ProcessTime": 1.5,
+          "JSHeapUsedSize": 13697760,
+          "JSHeapTotalSize": 25305088,
+          "FirstMeaningfulPaint": 502.360554,
+          "DomContentLoaded": 502.291359,
+          "NavigationStart": 502.238694
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 3,
+          "addLayer": 6,
+          "setData": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705170132,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705170133,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705170208,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "recovery": {
+        "at": "2026-10-11T07:52:55.173Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 3324,
+          "jsEventListeners": 465
+        },
+        "performance": {
+          "Timestamp": 507.405799,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 465,
+          "LayoutObjects": 147,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 3324,
+          "Resources": 72,
+          "ContextLifecycleStateObservers": 27,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2244,
+          "LayoutCount": 15,
+          "RecalcStyleCount": 23,
+          "LayoutDuration": 0.022246,
+          "RecalcStyleDuration": 0.006896,
+          "DevToolsCommandDuration": 0.105754,
+          "ScriptDuration": 0.304051,
+          "V8CompileDuration": 4.8e-05,
+          "TaskDuration": 1.33034,
+          "TaskOtherDuration": 0.891345,
+          "ThreadTime": 0.694819,
+          "ProcessTime": 1.56,
+          "JSHeapUsedSize": 16441288,
+          "JSHeapTotalSize": 25305088,
+          "FirstMeaningfulPaint": 502.360554,
+          "DomContentLoaded": 502.291359,
+          "NavigationStart": 502.238694
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 3,
+          "addLayer": 6,
+          "setData": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705170132,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705170133,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705170208,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "failedRefresh": {
+        "at": "2026-10-11T07:52:58.805Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 3518,
+          "jsEventListeners": 606
+        },
+        "performance": {
+          "Timestamp": 511.039126,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 606,
+          "LayoutObjects": 215,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 3518,
+          "Resources": 75,
+          "ContextLifecycleStateObservers": 27,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2260,
+          "LayoutCount": 22,
+          "RecalcStyleCount": 37,
+          "LayoutDuration": 0.024146,
+          "RecalcStyleDuration": 0.010434,
+          "DevToolsCommandDuration": 0.139798,
+          "ScriptDuration": 0.350721,
+          "V8CompileDuration": 4.8e-05,
+          "TaskDuration": 1.472939,
+          "TaskOtherDuration": 0.947792,
+          "ThreadTime": 0.814287,
+          "ProcessTime": 1.75,
+          "JSHeapUsedSize": 17611724,
+          "JSHeapTotalSize": 29499392,
+          "FirstMeaningfulPaint": 502.360554,
+          "DomContentLoaded": 502.291359,
+          "NavigationStart": 502.238694
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "location": "th-01",
+        "summary": "แบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 3,
+          "addLayer": 6,
+          "setData": 2
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705170132,
+            "errorUpdatedAt": 1791705176284,
+            "status": "error",
+            "fetchStatus": "idle",
+            "staleByTime": true,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705175283,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705170208,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      }
+    },
+    {
+      "name": "rapid-city-switch",
+      "final": {
+        "at": "2026-10-11T07:53:06.040Z",
+        "dom": {
+          "documents": 1,
+          "nodes": 2238,
+          "jsEventListeners": 414
+        },
+        "performance": {
+          "Timestamp": 518.275859,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 1,
+          "Frames": 1,
+          "JSEventListeners": 414,
+          "LayoutObjects": 128,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 2238,
+          "Resources": 25,
+          "ContextLifecycleStateObservers": 12,
+          "V8PerContextDatas": 2,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 2,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 0,
+          "ArrayBufferContents": 3850,
+          "LayoutCount": 34,
+          "RecalcStyleCount": 57,
+          "LayoutDuration": 0.043848,
+          "RecalcStyleDuration": 0.023552,
+          "DevToolsCommandDuration": 0.070147,
+          "ScriptDuration": 0.603098,
+          "V8CompileDuration": 7.8e-05,
+          "TaskDuration": 5.925062,
+          "TaskOtherDuration": 5.184339,
+          "ThreadTime": 1.493734,
+          "ProcessTime": 4.87,
+          "JSHeapUsedSize": 22100056,
+          "JSHeapTotalSize": 33431552,
+          "FirstMeaningfulPaint": 0,
+          "DomContentLoaded": 511.400871,
+          "NavigationStart": 511.349699
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "cn-chongqing",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "จีนอาจไม่ครอบคลุม",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 3,
+          "addLayer": 6,
+          "setData": 8,
+          "flyTo": 3
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705179237,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705179238,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          },
+          {
+            "key": [
+              "places",
+              ""
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "weather",
+              "CN",
+              34.2658,
+              108.9541,
+              "Asia/Shanghai"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "air",
+              "CN",
+              34.2658,
+              108.9541,
+              "Asia/Shanghai"
+            ],
+            "dataUpdatedAt": 1791705180822,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "weather",
+              "CN",
+              30.5728,
+              104.0668,
+              "Asia/Shanghai"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "air",
+              "CN",
+              30.5728,
+              104.0668,
+              "Asia/Shanghai"
+            ],
+            "dataUpdatedAt": 1791705182471,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "weather",
+              "CN",
+              29.563,
+              106.5516,
+              "Asia/Shanghai"
+            ],
+            "dataUpdatedAt": 1791705184818,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "CN",
+              29.563,
+              106.5516,
+              "Asia/Shanghai"
+            ],
+            "dataUpdatedAt": 1791705183062,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          }
+        ]
+      },
+      "requests": [
+        {
+          "id": "3753.31",
+          "url": "https://api.open-meteo.com/v1/forecast?latitude=13.7563&longitude=100.5018&current=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cis_day%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m%2Cpressure_msl&hourly=temperature_2m%2Cprecipitation_probability%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cprecipitation_probability_max%2Cwind_speed_10m_max&forecast_days=16&timezone=Asia%2FBangkok&timeformat=unixtime&wind_speed_unit=kmh",
+          "group": "weather",
+          "start": 511.444052,
+          "wallTime": 1791705179.206147,
+          "type": "Fetch",
+          "end": 512.963213,
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "id": "3753.77",
+          "url": "https://api.open-meteo.com/v1/forecast?latitude=34.2658&longitude=108.9541&current=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cis_day%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m%2Cpressure_msl&hourly=temperature_2m%2Cprecipitation_probability%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cprecipitation_probability_max%2Cwind_speed_10m_max&forecast_days=16&timezone=Asia%2FShanghai&timeformat=unixtime&wind_speed_unit=kmh",
+          "group": "weather",
+          "start": 512.925618,
+          "wallTime": 1791705180.687705,
+          "type": "Fetch",
+          "end": 514.587764,
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "id": "3753.119",
+          "url": "https://api.open-meteo.com/v1/forecast?latitude=30.5728&longitude=104.0668&current=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cis_day%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m%2Cpressure_msl&hourly=temperature_2m%2Cprecipitation_probability%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cprecipitation_probability_max%2Cwind_speed_10m_max&forecast_days=16&timezone=Asia%2FShanghai&timeformat=unixtime&wind_speed_unit=kmh",
+          "group": "weather",
+          "start": 514.514241,
+          "wallTime": 1791705182.276349,
+          "type": "Fetch",
+          "end": 515.246759,
+          "error": "net::ERR_ABORTED",
+          "canceled": true
+        },
+        {
+          "id": "3753.145",
+          "url": "https://api.open-meteo.com/v1/forecast?latitude=29.563&longitude=106.5516&current=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cis_day%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m%2Cpressure_msl&hourly=temperature_2m%2Cprecipitation_probability%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cprecipitation_probability_max%2Cwind_speed_10m_max&forecast_days=16&timezone=Asia%2FShanghai&timeformat=unixtime&wind_speed_unit=kmh",
+          "group": "weather",
+          "start": 515.221757,
+          "wallTime": 1791705182.983873,
+          "type": "Fetch",
+          "status": 200,
+          "fromDiskCache": false,
+          "fromServiceWorker": false,
+          "responseAt": 517.055557,
+          "timing": {
+            "requestTime": 515.222371,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": -1,
+            "sendEnd": -1,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": -1,
+            "receiveHeadersEnd": 1805.43
+          },
+          "protocol": "http/1.1",
+          "end": 517.027803,
+          "encodedBytes": 14285
+        }
+      ]
+    },
+    {
+      "name": "radar-truth-1",
+      "before": {
+        "at": "2026-10-11T07:53:11.809Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 3309,
+          "jsEventListeners": 392
+        },
+        "performance": {
+          "Timestamp": 524.040958,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 392,
+          "LayoutObjects": 140,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 3309,
+          "Resources": 72,
+          "ContextLifecycleStateObservers": 27,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2243,
+          "LayoutCount": 15,
+          "RecalcStyleCount": 21,
+          "LayoutDuration": 0.019278,
+          "RecalcStyleDuration": 0.006408,
+          "DevToolsCommandDuration": 0.113747,
+          "ScriptDuration": 0.301637,
+          "V8CompileDuration": 6.2e-05,
+          "TaskDuration": 1.384438,
+          "TaskOtherDuration": 0.943306,
+          "ThreadTime": 0.689798,
+          "ProcessTime": 1.62,
+          "JSHeapUsedSize": 15238092,
+          "JSHeapTotalSize": 25305088,
+          "FirstMeaningfulPaint": 518.481088,
+          "DomContentLoaded": 518.417578,
+          "NavigationStart": 518.360765
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791705000",
+        "radarLabel": "2026-10-11T07:50:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 6,
+          "addLayer": 12,
+          "setData": 2
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705186787,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705186784,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705186543,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "pending": {
+        "at": "2026-10-11T07:53:12.338Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 3309,
+          "jsEventListeners": 436
+        },
+        "performance": {
+          "Timestamp": 524.569502,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 436,
+          "LayoutObjects": 140,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 3309,
+          "Resources": 78,
+          "ContextLifecycleStateObservers": 27,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2259,
+          "LayoutCount": 16,
+          "RecalcStyleCount": 21,
+          "LayoutDuration": 0.01948,
+          "RecalcStyleDuration": 0.006408,
+          "DevToolsCommandDuration": 0.122493,
+          "ScriptDuration": 0.320949,
+          "V8CompileDuration": 6.2e-05,
+          "TaskDuration": 1.51184,
+          "TaskOtherDuration": 1.042448,
+          "ThreadTime": 0.725613,
+          "ProcessTime": 1.68,
+          "JSHeapUsedSize": 18980112,
+          "JSHeapTotalSize": 27140096,
+          "FirstMeaningfulPaint": 518.481088,
+          "DomContentLoaded": 518.417578,
+          "NavigationStart": 518.360765
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 6,
+          "addLayer": 12,
+          "setData": 3,
+          "setTiles": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705186787,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705186784,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705186543,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "after": {
+        "at": "2026-10-11T07:53:17.911Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 3310,
+          "jsEventListeners": 440
+        },
+        "performance": {
+          "Timestamp": 530.136181,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 440,
+          "LayoutObjects": 140,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 3310,
+          "Resources": 78,
+          "ContextLifecycleStateObservers": 27,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2270,
+          "LayoutCount": 16,
+          "RecalcStyleCount": 25,
+          "LayoutDuration": 0.01948,
+          "RecalcStyleDuration": 0.006791,
+          "DevToolsCommandDuration": 0.133032,
+          "ScriptDuration": 0.329562,
+          "V8CompileDuration": 6.2e-05,
+          "TaskDuration": 1.639059,
+          "TaskOtherDuration": 1.150132,
+          "ThreadTime": 0.792051,
+          "ProcessTime": 1.81,
+          "JSHeapUsedSize": 15712516,
+          "JSHeapTotalSize": 29499392,
+          "FirstMeaningfulPaint": 518.481088,
+          "DomContentLoaded": 518.417578,
+          "NavigationStart": 518.360765
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 6,
+          "addLayer": 12,
+          "setData": 3,
+          "setTiles": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705186787,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705186784,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705186543,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "failed": {
+        "at": "2026-10-11T07:53:19.753Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 3312,
+          "jsEventListeners": 484
+        },
+        "performance": {
+          "Timestamp": 531.98502,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 484,
+          "LayoutObjects": 142,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 3312,
+          "Resources": 86,
+          "ContextLifecycleStateObservers": 27,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2286,
+          "LayoutCount": 18,
+          "RecalcStyleCount": 26,
+          "LayoutDuration": 0.019895,
+          "RecalcStyleDuration": 0.006925,
+          "DevToolsCommandDuration": 0.14941,
+          "ScriptDuration": 0.349962,
+          "V8CompileDuration": 6.2e-05,
+          "TaskDuration": 1.782319,
+          "TaskOtherDuration": 1.256065,
+          "ThreadTime": 0.844813,
+          "ProcessTime": 1.9,
+          "JSHeapUsedSize": 19248284,
+          "JSHeapTotalSize": 29761536,
+          "FirstMeaningfulPaint": 518.481088,
+          "DomContentLoaded": 518.417578,
+          "NavigationStart": 518.360765
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791703200",
+        "radarLabel": "2026-10-11T07:20:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 6,
+          "addLayer": 12,
+          "setData": 4,
+          "setTiles": 2
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705186787,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705186784,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705186543,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "heldRequests": [
+        {
+          "url": "https://tilecache.rainviewer.com/v2/radar/51e98c9212e4/512/5/24/14/2/1_0.png",
+          "at": 1791705191863
+        },
+        {
+          "url": "https://tilecache.rainviewer.com/v2/radar/51e98c9212e4/512/5/25/14/2/1_0.png",
+          "at": 1791705191864
+        },
+        {
+          "url": "https://tilecache.rainviewer.com/v2/radar/51e98c9212e4/512/5/24/15/2/1_0.png",
+          "at": 1791705191864
+        },
+        {
+          "url": "https://tilecache.rainviewer.com/v2/radar/51e98c9212e4/512/5/25/15/2/1_0.png",
+          "at": 1791705191864
+        },
+        {
+          "url": "https://tilecache.rainviewer.com/v2/radar/51e98c9212e4/512/5/24/16/2/1_0.png",
+          "at": 1791705191864
+        },
+        {
+          "url": "https://tilecache.rainviewer.com/v2/radar/51e98c9212e4/512/5/25/16/2/1_0.png",
+          "at": 1791705191864
+        }
+      ],
+      "pauseVerified": true,
+      "visibilityMethod": "synthetic hidden property + actual app visibilitychange listener, not OS tab suspension"
+    },
+    {
+      "name": "radar-truth-2",
+      "before": {
+        "at": "2026-10-11T07:53:25.694Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 1326,
+          "jsEventListeners": 365
+        },
+        "performance": {
+          "Timestamp": 537.930629,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 365,
+          "LayoutObjects": 145,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 1326,
+          "Resources": 78,
+          "ContextLifecycleStateObservers": 23,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2289,
+          "LayoutCount": 13,
+          "RecalcStyleCount": 20,
+          "LayoutDuration": 0.021708,
+          "RecalcStyleDuration": 0.005484,
+          "DevToolsCommandDuration": 0.036169,
+          "ScriptDuration": 0.255765,
+          "V8CompileDuration": 7.5e-05,
+          "TaskDuration": 1.294916,
+          "TaskOtherDuration": 0.975715,
+          "ThreadTime": 0.592701,
+          "ProcessTime": 1.54,
+          "JSHeapUsedSize": 13130952,
+          "JSHeapTotalSize": 25829376,
+          "FirstMeaningfulPaint": 532.483132,
+          "DomContentLoaded": 532.435348,
+          "NavigationStart": 532.383375
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791705000",
+        "radarLabel": "2026-10-11T07:50:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 4,
+          "addLayer": 10,
+          "setData": 3,
+          "setTiles": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705200696,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705200695,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705200675,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "pending": {
+        "at": "2026-10-11T07:53:26.212Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 1326,
+          "jsEventListeners": 409
+        },
+        "performance": {
+          "Timestamp": 538.449636,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 409,
+          "LayoutObjects": 145,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 1326,
+          "Resources": 84,
+          "ContextLifecycleStateObservers": 23,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2305,
+          "LayoutCount": 14,
+          "RecalcStyleCount": 20,
+          "LayoutDuration": 0.021884,
+          "RecalcStyleDuration": 0.005484,
+          "DevToolsCommandDuration": 0.038589,
+          "ScriptDuration": 0.272727,
+          "V8CompileDuration": 7.5e-05,
+          "TaskDuration": 1.408339,
+          "TaskOtherDuration": 1.06958,
+          "ThreadTime": 0.620417,
+          "ProcessTime": 1.58,
+          "JSHeapUsedSize": 14869356,
+          "JSHeapTotalSize": 26091520,
+          "FirstMeaningfulPaint": 532.483132,
+          "DomContentLoaded": 532.435348,
+          "NavigationStart": 532.383375
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 4,
+          "addLayer": 10,
+          "setData": 4,
+          "setTiles": 2
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705200696,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705200695,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705200675,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "after": {
+        "at": "2026-10-11T07:53:31.762Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 1326,
+          "jsEventListeners": 415
+        },
+        "performance": {
+          "Timestamp": 543.999673,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 415,
+          "LayoutObjects": 145,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 1326,
+          "Resources": 84,
+          "ContextLifecycleStateObservers": 23,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2317,
+          "LayoutCount": 14,
+          "RecalcStyleCount": 24,
+          "LayoutDuration": 0.021884,
+          "RecalcStyleDuration": 0.00586,
+          "DevToolsCommandDuration": 0.040819,
+          "ScriptDuration": 0.283948,
+          "V8CompileDuration": 7.5e-05,
+          "TaskDuration": 1.560127,
+          "TaskOtherDuration": 1.207541,
+          "ThreadTime": 0.679972,
+          "ProcessTime": 1.71,
+          "JSHeapUsedSize": 15872764,
+          "JSHeapTotalSize": 26091520,
+          "FirstMeaningfulPaint": 532.483132,
+          "DomContentLoaded": 532.435348,
+          "NavigationStart": 532.383375
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 4,
+          "addLayer": 10,
+          "setData": 4,
+          "setTiles": 2
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705200696,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705200695,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705200675,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "failed": {
+        "at": "2026-10-11T07:53:33.585Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 1329,
+          "jsEventListeners": 459
+        },
+        "performance": {
+          "Timestamp": 545.821104,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 459,
+          "LayoutObjects": 147,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 1329,
+          "Resources": 92,
+          "ContextLifecycleStateObservers": 23,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2333,
+          "LayoutCount": 16,
+          "RecalcStyleCount": 25,
+          "LayoutDuration": 0.022221,
+          "RecalcStyleDuration": 0.006005,
+          "DevToolsCommandDuration": 0.043205,
+          "ScriptDuration": 0.303246,
+          "V8CompileDuration": 7.5e-05,
+          "TaskDuration": 1.67933,
+          "TaskOtherDuration": 1.304578,
+          "ThreadTime": 0.722011,
+          "ProcessTime": 1.78,
+          "JSHeapUsedSize": 17461436,
+          "JSHeapTotalSize": 26877952,
+          "FirstMeaningfulPaint": 532.483132,
+          "DomContentLoaded": 532.435348,
+          "NavigationStart": 532.383375
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "30°C",
+        "condition": "มีฝน",
+        "location": "th-01",
+        "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+        "radarFrame": "1791703200",
+        "radarLabel": "2026-10-11T07:20:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 4,
+          "addLayer": 10,
+          "setData": 5,
+          "setTiles": 3
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705200696,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 1791705200695,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705200675,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "heldRequests": [
+        {
+          "url": "https://tilecache.rainviewer.com/v2/radar/51e98c9212e4/512/5/24/14/2/1_0.png",
+          "at": 1791705205746
+        },
+        {
+          "url": "https://tilecache.rainviewer.com/v2/radar/51e98c9212e4/512/5/25/14/2/1_0.png",
+          "at": 1791705205746
+        },
+        {
+          "url": "https://tilecache.rainviewer.com/v2/radar/51e98c9212e4/512/5/24/15/2/1_0.png",
+          "at": 1791705205746
+        },
+        {
+          "url": "https://tilecache.rainviewer.com/v2/radar/51e98c9212e4/512/5/25/15/2/1_0.png",
+          "at": 1791705205747
+        },
+        {
+          "url": "https://tilecache.rainviewer.com/v2/radar/51e98c9212e4/512/5/24/16/2/1_0.png",
+          "at": 1791705205747
+        },
+        {
+          "url": "https://tilecache.rainviewer.com/v2/radar/51e98c9212e4/512/5/25/16/2/1_0.png",
+          "at": 1791705205747
+        }
+      ],
+      "pauseVerified": true,
+      "visibilityMethod": "synthetic hidden property + actual app visibilitychange listener, not OS tab suspension"
+    },
+    {
+      "name": "forced-webgl-unavailable",
+      "before": {
+        "at": "2026-10-11T07:53:45.912Z",
+        "dom": {
+          "documents": 4,
+          "nodes": 419,
+          "jsEventListeners": 363
+        },
+        "performance": {
+          "Timestamp": 558.148392,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 4,
+          "Frames": 4,
+          "JSEventListeners": 363,
+          "LayoutObjects": 161,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 419,
+          "Resources": 51,
+          "ContextLifecycleStateObservers": 17,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 0,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 4,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 6,
+          "LayoutCount": 12,
+          "RecalcStyleCount": 21,
+          "LayoutDuration": 0.015083,
+          "RecalcStyleDuration": 0.005803,
+          "DevToolsCommandDuration": 0.025222,
+          "ScriptDuration": 0.105276,
+          "V8CompileDuration": 6e-05,
+          "TaskDuration": 0.229636,
+          "TaskOtherDuration": 0.078192,
+          "ThreadTime": 0.24799,
+          "ProcessTime": 0.47,
+          "JSHeapUsedSize": 6081764,
+          "JSHeapTotalSize": 9052160,
+          "FirstMeaningfulPaint": 546.122878,
+          "DomContentLoaded": 546.078786,
+          "NavigationStart": 546.026175
+        },
+        "engine": "leaflet-fallback",
+        "status": "ready",
+        "location": "th-01",
+        "summary": "แบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+        "radarFrame": "1791705000",
+        "radarLabel": "2026-10-11T07:50:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 0,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "addLayer": 5,
+          "invalidateSize": 2,
+          "panBy": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "fetching",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "fetching",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705214189,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "after": {
+        "at": "2026-10-11T07:53:46.479Z",
+        "dom": {
+          "documents": 4,
+          "nodes": 491,
+          "jsEventListeners": 572
+        },
+        "performance": {
+          "Timestamp": 558.715745,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 4,
+          "Frames": 4,
+          "JSEventListeners": 572,
+          "LayoutObjects": 220,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 491,
+          "Resources": 51,
+          "ContextLifecycleStateObservers": 17,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 0,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 4,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 6,
+          "LayoutCount": 18,
+          "RecalcStyleCount": 72,
+          "LayoutDuration": 0.016567,
+          "RecalcStyleDuration": 0.016981,
+          "DevToolsCommandDuration": 0.049629,
+          "ScriptDuration": 0.122983,
+          "V8CompileDuration": 6e-05,
+          "TaskDuration": 0.320104,
+          "TaskOtherDuration": 0.113884,
+          "ThreadTime": 0.338488,
+          "ProcessTime": 0.64,
+          "JSHeapUsedSize": 6266112,
+          "JSHeapTotalSize": 8003584,
+          "FirstMeaningfulPaint": 546.122878,
+          "DomContentLoaded": 546.078786,
+          "NavigationStart": 546.026175
+        },
+        "engine": "leaflet-fallback",
+        "status": "ready",
+        "location": "th-01",
+        "summary": "แบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+        "radarFrame": "1791705000",
+        "radarLabel": "2026-10-11T07:50:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 0,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "dark",
+        "mapInstances": 1,
+        "mapCalls": {
+          "addLayer": 5,
+          "invalidateSize": 2,
+          "panBy": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "fetching",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "fetching",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791705214189,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "webglMethod": "getContext returns null for webgl only; real Leaflet renderer and external raster requests"
+    }
+  ],
+  "interactions": [
+    {
+      "initial": {
+        "at": "2026-10-11T07:49:47.012Z",
+        "dom": {
+          "documents": 7,
+          "nodes": 976,
+          "jsEventListeners": 358
+        },
+        "performance": {
+          "Timestamp": 319.245731,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 7,
+          "Frames": 4,
+          "JSEventListeners": 358,
+          "LayoutObjects": 126,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 976,
+          "Resources": 72,
+          "ContextLifecycleStateObservers": 27,
+          "V8PerContextDatas": 4,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 9,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 2,
+          "ArrayBufferContents": 2189,
+          "LayoutCount": 12,
+          "RecalcStyleCount": 18,
+          "LayoutDuration": 0.01444,
+          "RecalcStyleDuration": 0.005911,
+          "DevToolsCommandDuration": 0.093823,
+          "ScriptDuration": 0.24004,
+          "V8CompileDuration": 6.4e-05,
+          "TaskDuration": 1.302532,
+          "TaskOtherDuration": 0.948254,
+          "ThreadTime": 0.604726,
+          "ProcessTime": 1.45,
+          "JSHeapUsedSize": 16752512,
+          "JSHeapTotalSize": 22159360,
+          "FirstMeaningfulPaint": 313.709319,
+          "DomContentLoaded": 313.641261,
+          "NavigationStart": 313.571959
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "location": "th-01",
+        "summary": "แบบจำลอง · ข้อมูลยังไม่ครบสำหรับประเมิน",
+        "radarFrame": "1791704400",
+        "radarLabel": "2026-10-11T07:40:00.000Z",
+        "radarNotice": "",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 3,
+          "resize": 2,
+          "setStyle": 1,
+          "addSource": 6,
+          "addLayer": 12,
+          "setData": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "fetching",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "fetching",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791704981763,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          }
+        ]
+      },
+      "phases": [
+        {
+          "name": "continuous-pan",
+          "start": 5680.900000000023,
+          "end": 25896.20000000001,
+          "wallMs": 20215.29999999999,
+          "frameStats": {
+            "samples": 558,
+            "medianMs": 33.39999999999782,
+            "p95Ms": 50.099999999998545,
+            "maxMs": 83.30000000000109,
+            "intervalsOver33Ms": 291,
+            "intervalsOver50Ms": 36,
+            "estimatedMissedVsync": 655,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 18813.725,
+            "scriptDurationMs": 636.317,
+            "layoutCount": 1,
+            "layoutDurationMs": 0.8809999999999998,
+            "recalcStyleCount": 14
+          }
+        },
+        {
+          "name": "wheel-repeated-zoom",
+          "start": 25920.79999999999,
+          "end": 29264.599999999977,
+          "wallMs": 3343.7999999999884,
+          "frameStats": {
+            "samples": 121,
+            "medianMs": 16.700000000000728,
+            "p95Ms": 50,
+            "maxMs": 50.10000000000218,
+            "intervalsOver33Ms": 36,
+            "intervalsOver50Ms": 4,
+            "estimatedMissedVsync": 80,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 2271.2380000000003,
+            "scriptDurationMs": 78.58900000000003,
+            "layoutCount": 0,
+            "layoutDurationMs": 0,
+            "recalcStyleCount": 0
+          }
+        },
+        {
+          "name": "touch-pinch",
+          "start": 29292.70000000001,
+          "end": 31130.70000000001,
+          "wallMs": 1838,
+          "frameStats": {
+            "samples": 30,
+            "medianMs": 50,
+            "p95Ms": 133.29999999999927,
+            "maxMs": 149.89999999999782,
+            "intervalsOver33Ms": 18,
+            "intervalsOver50Ms": 14,
+            "estimatedMissedVsync": 80,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 1683.6839999999995,
+            "scriptDurationMs": 83.94599999999997,
+            "layoutCount": 0,
+            "layoutDurationMs": 0,
+            "recalcStyleCount": 0
+          }
+        },
+        {
+          "name": "theme-dark-0",
+          "start": 31138.900000000023,
+          "end": 34122.59999999998,
+          "wallMs": 2983.6999999999534,
+          "frameStats": {
+            "samples": 104,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 100,
+            "maxMs": 183.3000000000029,
+            "intervalsOver33Ms": 13,
+            "intervalsOver50Ms": 13,
+            "estimatedMissedVsync": 75,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 1545.8210000000001,
+            "scriptDurationMs": 69.93599999999999,
+            "layoutCount": 11,
+            "layoutDurationMs": 1.998999999999999,
+            "recalcStyleCount": 22
+          }
+        },
+        {
+          "name": "theme-light-0",
+          "start": 34132,
+          "end": 37198.59999999998,
+          "wallMs": 3066.5999999999767,
+          "frameStats": {
+            "samples": 122,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 100,
+            "maxMs": 166.59999999999854,
+            "intervalsOver33Ms": 11,
+            "intervalsOver50Ms": 11,
+            "estimatedMissedVsync": 62,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 1285.3300000000017,
+            "scriptDurationMs": 78.20800000000006,
+            "layoutCount": 11,
+            "layoutDurationMs": 1.1000000000000003,
+            "recalcStyleCount": 22
+          }
+        },
+        {
+          "name": "theme-dark-1",
+          "start": 37208.29999999999,
+          "end": 39755.79999999999,
+          "wallMs": 2547.5,
+          "frameStats": {
+            "samples": 94,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 116.59999999999854,
+            "maxMs": 166.70000000000437,
+            "intervalsOver33Ms": 10,
+            "intervalsOver50Ms": 10,
+            "estimatedMissedVsync": 59,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 1216.8869999999997,
+            "scriptDurationMs": 37.93499999999983,
+            "layoutCount": 11,
+            "layoutDurationMs": 1.6199999999999999,
+            "recalcStyleCount": 22
+          }
+        },
+        {
+          "name": "theme-light-1",
+          "start": 39765,
+          "end": 42778.79999999999,
+          "wallMs": 3013.7999999999884,
+          "frameStats": {
+            "samples": 120,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 100,
+            "maxMs": 166.6999999999971,
+            "intervalsOver33Ms": 11,
+            "intervalsOver50Ms": 11,
+            "estimatedMissedVsync": 60,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 1229.9829999999972,
+            "scriptDurationMs": 60.081999999999965,
+            "layoutCount": 11,
+            "layoutDurationMs": 1.1800000000000006,
+            "recalcStyleCount": 21
+          }
+        },
+        {
+          "name": "sheet-cycle-0",
+          "start": 42788.09999999998,
+          "end": 45703.59999999998,
+          "wallMs": 2915.5,
+          "frameStats": {
+            "samples": 48,
+            "medianMs": 66.59999999999854,
+            "p95Ms": 100,
+            "maxMs": 100.09999999999854,
+            "intervalsOver33Ms": 36,
+            "intervalsOver50Ms": 28,
+            "estimatedMissedVsync": 127,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 3160.8260000000037,
+            "scriptDurationMs": 94.02500000000002,
+            "layoutCount": 33,
+            "layoutDurationMs": 7.901000000000002,
+            "recalcStyleCount": 60
+          }
+        },
+        {
+          "name": "sheet-cycle-1",
+          "start": 46165.09999999998,
+          "end": 49095.70000000001,
+          "wallMs": 2930.600000000035,
+          "frameStats": {
+            "samples": 48,
+            "medianMs": 66.59999999999854,
+            "p95Ms": 100,
+            "maxMs": 100.09999999999854,
+            "intervalsOver33Ms": 36,
+            "intervalsOver50Ms": 30,
+            "estimatedMissedVsync": 127,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 3153.137000000001,
+            "scriptDurationMs": 83.29999999999993,
+            "layoutCount": 33,
+            "layoutDurationMs": 4.130000000000002,
+            "recalcStyleCount": 61
+          }
+        },
+        {
+          "name": "sheet-cycle-2",
+          "start": 49467.29999999999,
+          "end": 52554.29999999999,
+          "wallMs": 3087,
+          "frameStats": {
+            "samples": 50,
+            "medianMs": 66.59999999999854,
+            "p95Ms": 100.09999999999854,
+            "maxMs": 116.70000000000437,
+            "intervalsOver33Ms": 38,
+            "intervalsOver50Ms": 30,
+            "estimatedMissedVsync": 135,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 3368.420999999998,
+            "scriptDurationMs": 94.35499999999996,
+            "layoutCount": 33,
+            "layoutDurationMs": 4.244999999999999,
+            "recalcStyleCount": 61
+          }
+        },
+        {
+          "name": "sheet-cycle-3",
+          "start": 52957.20000000001,
+          "end": 56043,
+          "wallMs": 3085.7999999999884,
+          "frameStats": {
+            "samples": 51,
+            "medianMs": 66.60000000000582,
+            "p95Ms": 100,
+            "maxMs": 100.09999999999854,
+            "intervalsOver33Ms": 38,
+            "intervalsOver50Ms": 31,
+            "estimatedMissedVsync": 134,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 3314.9220000000028,
+            "scriptDurationMs": 86.73900000000012,
+            "layoutCount": 33,
+            "layoutDurationMs": 3.9939999999999976,
+            "recalcStyleCount": 61
+          }
+        },
+        {
+          "name": "sheet-cycle-4",
+          "start": 56504.20000000001,
+          "end": 59587.40000000002,
+          "wallMs": 3083.2000000000116,
+          "frameStats": {
+            "samples": 51,
+            "medianMs": 66.69999999999709,
+            "p95Ms": 100,
+            "maxMs": 100.10000000000582,
+            "intervalsOver33Ms": 38,
+            "intervalsOver50Ms": 30,
+            "estimatedMissedVsync": 134,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 3305.4210000000026,
+            "scriptDurationMs": 86.01499999999996,
+            "layoutCount": 33,
+            "layoutDurationMs": 4.208000000000004,
+            "recalcStyleCount": 61
+          }
+        },
+        {
+          "name": "sheet-cycle-5",
+          "start": 59962.29999999999,
+          "end": 63052.59999999998,
+          "wallMs": 3090.2999999999884,
+          "frameStats": {
+            "samples": 51,
+            "medianMs": 66.69999999999709,
+            "p95Ms": 100,
+            "maxMs": 100.09999999999854,
+            "intervalsOver33Ms": 38,
+            "intervalsOver50Ms": 30,
+            "estimatedMissedVsync": 135,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 3324.005999999997,
+            "scriptDurationMs": 96.57399999999994,
+            "layoutCount": 33,
+            "layoutDurationMs": 5.321,
+            "recalcStyleCount": 61
+          }
+        },
+        {
+          "name": "sheet-real-touch-drag",
+          "start": 63512.79999999999,
+          "end": 64410.70000000001,
+          "wallMs": 897.9000000000233,
+          "frameStats": {
+            "samples": 27,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 100,
+            "maxMs": 100.09999999999854,
+            "intervalsOver33Ms": 6,
+            "intervalsOver50Ms": 6,
+            "estimatedMissedVsync": 27,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 844.2009999999982,
+            "scriptDurationMs": 18.943000000000154,
+            "layoutCount": 5,
+            "layoutDurationMs": 1.336999999999998,
+            "recalcStyleCount": 10
+          }
+        },
+        {
+          "name": "radar-manual-0",
+          "start": 64739.40000000002,
+          "end": 66828.70000000001,
+          "wallMs": 2089.2999999999884,
+          "frameStats": {
+            "samples": 80,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 83.40000000000146,
+            "maxMs": 100,
+            "intervalsOver33Ms": 11,
+            "intervalsOver50Ms": 10,
+            "estimatedMissedVsync": 45,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 994.7449999999947,
+            "scriptDurationMs": 24.753000000000025,
+            "layoutCount": 6,
+            "layoutDurationMs": 0.7230000000000014,
+            "recalcStyleCount": 10
+          }
+        },
+        {
+          "name": "radar-manual-1",
+          "start": 66837.79999999999,
+          "end": 68351.79999999999,
+          "wallMs": 1514,
+          "frameStats": {
+            "samples": 69,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 83.30000000000291,
+            "maxMs": 100.09999999999127,
+            "intervalsOver33Ms": 5,
+            "intervalsOver50Ms": 5,
+            "estimatedMissedVsync": 22,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 497.59300000000195,
+            "scriptDurationMs": 11.368999999999962,
+            "layoutCount": 1,
+            "layoutDurationMs": 0.16300000000000342,
+            "recalcStyleCount": 0
+          }
+        },
+        {
+          "name": "radar-manual-2",
+          "start": 68360,
+          "end": 69874.5,
+          "wallMs": 1514.5,
+          "frameStats": {
+            "samples": 74,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 83.30000000000291,
+            "maxMs": 100,
+            "intervalsOver33Ms": 4,
+            "intervalsOver50Ms": 4,
+            "estimatedMissedVsync": 17,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 415.3300000000044,
+            "scriptDurationMs": 10.86200000000015,
+            "layoutCount": 1,
+            "layoutDurationMs": 0.11399999999999605,
+            "recalcStyleCount": 0
+          }
+        },
+        {
+          "name": "radar-rapid-frames",
+          "start": 69883.90000000002,
+          "end": 74144.79999999999,
+          "wallMs": 4260.899999999965,
+          "frameStats": {
+            "samples": 105,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 100,
+            "maxMs": 100.10000000000582,
+            "intervalsOver33Ms": 34,
+            "intervalsOver50Ms": 33,
+            "estimatedMissedVsync": 150,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 3378.2580000000025,
+            "scriptDurationMs": 80.8739999999999,
+            "layoutCount": 10,
+            "layoutDurationMs": 2.8430000000000053,
+            "recalcStyleCount": 0
+          }
+        },
+        {
+          "name": "radar-real-playback-pan",
+          "start": 74190.59999999998,
+          "end": 113162.5,
+          "wallMs": 38971.90000000002,
+          "frameStats": {
+            "samples": 1996,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 16.80000000000291,
+            "maxMs": 100.10000000000582,
+            "intervalsOver33Ms": 78,
+            "intervalsOver50Ms": 78,
+            "estimatedMissedVsync": 343,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 7426.324000000001,
+            "scriptDurationMs": 180.91499999999994,
+            "layoutCount": 2,
+            "layoutDurationMs": 0.27800000000000047,
+            "recalcStyleCount": 3
+          }
+        },
+        {
+          "name": "location-Xian",
+          "start": 113255.79999999999,
+          "end": 116316.5,
+          "wallMs": 3060.7000000000116,
+          "frameStats": {
+            "samples": 115,
+            "medianMs": 16.69999999999709,
+            "p95Ms": 50.10000000000582,
+            "maxMs": 216.59999999999127,
+            "intervalsOver33Ms": 24,
+            "intervalsOver50Ms": 8,
+            "estimatedMissedVsync": 69,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 2275.071000000004,
+            "scriptDurationMs": 173.73300000000035,
+            "layoutCount": 9,
+            "layoutDurationMs": 9.931999999999997,
+            "recalcStyleCount": 16
+          }
+        },
+        {
+          "name": "reduced-motion-sheet",
+          "start": 120375.79999999999,
+          "end": 121777.09999999998,
+          "wallMs": 1401.2999999999884,
+          "frameStats": {
+            "samples": 38,
+            "medianMs": 49.90000000000873,
+            "p95Ms": 66.69999999999709,
+            "maxMs": 66.69999999999709,
+            "intervalsOver33Ms": 21,
+            "intervalsOver50Ms": 5,
+            "estimatedMissedVsync": 46,
+            "note": "rAF intervals / 16.667ms heuristic, not measured screen presentation or physical-device FPS"
+          },
+          "mainThread": {
+            "taskDurationMs": 1114.1599999999983,
+            "scriptDurationMs": 48.83599999999966,
+            "layoutCount": 6,
+            "layoutDurationMs": 5.777000000000005,
+            "recalcStyleCount": 12
+          }
+        }
+      ],
+      "xian": {
+        "at": "2026-10-11T07:51:37.689Z",
+        "dom": {
+          "documents": 1,
+          "nodes": 3133,
+          "jsEventListeners": 273
+        },
+        "performance": {
+          "Timestamp": 429.922331,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 1,
+          "Frames": 1,
+          "JSEventListeners": 273,
+          "LayoutObjects": 132,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 3133,
+          "Resources": 26,
+          "ContextLifecycleStateObservers": 14,
+          "V8PerContextDatas": 2,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 2,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 0,
+          "ArrayBufferContents": 2345,
+          "LayoutCount": 298,
+          "RecalcStyleCount": 537,
+          "LayoutDuration": 0.067225,
+          "RecalcStyleDuration": 0.090557,
+          "DevToolsCommandDuration": 0.837045,
+          "ScriptDuration": 2.337807,
+          "V8CompileDuration": 6.4e-05,
+          "TaskDuration": 65.150434,
+          "TaskOtherDuration": 61.817736,
+          "ThreadTime": 5.651413,
+          "ProcessTime": 14.25,
+          "JSHeapUsedSize": 16374412,
+          "JSHeapTotalSize": 27140096,
+          "FirstMeaningfulPaint": 313.709319,
+          "DomContentLoaded": 313.641261,
+          "NavigationStart": 313.571959
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "20°C",
+        "condition": "มีเมฆบางส่วน",
+        "location": "cn-xian",
+        "summary": "แบบจำลอง · ควรใส่ใจสภาพอากาศ",
+        "radarFrame": "1791703800",
+        "radarLabel": "2026-10-11T07:30:00.000Z",
+        "radarNotice": "จีนอาจไม่ครอบคลุม",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 151,
+          "resize": 150,
+          "setStyle": 5,
+          "addSource": 18,
+          "addLayer": 36,
+          "setData": 19,
+          "setTiles": 15,
+          "flyTo": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 1791705006586,
+            "status": "error",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 1791705006589,
+            "status": "error",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791704981763,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          },
+          {
+            "key": [
+              "places",
+              ""
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "weather",
+              "CN",
+              34.2658,
+              108.9541,
+              "Asia/Shanghai"
+            ],
+            "dataUpdatedAt": 1791705095244,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "CN",
+              34.2658,
+              108.9541,
+              "Asia/Shanghai"
+            ],
+            "dataUpdatedAt": 1791705095220,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          }
+        ]
+      },
+      "resumed": {
+        "at": "2026-10-11T07:51:40.764Z",
+        "dom": {
+          "documents": 1,
+          "nodes": 3134,
+          "jsEventListeners": 273
+        },
+        "performance": {
+          "Timestamp": 432.996476,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 1,
+          "Frames": 1,
+          "JSEventListeners": 273,
+          "LayoutObjects": 132,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 3134,
+          "Resources": 26,
+          "ContextLifecycleStateObservers": 14,
+          "V8PerContextDatas": 2,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 2,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 0,
+          "ArrayBufferContents": 2345,
+          "LayoutCount": 298,
+          "RecalcStyleCount": 541,
+          "LayoutDuration": 0.067225,
+          "RecalcStyleDuration": 0.090909,
+          "DevToolsCommandDuration": 0.845411,
+          "ScriptDuration": 2.340134,
+          "V8CompileDuration": 6.4e-05,
+          "TaskDuration": 65.176157,
+          "TaskOtherDuration": 61.832414,
+          "ThreadTime": 5.682944,
+          "ProcessTime": 14.31,
+          "JSHeapUsedSize": 18348140,
+          "JSHeapTotalSize": 27140096,
+          "FirstMeaningfulPaint": 313.709319,
+          "DomContentLoaded": 313.641261,
+          "NavigationStart": 313.571959
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "20°C",
+        "condition": "มีเมฆบางส่วน",
+        "location": "cn-xian",
+        "summary": "แบบจำลอง · ควรใส่ใจสภาพอากาศ",
+        "radarFrame": "1791703800",
+        "radarLabel": "2026-10-11T07:30:00.000Z",
+        "radarNotice": "จีนอาจไม่ครอบคลุม",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 151,
+          "resize": 150,
+          "setStyle": 5,
+          "addSource": 18,
+          "addLayer": 36,
+          "setData": 19,
+          "setTiles": 15,
+          "flyTo": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 1791705006586,
+            "status": "error",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 1791705006589,
+            "status": "error",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791704981763,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          },
+          {
+            "key": [
+              "places",
+              ""
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "weather",
+              "CN",
+              34.2658,
+              108.9541,
+              "Asia/Shanghai"
+            ],
+            "dataUpdatedAt": 1791705095244,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "CN",
+              34.2658,
+              108.9541,
+              "Asia/Shanghai"
+            ],
+            "dataUpdatedAt": 1791705095220,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          }
+        ]
+      },
+      "final": {
+        "at": "2026-10-11T07:51:43.771Z",
+        "dom": {
+          "documents": 3,
+          "nodes": 6423,
+          "jsEventListeners": 410
+        },
+        "performance": {
+          "Timestamp": 436.003049,
+          "AudioHandlers": 0,
+          "AudioWorkletProcessors": 0,
+          "Documents": 3,
+          "Frames": 3,
+          "JSEventListeners": 410,
+          "LayoutObjects": 1210,
+          "MediaKeySessions": 0,
+          "MediaKeys": 0,
+          "Nodes": 6423,
+          "Resources": 29,
+          "ContextLifecycleStateObservers": 18,
+          "V8PerContextDatas": 2,
+          "WorkerGlobalScopes": 1,
+          "UACSSResources": 0,
+          "RTCPeerConnections": 0,
+          "ResourceFetchers": 4,
+          "AdSubframes": 0,
+          "DetachedScriptStates": 0,
+          "ArrayBufferContents": 2336,
+          "LayoutCount": 320,
+          "RecalcStyleCount": 582,
+          "LayoutDuration": 0.096926,
+          "RecalcStyleDuration": 0.116098,
+          "DevToolsCommandDuration": 0.951822,
+          "ScriptDuration": 2.461216,
+          "V8CompileDuration": 6.4e-05,
+          "TaskDuration": 67.443503,
+          "TaskOtherDuration": 63.817377,
+          "ThreadTime": 6.045961,
+          "ProcessTime": 14.92,
+          "JSHeapUsedSize": 22485580,
+          "JSHeapTotalSize": 30285824,
+          "FirstMeaningfulPaint": 313.709319,
+          "DomContentLoaded": 313.641261,
+          "NavigationStart": 313.571959
+        },
+        "engine": "maplibre",
+        "status": "ready",
+        "temperature": "20°C",
+        "condition": "มีเมฆบางส่วน",
+        "location": "cn-xian",
+        "summary": "แบบจำลอง · ควรใส่ใจสภาพอากาศ",
+        "radarFrame": "1791703800",
+        "radarLabel": "2026-10-11T07:30:00.000Z",
+        "radarNotice": "จีนอาจไม่ครอบคลุม",
+        "canvasCount": 1,
+        "overflow": false,
+        "visibility": "visible",
+        "theme": "light",
+        "mapInstances": 1,
+        "mapCalls": {
+          "setPadding": 155,
+          "resize": 156,
+          "setStyle": 5,
+          "addSource": 18,
+          "addLayer": 36,
+          "setData": 19,
+          "setTiles": 15,
+          "flyTo": 1
+        },
+        "query": [
+          {
+            "key": [
+              "weather",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 1791705006586,
+            "status": "error",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "air",
+              "TH",
+              13.7563,
+              100.5018,
+              "Asia/Bangkok"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 1791705006589,
+            "status": "error",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "radar"
+            ],
+            "dataUpdatedAt": 1791704981763,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "OBSERVED"
+          },
+          {
+            "key": [
+              "places",
+              ""
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          },
+          {
+            "key": [
+              "weather",
+              "CN",
+              34.2658,
+              108.9541,
+              "Asia/Shanghai"
+            ],
+            "dataUpdatedAt": 1791705095244,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791704700
+          },
+          {
+            "key": [
+              "air",
+              "CN",
+              34.2658,
+              108.9541,
+              "Asia/Shanghai"
+            ],
+            "dataUpdatedAt": 1791705095220,
+            "errorUpdatedAt": 0,
+            "status": "success",
+            "fetchStatus": "idle",
+            "staleByTime": false,
+            "dataType": "MODELED",
+            "sourceTime": 1791702000
+          },
+          {
+            "key": [
+              "places",
+              "เชียงใหม่"
+            ],
+            "dataUpdatedAt": 0,
+            "errorUpdatedAt": 0,
+            "status": "pending",
+            "fetchStatus": "idle",
+            "staleByTime": true
+          }
+        ]
+      }
+    }
+  ],
+  "stages": [
+    {
+      "name": "production-loads",
+      "status": "completed",
+      "durationMs": 225056
+    },
+    {
+      "name": "map-radar-sheet-interactions",
+      "status": "completed",
+      "durationMs": 124926
+    },
+    {
+      "name": "api-reliability-controlled",
+      "status": "completed",
+      "durationMs": 79859
+    },
+    {
+      "name": "radar-render-truth-failures",
+      "status": "completed",
+      "durationMs": 27666
+    },
+    {
+      "name": "webgl-failure-fallback",
+      "status": "completed",
+      "durationMs": 12859
+    },
+    {
+      "name": "sustained-10-minute-real-time",
+      "status": "completed",
+      "durationMs": 605518
+    }
+  ],
+  "infrastructureFailures": [],
+  "INP": null,
+  "physicalIphone": false
+}

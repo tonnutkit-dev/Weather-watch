@@ -1,0 +1,58 @@
+[
+  {
+    "trace": "test-results/mobile-layout-Mobile-V0-2--a0886-light-dark-controls-and-map/trace.zip",
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=13.7563&longitude=100.5018&current=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cis_day%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m%2Cpressure_msl&hourly=temperature_2m%2Cprecipitation_probability%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cprecipitation_probability_max%2Cwind_speed_10m_max&forecast_days=16&timezone=Asia%2FBangkok&timeformat=unixtime&wind_speed_unit=kmh",
+    "elapsedMs": 11996.527000000002,
+    "status": -1,
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "trace": "test-results/mobile-layout-Mobile-V0-2--a0886-light-dark-controls-and-map/trace.zip",
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=13.7563&longitude=100.5018&current=pm2_5%2Cpm10%2Cus_aqi&hourly=pm2_5%2Cpm10%2Cus_aqi&forecast_days=5&domains=cams_global&timezone=Asia%2FBangkok&timeformat=unixtime",
+    "elapsedMs": 11995.294000000002,
+    "status": -1,
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "trace": "test-results/mobile-layout-Mobile-V0-2--a0886-light-dark-controls-and-map/trace.zip",
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=13.7563&longitude=100.5018&current=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cis_day%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m%2Cpressure_msl&hourly=temperature_2m%2Cprecipitation_probability%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cprecipitation_probability_max%2Cwind_speed_10m_max&forecast_days=16&timezone=Asia%2FBangkok&timeformat=unixtime&wind_speed_unit=kmh",
+    "elapsedMs": 11999.623,
+    "status": -1,
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "trace": "test-results/mobile-layout-Mobile-V0-2--a0886-light-dark-controls-and-map/trace.zip",
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=13.7563&longitude=100.5018&current=pm2_5%2Cpm10%2Cus_aqi&hourly=pm2_5%2Cpm10%2Cus_aqi&forecast_days=5&domains=cams_global&timezone=Asia%2FBangkok&timeformat=unixtime",
+    "elapsedMs": 12003.555999999997,
+    "status": -1,
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "trace": "test-results/prototype-mobile-states-and-no-horizontal-overflow/trace.zip",
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=13.7563&longitude=100.5018&current=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cis_day%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m%2Cpressure_msl&hourly=temperature_2m%2Cprecipitation_probability%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cprecipitation_probability_max%2Cwind_speed_10m_max&forecast_days=16&timezone=Asia%2FBangkok&timeformat=unixtime&wind_speed_unit=kmh",
+    "elapsedMs": 11997.494999999995,
+    "status": -1,
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "trace": "test-results/prototype-mobile-states-and-no-horizontal-overflow/trace.zip",
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=13.7563&longitude=100.5018&current=pm2_5%2Cpm10%2Cus_aqi&hourly=pm2_5%2Cpm10%2Cus_aqi&forecast_days=5&domains=cams_global&timezone=Asia%2FBangkok&timeformat=unixtime",
+    "elapsedMs": 11998.027000000002,
+    "status": -1,
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "trace": "test-results/prototype-mobile-states-and-no-horizontal-overflow/trace.zip",
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=13.7563&longitude=100.5018&current=temperature_2m%2Crelative_humidity_2m%2Capparent_temperature%2Cis_day%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m%2Cpressure_msl&hourly=temperature_2m%2Cprecipitation_probability%2Cprecipitation%2Cweather_code%2Cwind_speed_10m%2Cwind_direction_10m&daily=weather_code%2Ctemperature_2m_max%2Ctemperature_2m_min%2Cprecipitation_sum%2Cprecipitation_probability_max%2Cwind_speed_10m_max&forecast_days=16&timezone=Asia%2FBangkok&timeformat=unixtime&wind_speed_unit=kmh",
+    "elapsedMs": 11999.949999999983,
+    "status": -1,
+    "failure": "net::ERR_ABORTED"
+  },
+  {
+    "trace": "test-results/prototype-mobile-states-and-no-horizontal-overflow/trace.zip",
+    "url": "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=13.7563&longitude=100.5018&current=pm2_5%2Cpm10%2Cus_aqi&hourly=pm2_5%2Cpm10%2Cus_aqi&forecast_days=5&domains=cams_global&timezone=Asia%2FBangkok&timeformat=unixtime",
+    "elapsedMs": 12003.693000000014,
+    "status": -1,
+    "failure": "net::ERR_ABORTED"
+  }
+]

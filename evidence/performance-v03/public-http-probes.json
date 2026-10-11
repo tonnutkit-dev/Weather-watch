@@ -1,0 +1,50 @@
+{
+  "url": "https://tonnutkit-dev.github.io/Weather-watch/",
+  "at": "2026-10-11T07:54:42.833195+00:00",
+  "environment": "scratch curl, new process per run, HTTP-only; not browser LCP or GitHub runner",
+  "runs": [
+    {
+      "http_code": 200,
+      "time_namelookup": 4e-05,
+      "time_connect": 0.000487,
+      "time_appconnect": 6.811048,
+      "time_starttransfer": 7.076088,
+      "time_total": 7.076729,
+      "size_download": 623,
+      "http_version": "2",
+      "url_effective": "https://tonnutkit-dev.github.io/Weather-watch/"
+    },
+    {
+      "http_code": 200,
+      "time_namelookup": 3.8e-05,
+      "time_connect": 0.000424,
+      "time_appconnect": 7.045719,
+      "time_starttransfer": 7.277234,
+      "time_total": 7.319222,
+      "size_download": 623,
+      "http_version": "2",
+      "url_effective": "https://tonnutkit-dev.github.io/Weather-watch/"
+    },
+    {
+      "http_code": 200,
+      "time_namelookup": 3.9e-05,
+      "time_connect": 0.000236,
+      "time_appconnect": 7.060585,
+      "time_starttransfer": 7.231531,
+      "time_total": 7.232333,
+      "size_download": 623,
+      "http_version": "2",
+      "url_effective": "https://tonnutkit-dev.github.io/Weather-watch/"
+    }
+  ],
+  "release": {
+    "project": "Weather Watch",
+    "version": "0.2.0",
+    "commit": "2036e2ac788cb31d25fd387cb40520ad95c408a6",
+    "base": "/Weather-watch/",
+    "site": "https://tonnutkit-dev.github.io/Weather-watch/",
+    "builtAt": "2026-10-11T05:12:05.577Z",
+    "channel": "public-qa"
+  },
+  "physicalDevice": false
+}

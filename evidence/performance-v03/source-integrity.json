@@ -1,0 +1,19 @@
+{
+  "baseline": "2036e2ac788cb31d25fd387cb40520ad95c408a6",
+  "measuredAuditCommit": "9933e4383e899be752667021fa3dd24e6f067a1d",
+  "protectedProductionPaths": [
+    "src",
+    "package.json",
+    "package-lock.json",
+    "vite.config.ts",
+    "DESIGN.md",
+    ".github/workflows/pages.yml"
+  ],
+  "productionSourceChanged": false,
+  "productionDiff": "",
+  "approvedDesignCommit": "19ec27ce5abc338a65cf368d17f6d3abbf884840",
+  "workflowHasDeployJob": false,
+  "localBrowserInstall": "FAILED: downloaded archive invalid; use CI browser only",
+  "localOriginalUnitTests": 49,
+  "localRadarTransportContractTests": 6
+}

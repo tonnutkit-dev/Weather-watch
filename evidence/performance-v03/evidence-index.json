@@ -1,0 +1,21 @@
+{
+  "executionCommit": "9933e4383e899be752667021fa3dd24e6f067a1d",
+  "productionBaseline": "2036e2ac788cb31d25fd387cb40520ad95c408a6",
+  "run": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38122422039",
+  "artifactId": 11696027986,
+  "artifactBytes": 73752671,
+  "artifactSHA256": "9a92178eae193acb52d705fb7b7862cfe7ddb0c979e44e893eee87f0864a3012",
+  "auditStagesCompleted": 6,
+  "stageFailures": [],
+  "loads": 18,
+  "reliabilityCases": 14,
+  "sustainedMs": 600444,
+  "existingUnitTestsPassed": 49,
+  "extraContractTestsPassed": 6,
+  "e2eFirstAttemptPassed": 7,
+  "e2eFlakyRetryPassed": 2,
+  "deployed": false,
+  "merged": false,
+  "physicalIphoneTested": false,
+  "decision": "NOT READY — CORRECTIONS REQUIRED"
+}

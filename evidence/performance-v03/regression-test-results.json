@@ -1,0 +1,47 @@
+[
+  {
+    "title": "375\u00d7667: all sheet states, light/dark, controls and map",
+    "outcome": "expected",
+    "duration": 18084
+  },
+  {
+    "title": "390\u00d7844: all sheet states, light/dark, controls and map",
+    "outcome": "expected",
+    "duration": 18895
+  },
+  {
+    "title": "430\u00d7932: all sheet states, light/dark, controls and map",
+    "outcome": "flaky",
+    "duration": 65571
+  },
+  {
+    "title": "tablet layout retains map, forecast, geography and both themes",
+    "outcome": "expected",
+    "duration": 3913
+  },
+  {
+    "title": "live map/weather and appearance/location integrity",
+    "outcome": "expected",
+    "duration": 4321
+  },
+  {
+    "title": "mobile states and no horizontal overflow",
+    "outcome": "flaky",
+    "duration": 62619
+  },
+  {
+    "title": "subdirectory assets, real radar imagery and playback",
+    "outcome": "expected",
+    "duration": 19809
+  },
+  {
+    "title": "provider connection failure preserves independent map",
+    "outcome": "expected",
+    "duration": 1962
+  },
+  {
+    "title": "offline error is meaningful",
+    "outcome": "expected",
+    "duration": 367
+  }
+]
