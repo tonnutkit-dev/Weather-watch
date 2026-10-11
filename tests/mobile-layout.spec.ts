@@ -179,13 +179,21 @@ test.describe("Mobile V0.2 composition", () => {
       const beforeZoom = await map.getAttribute("data-map-zoom");
       // Actual Chromium touch pinch, independent of hidden zoom buttons.
       const cdp = await context.newCDPSession(page);
-      await cdp.send("Input.synthesizePinchGesture", {
-        x: 140,
-        y: 230,
-        scaleFactor: 1.4,
-        gestureSourceType: "touch",
-        relativeSpeed: 300,
-      });
+      // Assert that the gesture actually targets the map after sheet transitions.
+      await expect.poll(() => page.evaluate(() =>
+        !!document.elementFromPoint(140, 230)?.closest('.maplibregl-canvas'))).toBe(true);
+      // Send real two-finger DOM touch input: compositor-only synthesized pinch can
+      // zoom the browser or do nothing in headless mobile Chromium. Zoom assertion stays unchanged.
+      const fingers = (spread: number) => [
+        { x: 140 - spread, y: 230, id: 0, radiusX: 3, radiusY: 3, force: 1 },
+        { x: 140 + spread, y: 230, id: 1, radiusX: 3, radiusY: 3, force: 1 },
+      ];
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: fingers(36) });
+      for (let step = 1; step <= 8; step++) {
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: fingers(36 * (1 + .4 * step / 8)) });
+        await page.waitForTimeout(20); // Spaced input events, not a readiness sleep.
+      }
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
 
       await expect
         .poll(() => map.getAttribute("data-map-zoom"), { timeout: 10000 })

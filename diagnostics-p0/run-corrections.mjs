@@ -116,6 +116,16 @@ try {
     const count=s.state.airCalls;await s.page.evaluate(()=>{for(let i=0;i<10;i++){window.dispatchEvent(new Event('online'));window.dispatchEvent(new Event('focus'));}});await sleep(300);
     assert.equal(s.state.airCalls,count);await s.c.close();return {initial,partial,expired,counts:{weather:s.state.weatherCalls,air:s.state.airCalls}};
   });
+  for(const after of [false,true])await check(`${after?'after':'before'}-actual-DOM-pinch`,async()=>{
+    const s=await context({after});await open(s);
+    const before=await s.page.locator('.map-canvas').getAttribute('data-map-zoom');
+    const fingers=spread=>[{x:140-spread,y:230,id:0},{x:140+spread,y:230,id:1}];
+    await s.cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:fingers(36)});
+    for(let i=1;i<=8;i++){await s.cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:fingers(36*(1+.4*i/8))});await sleep(20);}
+    await s.cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await sleep(800);
+    const zoom=await s.page.locator('.map-canvas').getAttribute('data-map-zoom');assert.notEqual(zoom,before);
+    assert.equal((await snapshot(s)).mapInstances,1);await s.c.close();return {before,after:zoom};
+  });
   for(const size of [{width:375,height:667},{width:390,height:844},{width:430,height:932}])for(const dark of [false,true])await check(`after-geometry-${size.width}-${dark?'dark':'light'}`,async()=>{
     const s=await context({size,reduced:true});await open(s);if(dark)await theme(s,true);const rows=[];
     for(const sheet of ['collapsed','half','expanded']){
