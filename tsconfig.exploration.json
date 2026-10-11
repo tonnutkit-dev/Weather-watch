@@ -1,0 +1,1 @@
+{"extends":"./tsconfig.json","include":["exploration/src"],"compilerOptions":{"types":["vite/client"]}}

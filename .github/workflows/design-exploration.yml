@@ -1,0 +1,50 @@
+name: Weather Watch isolated design exploration
+on:
+  push:
+    branches: [work/premium-visual-exploration]
+permissions:
+  contents: read
+concurrency:
+  group: weather-watch-design-exploration
+  cancel-in-progress: false
+jobs:
+  visual-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout isolated source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Node 24
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24
+          cache: npm
+      - name: Reproducible install
+        run: npm ci
+      - name: Original application type checks and tests
+        run: |
+          npm run typecheck
+          npm test
+          npm run build
+          npm run verify:pages
+      - name: Isolated strict check and production build
+        run: |
+          npx tsc -p tsconfig.exploration.json --pretty false
+          npx vite build --config vite.exploration.config.ts
+      - name: Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Real browser design QA
+        run: npx playwright test --config exploration/playwright.config.ts
+      - name: Retain screenshots and runnable prototypes
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: design-exploration-${{ github.run_id }}
+          path: |
+            exploration/playwright-report/
+            exploration/test-results/
+            exploration/dist/
+          retention-days: 14
+      - name: Failure report
+        if: failure()
+        run: echo '::error::Isolated design QA failed. No Pages publishing step exists in this workflow; main and public QA remain unchanged.'
