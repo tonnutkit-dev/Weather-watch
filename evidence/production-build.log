@@ -5,7 +5,7 @@ npm warn Unknown env config "http-proxy". This will stop working in the next maj
 
 vite v7.3.7 building client environment for production...
 transforming...
-✓ 1826 modules transformed.
+✓ 1824 modules transformed.
 rendering chunks...
 computing gzip size...
 dist/index.html                                                     1.12 kB │ gzip:   0.62 kB
@@ -33,13 +33,13 @@ dist/assets/noto-sans-thai-latin-700-normal-C4AMFKt5.woff          12.94 kB
 dist/assets/noto-sans-thai-latin-400-normal-Dh_FJjOB.woff          13.14 kB
 dist/assets/noto-sans-thai-latin-600-normal-Dbc-dNO6.woff          13.15 kB
 dist/assets/noto-sans-thai-latin-500-normal-BC04jsmm.woff          13.18 kB
-dist/assets/maplibre-gl-csp-worker-BF1M-q9C.js                    457.88 kB
+dist/assets/maplibre-gl-worker-VaXr2Fck.mjs                       508.31 kB
 dist/assets/RasterCanvas-CIGW-MKW.css                              15.61 kB │ gzip:   6.46 kB
 dist/assets/index-bOi27kAX.css                                     37.67 kB │ gzip:   7.94 kB
-dist/assets/GLCanvas-DNVN2dqC.css                                  69.92 kB │ gzip:  10.05 kB
-dist/assets/MapCanvas-D9MKSpiq.js                                   0.92 kB │ gzip:   0.56 kB
+dist/assets/GLCanvas-RZO-t2LB.css                                  83.13 kB │ gzip:  10.53 kB
+dist/assets/MapCanvas-BsAgkH_H.js                                   0.92 kB │ gzip:   0.56 kB
 dist/assets/budget-Cq4xWVoz.js                                      1.01 kB │ gzip:   0.58 kB
-dist/assets/RasterCanvas-B1ov4TCj.js                              156.71 kB │ gzip:  46.07 kB
-dist/assets/index-DZ4Gs8pt.js                                     404.59 kB │ gzip: 129.73 kB
-dist/assets/GLCanvas-U7jBTvZ1.js                                1,059.27 kB │ gzip: 287.03 kB
-✓ built in 5.03s
+dist/assets/RasterCanvas-CH4tcKRA.js                              156.71 kB │ gzip:  46.07 kB
+dist/assets/index-DWr4HioS.js                                     404.59 kB │ gzip: 129.73 kB
+dist/assets/GLCanvas-B4RjxBB4.js                                1,042.27 kB │ gzip: 284.37 kB
+✓ built in 4.26s

@@ -6,11 +6,12 @@ Outcome: Foundation PASS. Functional prototype CONDITIONAL PASS. Real weather, f
 | Command/check | Result | Evidence / scope |
 |---|---|---|
 | npm install + lockfile | PASS | Pinned resolved dependency lock |
-| npm ci | PASS | Reproducible 196-package install, no paid service |
+| npm ci | PASS | Reproducible lockfile install, no paid service |
 | npm run typecheck | PASS | Strict TS, noUnused/noUncheckedIndexedAccess; evidence/typecheck.log |
 | npm test | PASS: 45/45, 3 files | evidence/unit-tests.log |
 | npm run build | PASS | evidence/production-build.log; lazy map engines + worker built |
 | npm run verify:data | PASS for recorded requests | 23 HTTP200 responses, 13 frames in initial audit; website vs dataset distinction in data report |
+| npm audit --json | PASS: 0 vulnerabilities (production + development) | evidence/dependency-audit.json; MapLibre 6.13.0 / Vitest 5.0.3 |
 | Prettier 3.6.2 | Executed | Source formatted for maintenance; no formatting runtime dependency |
 | Playwright CLI spec | NOT RUN | Runnable specs/config provided; cloud CUA browser used instead |
 
@@ -54,3 +55,8 @@ Run npm ci && npm run dev on a computer accessible to the device. Check Safari l
 
 ## Repository handoff
 Existing main e380a0b6fc6ecbb2a3d57e870c2cbf70ee2d9a7b contains the owner's Initial commit and README. Work is prepared on work/weather-watch-foundation-01, preserving that commit as ancestor. Exact final/pushed SHA, remote verification, bundle verification and clean status are supplied in the external HANDOFF.md so a commit does not self-reference its own hash.
+
+## Security follow-up before final handoff
+Initial npm production audit found MapLibre <=6.4.0 attribution sanitizer advisory GHSA-jrc7-96c5-q579. Full audit also flagged the older Vitest/mocker/tinypool chain. Updated MapLibre to 6.13.0 and Vitest to 5.0.3; migrated MapLibre namespace import and standalone ESM worker URL. Official maintainer advisories/releases reviewed. Typecheck, 45 tests and production build re-executed successfully; final full npm audit returned zero vulnerabilities. Post-upgrade cloud browser smoke test still rendered actual weather and the same Leaflet/radar fallback. Primary GL remains NOT TESTED. Recorded screenshots show the unchanged fallback UI.
+
+Advisories: https://github.com/maplibre/maplibre-gl-js/security/advisories/GHSA-jrc7-96c5-q579 ; https://github.com/vitest-dev/vitest/security/advisories/GHSA-82fw-gwwq-j7x9 . npm audit is an advisory snapshot, not a comprehensive security certification.

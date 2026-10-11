@@ -4,15 +4,10 @@ npm warn Unknown env config "http-proxy". This will stop working in the next maj
 > vitest run
 
 
- RUN  v3.2.7 /workspace/scratch/942ade11d9f2/weather-watch
+ RUN  v5.0.3 /workspace/scratch/942ade11d9f2/weather-watch
 
- ✓ src/tests/preferences.test.tsx (5 tests) 23ms
- ✓ src/tests/adapters.test.ts (34 tests) 42ms
- ✓ src/tests/app.test.tsx (6 tests) 1165ms
-   ✓ App regressions > location switching changes provider coordinates and timezone, without Thai alert logic in China  368ms
-   ✓ App regressions > geolocation is opt-in and denial preserves a usable default  318ms
 
  Test Files  3 passed (3)
       Tests  45 passed (45)
-   Start at  08:16:24
-   Duration  2.00s (transform 323ms, setup 250ms, collect 579ms, tests 1.23s, environment 780ms, prepare 149ms)
+   Start at  08:36:00
+   Duration  2.01s (tests 40%, environment 31%, transform 15%, setup 8%, import 5%)

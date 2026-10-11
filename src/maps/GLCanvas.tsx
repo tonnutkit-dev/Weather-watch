@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import maplibregl from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
 import type { Map, GeoJSONSource, RasterTileSource } from "maplibre-gl";
-import workerUrl from "maplibre-gl/dist/maplibre-gl-csp-worker.js?url";
+import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?url";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { MapProps } from "./MapCanvas";
 import { radarTiles } from "../providers/radar";
