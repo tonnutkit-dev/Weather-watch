@@ -47,17 +47,18 @@ test('real radar pixels, cadence, Pause, manual scrub and stable map', async ({ 
   }
   await page.getByRole('button',{name:'หยุดเรดาร์',exact:true}).click();
   const paused=await time.getAttribute('datetime');await page.waitForTimeout(3500);expect(await time.getAttribute('datetime')).toBe(paused);
+  await info.attach('cadence-and-pixels-before-assertions',{body:Buffer.from(JSON.stringify({phase,browser:info.project.name,advances,pixelChanges,requests},null,2)),contentType:'application/json'});
   expect(pixelChanges.filter(x=>x.changedPixels>=30).length).toBeGreaterThanOrEqual(3);
   const intervals=advances.slice(1).map((x,i)=>x.at-advances[i]!.at);
   expect(advances[0]!.at).toBeLessThanOrEqual(2000);
   // Gate/budget delays may lengthen intervals; record them without pretending a fixed FPS.
   expect(intervals.filter(x=>x>=expectedInterval-250&&x<=expectedInterval+500).length).toBeGreaterThanOrEqual(3);
-  const slider=page.getByRole('slider',{name:'เฟรมเรดาร์ย้อนหลัง',exact:true});await slider.focus();await slider.press('End');
+  const slider=page.getByRole('slider',{name:'เฟรมเรดาร์ย้อนหลัง',exact:true});await slider.focus();await slider.press('ArrowLeft');
   expect(await time.getAttribute('datetime')).not.toBe(paused);
   await expect(page.getByRole('button',{name:'เล่นเรดาร์ย้อนหลัง',exact:true})).toHaveAttribute('aria-pressed','false');
   // Basemap control: radar hidden, fixed viewport and no dynamic UI in the clip.
   await page.getByRole('button',{name:'เลือกชั้นข้อมูล'}).click();
-  await page.getByRole('checkbox',{name:/เรดาร์ฝน/}).uncheck();await page.getByRole('button',{name:'ปิด',exact:true}).click();
+  await page.getByRole('checkbox',{name:/เรดาร์ย้อนหลัง/}).uncheck();await page.getByRole('button',{name:'ปิด',exact:true}).click();
   await page.waitForTimeout(1000);const baseA=await page.screenshot({clip});await page.waitForTimeout(1000);const baseB=await page.screenshot({clip});
   const basemapControl=difference(baseA,baseB);expect(basemapControl.changedPixels).toBeLessThanOrEqual(10);
   expect(await page.evaluate(node=>node===document.querySelector('.map-canvas'),host)).toBe(true);
