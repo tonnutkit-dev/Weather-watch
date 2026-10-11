@@ -65,7 +65,7 @@ export default function App() {
     ),
     [layers, setLayers] = useState<MapLayers>({
       radar: true,
-      weather: true,
+      weather: !window.matchMedia("(max-width: 759px)").matches,
       air: false,
       coverage: false,
     });
@@ -76,6 +76,13 @@ export default function App() {
     [geoLoading, setGeoLoading] = useState(false),
     [mapAction, setMapAction] = useState(0),
     [online, setOnline] = useState(navigator.onLine);
+  useEffect(() => {
+    if (
+      sheet !== "collapsed" &&
+      window.matchMedia("(max-width: 759px)").matches
+    )
+      setPlaying(false);
+  }, [sheet]);
   const weather = useQuery({
     queryKey: [
       "weather",
@@ -365,7 +372,7 @@ export default function App() {
               aria-pressed={layers.air}
               onClick={() => toggle("air")}
             >
-              <Leaf size={16} /> US AQI
+              <Leaf size={16} /> AQI จุดนี้
             </button>
             <button
               aria-label="ชั้นข้อมูลเพิ่มเติม"
@@ -374,25 +381,29 @@ export default function App() {
               <Layers size={17} />
             </button>
           </div>
-          <button
-            className="map-recenter icon-button"
-            title="กลับไปยังตำแหน่งที่เลือก"
-            aria-label="กลับไปยังตำแหน่งที่เลือก"
-            onClick={() => setMapAction((v) => v + 1)}
+          <div
+            className="map-toolbar"
+            role="group"
+            aria-label="เครื่องมือแผนที่"
           >
-            <LocateFixed size={20} />
-          </button>
+            <button
+              className="mobile-layer-button icon-button"
+              aria-label="เลือกชั้นข้อมูล"
+              onClick={() => setModal("layers")}
+            >
+              <Layers size={20} />
+            </button>
+            <button
+              className="map-recenter icon-button"
+              title="กลับไปยังตำแหน่งที่เลือก"
+              aria-label="กลับไปยังตำแหน่งที่เลือก"
+              onClick={() => setMapAction((v) => v + 1)}
+            >
+              <LocateFixed size={20} />
+            </button>
+          </div>
           {layers.radar && (
             <>
-              <div className="radar-legend">
-                <span>ความเข้มฝน</span>
-                <div className="legend-spectrum" />
-                <div>
-                  <span>เบา</span>
-                  <span>หนัก</span>
-                </div>
-                <small>RainViewer · dBZ</small>
-              </div>
               <RadarControls
                 radar={radar.data}
                 index={index}
@@ -413,6 +424,7 @@ export default function App() {
                 timezone={location.timezone}
                 loading={radar.isFetching}
                 error={radar.isError}
+                country={location.country}
               />
             </>
           )}
@@ -427,15 +439,6 @@ export default function App() {
               เรดาร์จีนอาจไม่มีข้อมูลครอบคลุม
             </div>
           )}
-          <div className="map-source">
-            <a
-              href="https://www.rainviewer.com/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Weather data by RainViewer
-            </a>
-          </div>
         </section>
         <SituationPanel
           location={location}
@@ -525,7 +528,11 @@ export default function App() {
                   "อุณหภูมิที่จุดเลือก",
                   "Open-Meteo · ค่าจากแบบจำลอง",
                 ],
-                ["air", "คุณภาพอากาศที่จุดเลือก", "CAMS · US AQI จากแบบจำลอง"],
+                [
+                  "air",
+                  "AQI จุดนี้",
+                  "CAMS · US AQI จากแบบจำลอง ไม่ใช่ heatmap",
+                ],
                 [
                   "coverage",
                   "พื้นที่ครอบคลุมเรดาร์",
@@ -565,6 +572,9 @@ export default function App() {
               onChange={(e) => setOpacity(Number(e.target.value))}
             />
           </label>
+          <p className="micro">
+            จีบนิ้วเพื่อซูม · คีย์บอร์ด + / − ซูมแผนที่ได้
+          </p>
           <p className="micro">
             ไทล์เรดาร์ละเอียดสูงสุด zoom 7 · ขยายแผนที่ได้
             แต่ไม่ได้เพิ่มความละเอียดข้อมูล
@@ -626,7 +636,7 @@ export default function App() {
               อาจไม่ครบทุกอำเภอ
             </p>
             <p className="micro">
-              Prototype 0.1 · ใช้ส่วนตัว · ไม่มีบัญชีผู้ใช้และไม่มีการบันทึก GPS
+              Prototype 0.2 · ใช้ส่วนตัว · ไม่มีบัญชีผู้ใช้และไม่มีการบันทึก GPS
               อัตโนมัติ
             </p>
           </div>

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import type { UseQueryResult } from "@tanstack/react-query";
 import {
   MapPin,
@@ -43,6 +43,13 @@ export function SituationPanel(p: Props) {
   const alert = alertFoundation(p.location.country);
   const drag = useRef<{ y: number; state: SheetState } | null>(null);
   const dragged = useRef(false);
+  const scroll = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (p.sheet === "collapsed" && scroll.current) {
+      scroll.current.scrollTop = 0;
+      scroll.current.scrollLeft = 0;
+    }
+  }, [p.sheet]);
   const cycle = (direction: number) => {
     const states: SheetState[] = ["collapsed", "half", "expanded"];
     p.onSheet(
@@ -117,7 +124,7 @@ export function SituationPanel(p: Props) {
           </button>
         </div>
       </div>
-      <div className="panel-scroll">
+      <div className="panel-scroll" ref={scroll}>
         <div className="current-section">
           <div className="location-title">
             <MapPin size={18} />
@@ -164,7 +171,9 @@ export function SituationPanel(p: Props) {
                       {value(w.current.temperature)}
                       <span>°C</span>
                     </div>
-                    <p>{condition(w.current.code)}</p>
+                    <p data-testid="weather-condition">
+                      {condition(w.current.code)}
+                    </p>
                     <small>
                       รู้สึกเหมือน {value(w.current.apparent)}° · สูง{" "}
                       {value(w.daily[0]?.high)}° / ต่ำ {value(w.daily[0]?.low)}°
@@ -214,6 +223,10 @@ export function SituationPanel(p: Props) {
             )
           )}
         </div>
+        <p className={`summary-message verdict-${v.verdict.toLowerCase()}`}>
+          <span className="verdict-dot" />
+          <span>แบบจำลอง · {v.title}</span>
+        </p>
         <div className={`verdict verdict-${v.verdict.toLowerCase()}`}>
           <span className="verdict-dot" />
           <div>

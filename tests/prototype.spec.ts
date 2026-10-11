@@ -3,8 +3,9 @@ import { test, expect } from "@playwright/test";
 test("live map/weather and appearance/location integrity", async ({
   page,
 }, testInfo) => {
+  test.setTimeout(90000);
   await page.goto("./");
-  await expect(page.getByTestId("temperature")).toBeVisible({ timeout: 30000 });
+  await expect(page.getByTestId("temperature")).toBeVisible({ timeout: 45000 });
   await expect(page.locator("[data-map-status=ready]")).toBeVisible({
     timeout: 30000,
   });
@@ -40,9 +41,10 @@ test("live map/weather and appearance/location integrity", async ({
   ).toBeVisible();
 });
 test("mobile states and no horizontal overflow", async ({ page }, testInfo) => {
+  test.setTimeout(90000);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("./");
-  await expect(page.getByTestId("temperature")).toBeVisible({ timeout: 30000 });
+  await expect(page.getByTestId("temperature")).toBeVisible({ timeout: 45000 });
   await expect(page.locator("[data-map-status=ready]")).toBeVisible({
     timeout: 30000,
   });
@@ -121,7 +123,7 @@ test("subdirectory assets, real radar imagery and playback", async ({
   });
   await page.goto("./");
   await expect(page.getByTestId("temperature")).toHaveText(/\d+°C/, {
-    timeout: 30000,
+    timeout: 45000,
   });
   await expect(page.locator("[data-map-status=ready]")).toBeVisible({
     timeout: 30000,
@@ -155,6 +157,7 @@ test("subdirectory assets, real radar imagery and playback", async ({
   });
   expect(failures).toEqual([]);
   expect(errors).toEqual([]);
+  expect(consoleErrors).toEqual([]);
 });
 test("provider connection failure preserves independent map", async ({
   page,

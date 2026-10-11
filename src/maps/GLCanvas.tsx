@@ -7,6 +7,7 @@ import type { MapProps } from "./MapCanvas";
 import { radarTiles } from "../providers/radar";
 import { radarImage } from "../radar/budget";
 import { value } from "../shared/time";
+import { mapBottomInset, observeMapLayout } from "./layout";
 maplibregl.setWorkerUrl(workerUrl);
 maplibregl.addProtocol("wwradar", async (params, controller) => ({
   data: await radarImage(
@@ -212,7 +213,7 @@ export default function GLCanvas(props: MapProps) {
         top: 0,
         left: 0,
         right: 0,
-        bottom: host.current.clientWidth < 760 ? 240 : 0,
+        bottom: mapBottomInset(host.current),
       });
       m.addControl(
         new maplibregl.NavigationControl({ showCompass: false }),
@@ -240,18 +241,17 @@ export default function GLCanvas(props: MapProps) {
           setRadarError(true);
         else if (!m.isStyleLoaded()) setStatus("error");
       });
-      const obs = new ResizeObserver(() => {
+      const disconnectLayout = observeMapLayout(host.current, () => {
         m.resize();
         m.setPadding({
           top: 0,
           left: 0,
           right: 0,
-          bottom: (host.current?.clientWidth ?? 0) < 760 ? 240 : 0,
+          bottom: host.current ? mapBottomInset(host.current) : 0,
         });
       });
-      obs.observe(host.current);
       return () => {
-        obs.disconnect();
+        disconnectLayout();
         m.remove();
         map.current = null;
       };
