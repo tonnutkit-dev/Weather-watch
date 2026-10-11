@@ -1521,7 +1521,7 @@ button:hover:not(:disabled){
     line-height:1.3;
     letter-spacing:-2px
   }
-  .weather-hero .weather-hero .weather-art,.direction-c .weather-hero .weather-art,.direction-b .weather-hero .weather-art{
+  .weather-hero .weather-art,.direction-c .weather-hero .weather-art,.direction-b .weather-hero .weather-art{
     width:94px;
     height:84px
   }
