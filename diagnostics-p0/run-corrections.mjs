@@ -159,9 +159,9 @@ try {
     }await s.c.close();await save('results',results);
   }
   for(const after of [false,true])for(let run=1;run<=3;run++)await check(`${after?'after':'before'}-matched-interaction-${run}`,async()=>{
-    // Prime Playwright's lazy input instrumentation before the baseline listener snapshot.
-    // Brand selects the already-active overview, so it changes no location/provider/map state.
-    const s=await context({after,clock:false,cpu:4});await open(s);await s.page.locator('.brand').click();await s.cdp.send('HeapProfiler.collectGarbage');const listenersBefore=await s.page.evaluate(()=>window.__WW_GLOBAL_LISTENER_COUNTS());const before=await s.cdp.send('Performance.getMetrics');const start=await s.page.evaluate(()=>performance.now());
+    // Prime Playwright's main-world injected evaluator before the baseline listener snapshot.
+    // A read-only locator evaluation initializes its main-world helper; clicks only prime the separate utility world.
+    const s=await context({after,clock:false,cpu:4});await open(s);await s.page.locator('.brand').evaluate(el => el.tagName);await s.cdp.send('HeapProfiler.collectGarbage');const listenersBefore=await s.page.evaluate(()=>window.__WW_GLOBAL_LISTENER_COUNTS());const before=await s.cdp.send('Performance.getMetrics');const start=await s.page.evaluate(()=>performance.now());
     for(let i=0;i<4;i++){await s.page.getByRole('button',{name:'ขยายแผง',exact:true}).click();await sleep(250);await s.page.getByRole('button',{name:'ยุบแผง',exact:true}).click();await sleep(250);}
     await s.page.evaluate(()=>window.__WW_MAP.panBy([40,20],{duration:300}));await sleep(400);await select(s,0);await sleep(400);await theme(s,true);await sleep(600);await theme(s,false);await sleep(600);
     const obs=await s.page.evaluate(start=>({frames:window.__WW_AUDIT.frames.filter(x=>x.at>=start),renders:window.__WW_AUDIT.renders,mapCalls:window.__WW_AUDIT.mapCalls}),start),metrics=await s.cdp.send('Performance.getMetrics');
