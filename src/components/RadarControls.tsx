@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Play, Pause, RefreshCw, EyeOff, ChevronUp } from "lucide-react";
 import type { Radar } from "../radar/types";
 import { timeLabel } from "../shared/time";
 import { isRadarStale } from "../providers/radar";
 import { Modal } from "./Modal";
-import type { RadarPresentation } from "../radar/presentation";
+import type { RadarPresentationStore } from "../radar/presentation";
 interface Props {
-  presentation?: RadarPresentation;
+  presentationStore?: RadarPresentationStore;
+  requestKey?: string;
   radar?: Radar;
   index: number;
   playing: boolean;
@@ -19,7 +20,12 @@ interface Props {
   error: boolean;
   country: "TH" | "CN";
 }
+const noSubscribe = () => () => {};
+const noSnapshot = () => undefined;
 export function RadarControls(p: Props) {
+  const snapshot = useSyncExternalStore(p.presentationStore?.subscribe ?? noSubscribe,
+    p.presentationStore?.getSnapshot ?? noSnapshot);
+  const presentation = snapshot?.key === p.requestKey ? snapshot : undefined;
   const [details, setDetails] = useState(false);
   const [now, setNow] = useState(() => Date.now() / 1000);
   useEffect(() => {
@@ -49,10 +55,10 @@ export function RadarControls(p: Props) {
     <>
       <div className="radar-controls" aria-label="ควบคุมเรดาร์ย้อนหลัง">
         <div className="radar-caption">
-          <span data-testid="radar-presentation" data-status={p.presentation?.status ?? 'pending'}>
-            {p.presentation?.status === 'failed' ? 'ภาพโหลดไม่สำเร็จ' :
-              p.presentation?.status === 'unverified' ? 'ภาพยังไม่ยืนยัน' :
-                p.presentation?.status === 'cancelled' ? 'พักการโหลดภาพ' : 'รอภาพเรดาร์'}</span>
+          <span data-testid="radar-presentation" data-status={presentation?.status ?? 'pending'}>
+            {presentation?.status === 'failed' ? 'ภาพโหลดไม่สำเร็จ' :
+              presentation?.status === 'unverified' ? 'ภาพยังไม่ยืนยัน' :
+                presentation?.status === 'cancelled' ? 'พักการโหลดภาพ' : 'รอภาพเรดาร์'}</span>
           <span
             className={
               stale || p.error ? "radar-freshness stale" : "radar-freshness"
@@ -118,10 +124,10 @@ export function RadarControls(p: Props) {
           onClose={() => setDetails(false)}
         >
           <div className="radar-details">
-            <p role="status">{p.presentation?.status === 'failed' ? 'ไทล์ของเฟรมนี้โหลดไม่สำเร็จ ภาพที่เหลืออาจเป็นเฟรมก่อนหน้า' :
-              p.presentation?.status === 'pending' || !p.presentation ? 'กำลังรอไทล์ของเฟรมที่เลือก ภาพบนแผนที่อาจยังเป็นเฟรมก่อนหน้า' :
+            <p role="status">{presentation?.status === 'failed' ? 'ไทล์ของเฟรมนี้โหลดไม่สำเร็จ ภาพที่เหลืออาจเป็นเฟรมก่อนหน้า' :
+              presentation?.status === 'pending' || !presentation ? 'กำลังรอไทล์ของเฟรมที่เลือก ภาพบนแผนที่อาจยังเป็นเฟรมก่อนหน้า' :
                 'ยังยืนยันภาพครบทั้งมุมมองไม่ได้ ไทล์ที่โหลดแล้วไม่ยืนยันความครอบคลุมหรือว่าไม่มีฝน'}</p>
-            <p className="micro">หลักฐาน renderer: {p.presentation?.evidence ?? 'request-selected'} · ไม่ใช้ source idle เป็นหลักฐานยืนยันภาพทุกพิกเซล</p>
+            <p className="micro">หลักฐาน renderer: {presentation?.evidence ?? 'request-selected'} · ไม่ใช้ source idle เป็นหลักฐานยืนยันภาพทุกพิกเซล</p>
             <dl>
               <div>
                 <dt>ภาพที่เลือก</dt>

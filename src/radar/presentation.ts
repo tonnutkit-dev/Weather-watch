@@ -71,3 +71,15 @@ export function radarTransport(url: string) {
     if (request != null) gate?.finish(generation, request, result);
   } };
 }
+
+/** Status updates belong to radar controls; they must not rerender App/forecast/map on every gate event. */
+export class RadarPresentationStore {
+  private state: RadarPresentation | undefined;
+  private listeners = new Set<() => void>();
+  getSnapshot = () => this.state;
+  subscribe = (listener: () => void) => { this.listeners.add(listener); return () => { this.listeners.delete(listener); }; };
+  report = (state: RadarPresentation) => {
+    this.state = state;
+    for (const listener of this.listeners) listener();
+  };
+}

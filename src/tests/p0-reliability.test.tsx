@@ -1,8 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, render, screen } from '@testing-library/react';
 import { freshness, RefreshGate } from '../reliability/freshness';
+import { RadarControls } from '../components/RadarControls';
 import { useSourceClock } from '../reliability/useFreshness';
-import { RadarPresentationGate, registerRadarGate, taggedRadarUrl, radarTransport } from '../radar/presentation';
+import { RadarPresentationGate, RadarPresentationStore, registerRadarGate, taggedRadarUrl, radarTransport } from '../radar/presentation';
 const at = Date.parse('2026-10-11T06:00:00Z');
 afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks(); });
 describe('R02 source validity and request admission', () => {
@@ -79,6 +80,20 @@ describe('R01 honest frame lifecycle', () => {
     gate.suspend(); gate.finish(generation, request, 'success');
     expect(gate.state.status).toBe('cancelled');
     gate.begin('b', 100, false); expect(gate.state.displayedTime).toBeNull();
+  });
+  it('updates radar status without rerendering the parent and masks superseded snapshots', () => {
+    const store = new RadarPresentationStore(); let parentRenders = 0;
+    function Parent() { parentRenders++; return <RadarControls presentationStore={store} requestKey="b" index={0}
+      playing={false} onIndex={vi.fn()} onPlay={vi.fn()} onRefresh={vi.fn()} onHide={vi.fn()}
+      timezone="Asia/Bangkok" loading={false} error={false} country="TH" />; }
+    const { unmount } = render(<Parent />);
+    act(() => store.report({ key: 'a', requestedTime: 100, status: 'failed', displayedTime: null, evidence: 'old' }));
+    expect(screen.getByTestId('radar-presentation')).toHaveAttribute('data-status', 'pending');
+    act(() => store.report({ key: 'b', requestedTime: 200, status: 'failed', displayedTime: null, evidence: 'current' }));
+    expect(screen.getByTestId('radar-presentation')).toHaveAttribute('data-status', 'failed');
+    expect(parentRenders).toBe(1); unmount();
+    act(() => store.report({ key: 'b', requestedTime: 200, status: 'cancelled', displayedTime: null, evidence: 'cleanup' }));
+    expect(parentRenders).toBe(1);
   });
   it('strips local generation fragments before provider transport and cache lookup', () => {
     const gate = new RadarPresentationGate(vi.fn()); gate.begin('a', 100, true);

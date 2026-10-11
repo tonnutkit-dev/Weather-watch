@@ -40,7 +40,7 @@ import { MapBoundary } from "../components/MapBoundary";
 import { freshness } from "../reliability/freshness";
 import { useSourceClock } from "../reliability/useFreshness";
 import { recordRefresh, useBoundedRefresh, automaticRefreshAllowed } from "../reliability/useRefresh";
-import { radarRequestKey, type RadarPresentation } from "../radar/presentation";
+import { radarRequestKey, RadarPresentationStore } from "../radar/presentation";
 import { value } from "../shared/time";
 const MapCanvas = lazy(() => import("../maps/MapCanvas"));
 function initialLocation() {
@@ -55,8 +55,8 @@ function initialLocation() {
 }
 export default function App() {
   const theme = useTheme();
-  const [radarPresentation, setRadarPresentation] = useState<RadarPresentation>();
-  const reportRadar = useCallback((state: RadarPresentation) => setRadarPresentation(state), []);
+  const [radarPresentationStore] = useState(() => new RadarPresentationStore());
+  const reportRadar = radarPresentationStore.report;
   const [location, setLocation] = useState<Location>(initialLocation),
     [favorites, setFavorites] = useState(() =>
       readFavorites().filter(isSupportedLocation),
@@ -220,7 +220,6 @@ export default function App() {
   const w = weatherFreshness.assessmentAllowed ? weather.data : undefined,
     a = airFreshness.assessmentAllowed ? air.data : undefined;
   const presentationKey = radarRequestKey({ frame: radar.data?.frames[index], location, theme: theme.theme, layers });
-  const presentation = radarPresentation?.key === presentationKey ? radarPresentation : undefined;
   return (
     <div className={`app sheet-state-${sheet}`}>
       <header className="app-header">
@@ -408,7 +407,8 @@ export default function App() {
             <>
               <RadarControls
                 radar={radar.data}
-                presentation={presentation}
+                presentationStore={radarPresentationStore}
+                requestKey={presentationKey}
                 index={index}
                 playing={playing}
                 onIndex={(n) => {
