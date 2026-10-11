@@ -1,0 +1,13 @@
+{
+  "project": "Weather Watch",
+  "version": "0.3-p0-playback-hotfix",
+  "channel": "isolated-owner-qa",
+  "commit": "b17c5a5e1af4900cd9aba80cb1488f6447bf450f",
+  "testedSource": "b17c5a5e1af4900cd9aba80cb1488f6447bf450f",
+  "base": "/",
+  "projectId": "appgprj_6acb7faa5b3c8191b7a76763de6a5ce2",
+  "site": "https://weather-watch-v03-p0-owner-qa-ton.tonnutkit.chatgpt.site",
+  "builtAt": "2026-10-11T15:22:30.800Z",
+  "applicationSourceUnchanged": true,
+  "diagnosticFixturesIncluded": false
+}
