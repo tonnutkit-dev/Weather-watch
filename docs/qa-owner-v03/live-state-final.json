@@ -1,0 +1,127 @@
+[
+  {
+    "test": "mobile states and no horizontal overflow",
+    "label": "mobile-layout",
+    "data": {
+      "scrollLeft": 0,
+      "scrollTop": 0,
+      "width": 388,
+      "scrollWidth": 388,
+      "temperature": {
+        "x": 97,
+        "y": 508.625,
+        "width": 163,
+        "height": 52.796875,
+        "top": 508.625,
+        "right": 260,
+        "bottom": 561.421875,
+        "left": 97
+      },
+      "panel": {
+        "x": 1,
+        "y": 450.125,
+        "width": 388,
+        "height": 393.875,
+        "top": 450.125,
+        "right": 389,
+        "bottom": 844,
+        "left": 1
+      }
+    }
+  },
+  {
+    "test": "subdirectory assets, real radar imagery and playback",
+    "label": "runtime-errors",
+    "data": {
+      "failures": [],
+      "errors": [],
+      "consoleErrors": [],
+      "radarImages": 32
+    }
+  },
+  {
+    "test": "live providers, qualified radar, sheet, theme and location",
+    "label": "live-state-and-errors",
+    "data": {
+      "approved": "4b3548fa49abd9475547fc6e8336a1b854ad6952",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "state": {
+        "title": "Weather Watch V0.3 P0 · Isolated Owner QA",
+        "temperature": "17°C",
+        "weatherFreshness": "fresh",
+        "airFreshness": "fresh",
+        "verdict": "Attention",
+        "selectedTime": "เลือก 18:40",
+        "radarStatus": "pending",
+        "displayedFrame": "",
+        "mapEngine": "maplibre",
+        "overflow": false
+      },
+      "realRadarImages": 17,
+      "pageErrors": [],
+      "consoleErrors": [],
+      "assetErrors": []
+    }
+  },
+  {
+    "test": "live providers, qualified radar, sheet, theme and location",
+    "label": "live-state-and-errors",
+    "data": {
+      "approved": "4b3548fa49abd9475547fc6e8336a1b854ad6952",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "state": {
+        "title": "Weather Watch V0.3 P0 · Isolated Owner QA",
+        "temperature": "17°C",
+        "weatherFreshness": "fresh",
+        "airFreshness": "fresh",
+        "verdict": "Attention",
+        "selectedTime": "เลือก 18:50",
+        "radarStatus": "pending",
+        "displayedFrame": "",
+        "mapEngine": "maplibre",
+        "overflow": false
+      },
+      "realRadarImages": 28,
+      "pageErrors": [],
+      "consoleErrors": [],
+      "assetErrors": []
+    }
+  },
+  {
+    "test": "source expiry and Unknown using real loaded readings and simulated offline elapsed time",
+    "label": "simulated-elapsed-time-real-source-readings",
+    "data": {
+      "note": "Test-only browser clock advance; initial readings from live providers, no fabricated values or radar fixture pixels",
+      "before": {
+        "title": "Weather Watch V0.3 P0 · Isolated Owner QA",
+        "temperature": "26°C",
+        "weatherFreshness": "fresh",
+        "airFreshness": "fresh",
+        "verdict": "Notable",
+        "selectedTime": "เลือก 19:50",
+        "radarStatus": "unverified",
+        "displayedFrame": "",
+        "mapEngine": "maplibre",
+        "overflow": false
+      },
+      "after": {
+        "title": "Weather Watch V0.3 P0 · Isolated Owner QA",
+        "temperature": "26°C",
+        "weatherFreshness": "expired",
+        "airFreshness": "expired",
+        "verdict": "Unknown",
+        "selectedTime": "เลือก 19:50",
+        "radarStatus": "unverified",
+        "displayedFrame": "",
+        "mapEngine": "maplibre",
+        "overflow": false
+      }
+    }
+  }
+]

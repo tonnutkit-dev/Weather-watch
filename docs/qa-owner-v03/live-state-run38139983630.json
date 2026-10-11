@@ -1,0 +1,48 @@
+[
+  {
+    "approved": "4b3548fa49abd9475547fc6e8336a1b854ad6952",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "state": {
+      "title": "Weather Watch V0.3 P0 · Isolated Owner QA",
+      "temperature": "17°C",
+      "weatherFreshness": "fresh",
+      "airFreshness": "fresh",
+      "verdict": "Attention",
+      "selectedTime": "เลือก 18:30",
+      "radarStatus": "pending",
+      "displayedFrame": "",
+      "mapEngine": "maplibre",
+      "overflow": false
+    },
+    "realRadarImages": 16,
+    "pageErrors": [],
+    "consoleErrors": [],
+    "assetErrors": []
+  },
+  {
+    "approved": "4b3548fa49abd9475547fc6e8336a1b854ad6952",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "state": {
+      "title": "Weather Watch V0.3 P0 · Isolated Owner QA",
+      "temperature": "17°C",
+      "weatherFreshness": "fresh",
+      "airFreshness": "fresh",
+      "verdict": "Attention",
+      "selectedTime": "เลือก 18:40",
+      "radarStatus": "pending",
+      "displayedFrame": "",
+      "mapEngine": "maplibre",
+      "overflow": false
+    },
+    "realRadarImages": 28,
+    "pageErrors": [],
+    "consoleErrors": [],
+    "assetErrors": []
+  }
+]

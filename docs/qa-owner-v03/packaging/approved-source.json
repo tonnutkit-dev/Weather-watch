@@ -1,0 +1,210 @@
+{
+  "candidate": "4b3548fa49abd9475547fc6e8336a1b854ad6952",
+  "testedSource": "6e0fc36f5554c3fa49578c79e35ef017a7c47e3e",
+  "files": [
+    {
+      "path": "index.html",
+      "sha256": "b9ebc8de8a7f023ffbef13d753f1269e257cc16c0956329f3c621df3868c87c8"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "6dd37df0eca9a660212c24117d7e9dd234175b23389c532b86884aa646c283fa"
+    },
+    {
+      "path": "package.json",
+      "sha256": "19ff55665a84295ea32d7e0ca082f3b676d3f6aa724262e16803469b76b79574"
+    },
+    {
+      "path": "src/air-quality/types.ts",
+      "sha256": "916b85aacccf53d5245cbd7144c91b45f5c117943f6d215863e71d09f9024966"
+    },
+    {
+      "path": "src/alerts/types.ts",
+      "sha256": "7d11d4a9de6a1acd51b8904067e19a4b581d732a539ceac80cfdd16fac9e7c84"
+    },
+    {
+      "path": "src/app/App.tsx",
+      "sha256": "b141ff4a6cb907fe76d8fe137fe44c39bd01779a23f466aa0cf8b70049aa0945"
+    },
+    {
+      "path": "src/components/Forecast.tsx",
+      "sha256": "768201cf2a4f80212fff1dff61694f8ffdd0621af4c4f10fb4c1aa301f3e15c1"
+    },
+    {
+      "path": "src/components/LocationSearch.tsx",
+      "sha256": "6403fab46b9679c6b9b5c09beb1b80535e5ee92916118292da197ed58c8b1b7f"
+    },
+    {
+      "path": "src/components/MapBoundary.tsx",
+      "sha256": "21a44e987501310579c39927ef08acba504a6eaebe3eea230ef1198527bc64e3"
+    },
+    {
+      "path": "src/components/Modal.tsx",
+      "sha256": "b008f0513c12f4c87a980495fb44f33fd569f6e29f8b48b3faabe7a60e68ed00"
+    },
+    {
+      "path": "src/components/RadarControls.tsx",
+      "sha256": "b14621e15c53198c361777ddff9b81d85d6fd0abe32b33785a7d8142e05c9969"
+    },
+    {
+      "path": "src/components/SituationPanel.tsx",
+      "sha256": "2220068e1299750a58957b9a17ef2cc8951ec6aead10a682dae4860bd38b7409"
+    },
+    {
+      "path": "src/components/WeatherIcon.tsx",
+      "sha256": "3dfca5360d7fd9e1f39aa581a47a444de88f63815fdc123398bc81d448bd111d"
+    },
+    {
+      "path": "src/design-system/styles.css",
+      "sha256": "8a488dff394b2262a719f0f30f59eac8ea82886cab0b2c4fa5e5a8d95ca66619"
+    },
+    {
+      "path": "src/flood/foundation.ts",
+      "sha256": "ea5830b9dea815dabb58c804b5e715f5a84f8f5587e2f62f334e51b3653a5cc7"
+    },
+    {
+      "path": "src/flood/types.ts",
+      "sha256": "fd07cbd885095b590bf10823486a1f14bb7e2cd7d397a05376994b60e92ae73c"
+    },
+    {
+      "path": "src/locations/provinces.ts",
+      "sha256": "e39c22d7ce2f3ea2cead03c40ecb75af7c7cc1696d1c7c218ee1900f1276c57e"
+    },
+    {
+      "path": "src/locations/region.ts",
+      "sha256": "477447cb7d8dad886b4189251f3ad0f401007e230503029d468ae992a15c79a7"
+    },
+    {
+      "path": "src/locations/thailand.json",
+      "sha256": "8fdafea565b52fb1ed773ee662c8dd2d4cb5ecf55981f1c7b944f2b30fd8b073"
+    },
+    {
+      "path": "src/locations/types.ts",
+      "sha256": "bed92fb7d92a45f9a69e49f6d038f30f9fa32631ae6147cf6fc8ad6360acaaff"
+    },
+    {
+      "path": "src/main.tsx",
+      "sha256": "e72f7fef085e756df01df1353aade4f32d2ce1308511ecc1016ac447e4fb6201"
+    },
+    {
+      "path": "src/maps/GLCanvas.tsx",
+      "sha256": "9b71d1178ba7ce709fe23f87e54790e280d8919ca18ef931d76ae2b8fb688013"
+    },
+    {
+      "path": "src/maps/MapCanvas.tsx",
+      "sha256": "b6149f907be2b2816a503b3ec871c5eb0e15a8fd9b95fc6b224fecad143a4289"
+    },
+    {
+      "path": "src/maps/RasterCanvas.tsx",
+      "sha256": "d58a9082fdb73c9c9153b572052c79bf1df0c8bc275ed06d36e0e5f40cd53b0b"
+    },
+    {
+      "path": "src/maps/layout.ts",
+      "sha256": "9b9a6752481b770c6c6d46c9f9062ab261e3ed703c5d45be6f815bd37dfe33d1"
+    },
+    {
+      "path": "src/providers/airQuality.ts",
+      "sha256": "393827cb66bfc0df349e0bacb4eb5c4e3a76ec16642da9c83840c0214f94262d"
+    },
+    {
+      "path": "src/providers/geocoding.ts",
+      "sha256": "d0aefcb51a12371f304818ad1c495720eaf1a89c954564645fd1cf80f137b1ea"
+    },
+    {
+      "path": "src/providers/http.ts",
+      "sha256": "ac7d1a502ef58093c20cc0e075eba7df8faa7b608700579a7eff5b0fc5a13d54"
+    },
+    {
+      "path": "src/providers/radar.ts",
+      "sha256": "e5946708512e87fb1fec9c2dca20f54667fd2b91a70c1593c1ad530dde587e9b"
+    },
+    {
+      "path": "src/providers/weather.ts",
+      "sha256": "b09c03bc52db244b45cb7b5e0e63ec969928ab81ef0ba8085c34d7139de489d5"
+    },
+    {
+      "path": "src/radar/budget.ts",
+      "sha256": "9d235d328dbb8e29cf7229326af8e0c9ced38b0f09cb58260d613370ac0c6198"
+    },
+    {
+      "path": "src/radar/presentation.ts",
+      "sha256": "e8426923b7a581a4d65eb1eb9d3c11b482baefa1f07681a9dcf853dbf357e147"
+    },
+    {
+      "path": "src/radar/types.ts",
+      "sha256": "75fb2bf634a7de3c18e97bf46456ccd97d794f3814d5b32b1cd53229522517bf"
+    },
+    {
+      "path": "src/reliability/freshness.ts",
+      "sha256": "cdda773bd4423e07f9633a03613f5bc431c71dad8f855ae936317fe2354258b6"
+    },
+    {
+      "path": "src/reliability/useFreshness.ts",
+      "sha256": "a95c36f77c620a2bddc25929c02e4985d0516f11b878ce0705aabceb9861acdd"
+    },
+    {
+      "path": "src/reliability/useRefresh.ts",
+      "sha256": "cd5d295e030e2fe4416a7e9a1953f5ebf296acdfe2d31b4301ec2431ecbb2135"
+    },
+    {
+      "path": "src/shared/preferences.ts",
+      "sha256": "c56f42df62f8a1747bdc25ba7c3cdc1f31248af5f639ce59d5bd0f4ff6fc2abf"
+    },
+    {
+      "path": "src/shared/provenance.ts",
+      "sha256": "14107ee7b2958b851eb2b89287093497a700290e5d58ec6f2b991b201e73c407"
+    },
+    {
+      "path": "src/shared/situation.ts",
+      "sha256": "1dd0dc7b584508c058314f67e61bf2bab2cb8c7c2a18e3efe7fb3fb9af074e27"
+    },
+    {
+      "path": "src/shared/theme.ts",
+      "sha256": "3b224bae01a5c94447d12a7d8b56f595b27eb7799eebccbd4d95558d31966e4f"
+    },
+    {
+      "path": "src/shared/time.ts",
+      "sha256": "e02058d342483dd4c5d5b3dbf1f7bcd74ec9bf1dc76809cd2049e94bb82b6966"
+    },
+    {
+      "path": "src/tests/adapters.test.ts",
+      "sha256": "ae981e4904897e55d1911527163b3c83a2d96ef33cdeddfc0378949193c9f8df"
+    },
+    {
+      "path": "src/tests/app.test.tsx",
+      "sha256": "61790c3543b75e1edf7c109858f8744fbfda76fdba1251019bacbcde93f0149e"
+    },
+    {
+      "path": "src/tests/p0-reliability.test.tsx",
+      "sha256": "1a7d93526dc610db31ae23a5a598346303f7858813d8e5efb331a806938d1a17"
+    },
+    {
+      "path": "src/tests/preferences.test.tsx",
+      "sha256": "a4088f37e35c8102a28709ac78f4a07d1f9a3a3b9532dd122cfd8b14dba01e28"
+    },
+    {
+      "path": "src/tests/radar-budget.test.ts",
+      "sha256": "a90e38ba26eb63a38f4beef0a0f0b2b395f9ff4a0063644e1e038d63d7866948"
+    },
+    {
+      "path": "src/tests/radar-controls.test.tsx",
+      "sha256": "872d15ed3155a929a9ba99f672eca10ad648ca8bca4362eb47a9893ee1b7d4d0"
+    },
+    {
+      "path": "src/tests/setup.ts",
+      "sha256": "93de66dbce27f9f3ded01b8fda161381c91cbda4534bf3382cd3f1e9888ffbf4"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "src/weather/types.ts",
+      "sha256": "81a099dd7c9f3791fd05271f9a3da0005c6f43417e026fde0d4554bfa6914c17"
+    },
+    {
+      "path": "vite.config.ts",
+      "sha256": "869e990359fc2fbace0ea9610ff25d833e900f77f76ef552b43450c65cc5fca1"
+    }
+  ]
+}
