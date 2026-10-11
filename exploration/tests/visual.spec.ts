@@ -14,7 +14,7 @@ async function geometry(page: Page) {
         const rect = (selector: string) => { const e = document.querySelector<HTMLElement>(selector); if (!e || getComputedStyle(e).display === 'none' || !e.getClientRects().length)
             return null; return e.getBoundingClientRect().toJSON(); };
         return { width: innerWidth, height: innerHeight, documentWidth: document.documentElement.scrollWidth,
-            header: rect('.app-header'), weather: rect('.weather-overview'), map: rect('.map-pane'), sheet: rect('.situation-sheet'), tools: rect('.map-tools'), radar: rect('.radar-strip'), temperature: rect('.temperature'), weatherArt:rect('.weather-overview .weather-art'), mapLabel:rect('.map-location-label'), condition: rect('.condition-line'), attribution: rect('.maplibregl-ctrl-attrib'), slider: rect('.radar-timeline input'), sheetScroll: rect('.sheet-scroll') };
+            header: rect('.app-header'), weather: rect('.weather-overview'), map: rect('.map-pane'), sheet: rect('.situation-sheet'), tools: rect('.map-tools'), radar: rect('.radar-strip'), temperature: rect('.temperature'), weatherArt:rect('.weather-overview .weather-art'), mapLabel:rect('.map-location-label'), condition: rect('.condition-line'), attribution: rect('.maplibregl-ctrl-attrib'), slider: rect('.radar-timeline input'), temperatureFontSize:parseFloat(getComputedStyle(document.querySelector('.temperature')!).fontSize), sheetScroll: rect('.sheet-scroll') };
     });
 }
 function collision(a: {
@@ -36,6 +36,8 @@ async function composition(page: Page) {
     expect(collision(g.tools, g.radar)).toBe(false);
     expect(collision(g.radar, g.sheet)).toBe(false);
     expect(collision(g.weatherArt,g.condition)).toBe(false);
+    expect(collision(g.temperature,g.weatherArt)).toBe(false);
+    if(g.temperature)expect(g.temperature.height).toBeLessThanOrEqual(g.temperatureFontSize*1.4);
     expect(collision(g.mapLabel,g.radar)).toBe(false);
     expect(g.attribution).not.toBeNull();
     expect(collision(g.attribution, g.sheet)).toBe(false);
@@ -76,6 +78,11 @@ for (const direction of directions) {
                             expect(g.map.height).toBeGreaterThan(size.height * .32);
                         if (state !== 'collapsed')
                             await expect(page.locator('.radar-strip')).toBeHidden();
+                        if(state!=='collapsed'){
+                            const details=await page.locator('.sheet-scroll').evaluate(e=>({width:e.clientWidth,scrollWidth:e.scrollWidth,icons:Array.from(e.querySelectorAll('.detail-content .weather-art.small')).map(el=>({width:el.getBoundingClientRect().width,height:el.getBoundingClientRect().height}))}));
+                            expect(details.scrollWidth).toBeLessThanOrEqual(details.width);
+                            for(const icon of details.icons){expect(icon.width).toBeLessThanOrEqual(40);expect(icon.height).toBeLessThanOrEqual(40);}
+                        }
                         if (state === 'expanded') {
                             await page.locator('.sheet-scroll').evaluate(e => { e.scrollTop = e.scrollHeight; });
                             await expect(page.locator('.trust-note')).toBeInViewport({ ratio: .5 });
@@ -102,6 +109,7 @@ for (const direction of directions) {
                 await page.getByRole('button', { name: 'ขยายแผง', exact: true }).click();
                 await page.getByRole('button', { name: 'รายวัน', exact: true }).click();
                 await expect(page.locator('.daily-list')).toBeVisible();
+            for(const icon of await page.locator('.daily-list .weather-art.small').all()){const box=await icon.boundingBox();expect(box?.width).toBeLessThanOrEqual(40);expect(box?.height).toBeLessThanOrEqual(40);}
                 await page.locator('.sheet-scroll').evaluate(e => { e.scrollTop = e.scrollHeight; });
                 await expect(page.locator('.air-card')).toBeInViewport({ ratio: .35 });
                 await capture(page, info, `${direction}-${size.name}-${theme}-details`);

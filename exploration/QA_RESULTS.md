@@ -42,6 +42,7 @@ Main and public QA remain at `2036e2ac788cb31d25fd387cb40520ad95c408a6`. Origina
 5. Short-screen marker labels could compete with the radar dock; moved camera center and added a marker/dock collision regression.
 6. Expanded mobile layer menu could sit behind the sheet; it now uses an accessible modal.
 7. Secondary C text on paper needed higher contrast; refined the token and added ratio tests.
+8. Final tablet detail screenshot review found B/C hero icon rules bleeding into forecast icons and B temperature wrapping its degree symbol. Scoped hero rules, constrained tablet hero proportions, kept numerals unbroken and added icon-size, temperature/art and internal scroll-overflow regressions. A final follow-up run verifies these fixes; inspect the latest branch commit Actions result.
 
 ## Limits and owner checks
 

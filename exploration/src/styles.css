@@ -241,6 +241,8 @@ button:hover:not(:disabled){
   height:178px
 }
 .temperature{
+  white-space:nowrap;
+  flex-shrink:0;
   font-family:Arial,sans-serif;
   font-weight:400;
   font-size:154px;
@@ -1094,9 +1096,9 @@ button:hover:not(:disabled){
   font-size:125px;
   letter-spacing:-10px
 }
-.direction-b .weather-art{
-  width:104px;
-  height:104px
+.direction-b .weather-hero .weather-art{
+  width:80px;
+  height:80px
 }
 .direction-b .condition-line{
   display:block
@@ -1222,7 +1224,7 @@ button:hover:not(:disabled){
   font-size:151px;
   font-weight:400
 }
-.direction-c .weather-art{
+.direction-c .weather-hero .weather-art{
   width:111px
 }
 .direction-c .editorial-note>p{
@@ -1306,6 +1308,9 @@ button:hover:not(:disabled){
   }
 }
 @media(min-width:760px) and (max-width:1050px){
+  .direction-b .temperature{font-size:108px;letter-spacing:-8px}
+  .direction-b .weather-hero .weather-art{width:72px;height:72px}
+
   .app-header{
     padding:0 24px
   }
@@ -1325,7 +1330,7 @@ button:hover:not(:disabled){
   .weather-hero,.direction-c .weather-hero{
     height:160px
   }
-  .weather-art,.direction-c .weather-art{
+  .weather-hero .weather-art,.direction-c .weather-hero .weather-art{
     width:100px
   }
   .weather-metrics{
@@ -1516,7 +1521,7 @@ button:hover:not(:disabled){
     line-height:1.3;
     letter-spacing:-2px
   }
-  .weather-art,.direction-c .weather-art,.direction-b .weather-art{
+  .weather-hero .weather-hero .weather-art,.direction-c .weather-hero .weather-art,.direction-b .weather-hero .weather-art{
     width:94px;
     height:84px
   }
@@ -1829,7 +1834,7 @@ button:hover:not(:disabled){
     justify-content:space-between;
     gap:25px
   }
-  .direction-b .weather-art{
+  .direction-b .weather-hero .weather-art{
     width:114px;
     height:94px;
     position:absolute;
@@ -1890,7 +1895,7 @@ button:hover:not(:disabled){
     font-size:99px;
     letter-spacing:-7px
   }
-  .direction-c .weather-art{
+  .direction-c .weather-hero .weather-art{
     width:103px;
     height:92px
   }
@@ -1957,11 +1962,11 @@ button:hover:not(:disabled){
   .temperature,.direction-a .temperature,.direction-c .temperature,.direction-b .temperature{
     font-size:81px
   }
-  .weather-art,.direction-c .weather-art{
+  .weather-hero .weather-art,.direction-c .weather-hero .weather-art{
     width:87px;
     height:76px
   }
-  .direction-b .weather-art{
+  .direction-b .weather-hero .weather-art{
     width:106px;
     height:82px;
     top:-10px
