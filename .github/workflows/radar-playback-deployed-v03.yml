@@ -1,0 +1,54 @@
+name: Weather Watch isolated HTTPS playback verification
+on:
+  push:
+    branches: [work/p0-reliability-correction-v03]
+    paths: [.github/workflows/radar-playback-deployed-v03.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deployed-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      WW_E2E_BASE_URL: https://weather-watch-v03-p0-owner-qa-ton.tonnutkit.chatgpt.site/
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: { node-version: 24, cache: npm }
+      - name: Verify isolated source and all static assets anonymously
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          const base = process.env.WW_E2E_BASE_URL;
+          const release = await fetch(new URL('release.json', base)).then(r => { if(!r.ok) throw Error(`release HTTP ${r.status}`); return r.json(); });
+          if(release.commit !== 'b17c5a5e1af4900cd9aba80cb1488f6447bf450f' || release.base !== '/' || release.diagnosticFixturesIncluded !== false) throw Error('Unexpected deployed source');
+          const integrity = await fetch(new URL('asset-integrity.json', base)).then(r=>r.json());
+          for(const a of integrity.assets) {
+            const r = await fetch(new URL(a.path, base)); if(!r.ok) throw Error(`asset HTTP ${r.status}: ${a.path}`);
+            const bytes = Buffer.from(await r.arrayBuffer());
+            if(createHash('sha256').update(bytes).digest('hex') !== a.sha256) throw Error(`asset mismatch: ${a.path}`);
+          }
+          const prior = await fetch('https://tonnutkit-dev.github.io/Weather-watch/release.json').then(r=>r.json());
+          if(prior.commit !== '2036e2ac788cb31d25fd387cb40520ad95c408a6') throw Error('Protected Pages release changed');
+          console.log(JSON.stringify({release,verifiedAssets:integrity.assets.length,protectedPages:prior.commit}));
+          NODE
+          test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Original regression tests on actual HTTPS deployment
+        run: npm run test:e2e
+      - name: Real automatic playback on actual HTTPS deployment
+        if: always()
+        run: npx playwright test --config qa-playback-v03/playwright.config.ts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: radar-playback-deployed-v03-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+            qa-playback-v03/browser-report/
+            qa-playback-v03/test-results/
+          retention-days: 90
