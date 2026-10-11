@@ -1,15 +1,16 @@
 // Isolated deterministic browser lab. Fixture pixels are TEST IMAGES, not live radar observations.
 import { chromium } from '@playwright/test';
 import { spawn, execFileSync } from 'node:child_process';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises';
 import { installObserver } from './browser-observer.mjs';
 import assert from 'node:assert/strict';
 import os from 'node:os';
+import { gzipSync } from 'node:zlib';
 const out='diagnostics-p0/raw'; await mkdir(out,{recursive:true});
 const fixture=JSON.parse(await readFile('diagnostics-p0/provider-fixtures.json','utf8'));
 const now=fixture.weather.body.current.time*1000+60000;
 const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=','base64');
-const results={environment:{baseline:'2036e2ac788cb31d25fd387cb40520ad95c408a6',correction:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),node:process.version,platform:os.platform(),cpu:os.cpus()[0]?.model,physicalIphone:false,softwareGPU:true,fixtureClock:new Date(now).toISOString(),notes:['Deterministic recorded provider responses, synthetic test PNG tiles and minimal LAB basemap. Never exposed by production.','No representative field INP, physical display FPS, GPU memory, battery or thermal measurement.','Matched lab measurements constrain UI/raster overhead; do not replace real-world basemap performance acceptance.']},checks:[],loads:[],interactions:[],failures:[]};
+const results={environment:{baseline:'2036e2ac788cb31d25fd387cb40520ad95c408a6',correction:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),node:process.version,platform:os.platform(),cpu:os.cpus()[0]?.model,physicalIphone:false,softwareGPU:true,fixtureClock:new Date(now).toISOString(),notes:['Screenshots with fixture/test tiles are laboratory evidence, not live weather observations. Original live E2E screenshot evidence is retained separately.','Deterministic recorded provider responses, synthetic test PNG tiles and minimal LAB basemap. Never exposed by production.','No representative field INP, physical display FPS, GPU memory, battery or thermal measurement.','Matched lab measurements constrain UI/raster overhead; do not replace real-world basemap performance acceptance.']},checks:[],loads:[],interactions:[],failures:[]};
 const servers=[]; const sessions = new Set();
 for(const [port,root,diagnostic] of [[4173,'.',false],[4175,'.',true],[4174,'diagnostics-p0/baseline',false],[4176,'diagnostics-p0/baseline',true]]) {
   servers.push(spawn('node',[`${process.cwd()}/node_modules/vite/bin/vite.js`,'preview',...(diagnostic?['--config','diagnostics-p0/vite.diagnostic.config.ts']:[]),'--host','127.0.0.1','--port',String(port)],{cwd:root,stdio:'ignore'}));
@@ -51,9 +52,12 @@ async function city(s,name){await s.page.getByRole('button',{name:'ค้นห�
 async function save(name,value){await writeFile(`${out}/${name}.json`,JSON.stringify(value,null,2)+'\n');}
 async function check(name,fn){console.log('CHECK',name);try{const evidence=await fn();results.checks.push({name,status:'passed',evidence});}catch(e){results.failures.push({name,error:e.stack});console.error('FAILED',name,e.message);}await save('results',results);for (const c of sessions) { await c.close(); sessions.delete(c); }}
 try {
+  results.payload=[];
+  for(const [after,path] of [[false,'diagnostics-p0/baseline/dist/assets'],[true,'dist/assets']])for(const file of await readdir(path)){if(/\.(js|mjs)$/.test(file)){const bytes=await readFile(`${path}/${file}`);results.payload.push({after,file,rawBytes:bytes.length,gzipBytes:gzipSync(bytes).length});}}
   for(const after of [false,true])for(const fallback of [false,true])await check(`${after?'after':'before'}-radar-${fallback?'leaflet':'maplibre'}`,async()=>{
     const s=await context({after,fallback});await s.c.tracing.start({screenshots:true,snapshots:true});await open(s);
     const initial=await snapshot(s);s.state.delay=4250;await select(s,0);await sleep(150);const pending=await snapshot(s);
+    await s.page.evaluate(()=>{const m=window.__WW_MAP;m.panBy([20,10],{animate:false,duration:0});if(m.zoomTo)m.zoomTo(m.getZoom()+.25,{duration:0});else m.setZoom(m.getZoom()+1,{animate:false});});
     if(after){assert.equal(pending.radarStatus,'pending');assert.match(pending.label,/เลือก/);assert.equal(pending.displayedFrame,'');}
     await sleep(4700);const complete=await snapshot(s);if(after)assert.equal(complete.radarStatus,'unverified');
     s.state.delay=0;s.state.tiles='failed';await select(s,1);await sleep(1000);const failed=await snapshot(s);
