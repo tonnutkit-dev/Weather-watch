@@ -7,7 +7,7 @@ import os from 'node:os';
 import { installObserver } from './browser-observer.mjs';
 
 const out='audit-v03/raw';await mkdir(out,{recursive:true});
-const baseline=execFileSync('git',['merge-base','HEAD','origin/main'],{encoding:'utf8'}).trim();
+const baseline=execFileSync('git',['rev-parse','origin/main'],{encoding:'utf8'}).trim();
 const auditCommit=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const base='http://127.0.0.1:4173/Weather-watch/';
 const diagnostic='http://127.0.0.1:4175/Weather-watch/';

@@ -15,6 +15,8 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: 24
@@ -22,7 +24,7 @@ jobs:
       - name: Verify audit source boundaries
         run: |
           git fetch origin main work/premium-visual-exploration
-          test -z "$(git diff --name-only origin/main HEAD -- src package.json package-lock.json vite.config.ts DESIGN.md .github/workflows/pages.yml)"
+          git diff --exit-code origin/main HEAD -- src package.json package-lock.json vite.config.ts DESIGN.md .github/workflows/pages.yml
           git rev-parse origin/main origin/work/premium-visual-exploration
       - name: Reproducible install
         run: npm ci
