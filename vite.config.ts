@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 export default defineConfig({
+  base: "/Weather-watch/",
   plugins: [react()],
   server: { host: "0.0.0.0", port: 4173, allowedHosts: ["terminal.local"] },
   build: { chunkSizeWarningLimit: 1200 },

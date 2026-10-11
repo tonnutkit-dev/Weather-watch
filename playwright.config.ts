@@ -1,15 +1,22 @@
 import { defineConfig } from "@playwright/test";
+const deployedUrl = process.env.WW_E2E_BASE_URL;
 export default defineConfig({
   testDir: "tests",
   timeout: 60000,
+  workers: 1,
+  retries: 0,
+  reporter: [["list"], ["html", { open: "never" }]],
   use: {
-    baseURL: "http://localhost:4173",
+    baseURL: deployedUrl || "http://127.0.0.1:4173/Weather-watch/",
     browserName: "chromium",
     screenshot: "only-on-failure",
+    trace: "retain-on-failure",
   },
-  webServer: {
-    command: "npm run dev",
-    url: "http://localhost:4173",
-    reuseExistingServer: true,
-  },
+  webServer: deployedUrl
+    ? undefined
+    : {
+        command: "npm run preview -- --host 127.0.0.1 --port 4173",
+        url: "http://127.0.0.1:4173/Weather-watch/",
+        reuseExistingServer: !process.env.CI,
+      },
 });

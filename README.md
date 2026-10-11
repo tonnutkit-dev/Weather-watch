@@ -1,5 +1,5 @@
 # Weather Watch 0.1
-Thai-first personal weather intelligence, nationwide Thailand + Xi’an/Chengdu/Chongqing. Work Order 001 + owner amendment: GitHub push authorized only to tonnutkit-dev/Weather-watch. No public deployment.
+Thai-first personal weather intelligence, nationwide Thailand + Xi’an/Chengdu/Chongqing. Owner amendment authorizes public GitHub Pages QA only for tonnutkit-dev/Weather-watch, without final production acceptance. See docs/GITHUB_PAGES.md for workflow, deployment verification and limitations.
 
 ## Run
 Node >=22.12 (verified with Node 24), npm.
@@ -7,11 +7,13 @@ Node >=22.12 (verified with Node 24), npm.
 npm ci
 npm run dev
 ```
-Open the Vite local URL on your own computer. A localhost URL in the Work container is not reachable from an iPhone; no public preview is authorized here.
+Open the Vite local URL on your own computer, including /Weather-watch/. Public QA target: https://tonnutkit-dev.github.io/Weather-watch/ (only confirmed live by the subsequent deployment report).
 ```
 npm run typecheck
 npm test
 npm run build
+npm run verify:pages
+npm run preview
 npm run verify:data
 npm run test:e2e
 ```

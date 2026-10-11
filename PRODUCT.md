@@ -14,7 +14,7 @@ Real Open-Meteo current modeled weather, hourly and up to 16 daily forecasts; Ma
 Typed separate satellite flood extent, reported incidents, measured river level, forecast discharge, official alerts. No authenticated integration without credentials and verified reuse rights. Unavailable means unavailable, never flood-free/no warnings. China never receives Thai alert logic.
 
 ## Non-goals
-Accounts, database, payment, commercial service, subscriptions, public deployment, custom AQI, street flood prediction, fabricated nowcast, province safety certification. GitHub push is authorized only to tonnutkit-dev/Weather-watch under the owner amendment; inspect and preserve remote history, never force-push. Official warning severity must precede any app interpretation when integrated.
+Accounts, database, payment, commercial service, subscriptions, final production acceptance, custom AQI, street flood prediction, fabricated nowcast, province safety certification. Owner amendments authorize source push and public GitHub Pages QA only to tonnutkit-dev/Weather-watch; inspect and preserve remote history, use a feature branch and normal reviewed merge, never force-push. Official warning severity must precede any app interpretation when integrated.
 
 ## Release gates
 Foundation: docs, audited claims, tokens, coherent architecture, passing build. Functional prototype: real weather visible, location switching, interactive rendered map, real radar if accessible, theme/responsive QA, screenshots and attribution. Any missing mandatory evidence = CONDITIONAL PASS or NO-GO, never full completion.

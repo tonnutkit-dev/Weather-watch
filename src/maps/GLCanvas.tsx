@@ -304,7 +304,11 @@ export default function GLCanvas(props: MapProps) {
         ref={host}
         className="map-canvas"
         aria-label="แผนที่อากาศแบบโต้ตอบ"
+        data-map-engine="maplibre"
         data-map-status={status}
+        data-radar-frame={props.frame?.time}
+        data-weather-layer={props.layers.weather}
+        data-air-layer={props.layers.air}
       />
       {status !== "ready" && (
         <div className="map-status" role="status">
