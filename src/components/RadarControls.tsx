@@ -28,7 +28,12 @@ export function RadarControls(p: Props) {
   const snapshot = useSyncExternalStore(p.presentationStore?.subscribe ?? noSubscribe,
     p.presentationStore?.getSnapshot ?? noSnapshot);
   const playback = useSyncExternalStore(p.playback?.subscribe ?? noSubscribe, p.playback?.getSnapshot ?? noSnapshot);
-  const playbackText = playback?.phase === "budget" ? "รอโควตาไทล์ · " : playback?.phase === "suspended" ? "พักเมื่อซ่อนแท็บ · " : playback?.playing ? "เล่น · " : "";
+  const playbackText = playback?.phase === "budget" ? "รอโควตา · " :
+    playback?.phase === "suspended" ? "พักในพื้นหลัง · " :
+    playback?.phase === "failed" ? "เล่นไม่สำเร็จ · " :
+    playback?.playing && playback.reason === "starting" ? "เริ่มเล่น · " :
+    playback?.playing && playback.phase === "buffering" ? "รอภาพ · " :
+    playback?.playing ? "เล่น · " : playback ? "หยุดไว้ · " : "";
   const presentation = snapshot?.key === p.requestKey ? snapshot : undefined;
   const [details, setDetails] = useState(false);
   const [now, setNow] = useState(() => Date.now() / 1000);
@@ -134,6 +139,11 @@ export function RadarControls(p: Props) {
               presentation?.status === 'pending' || !presentation ? 'กำลังรอไทล์ของเฟรมที่เลือก ภาพบนแผนที่อาจยังเป็นเฟรมก่อนหน้า' :
                 'ยังยืนยันภาพครบทั้งมุมมองไม่ได้ ไทล์ที่โหลดแล้วไม่ยืนยันความครอบคลุมหรือว่าไม่มีฝน'}</p>
             <p className="micro">หลักฐาน renderer: {presentation?.evidence ?? 'request-selected'} · ไม่ใช้ source idle เป็นหลักฐานยืนยันภาพทุกพิกเซล</p>
+            {playback && <p className="micro" role="status">{playback.phase === 'budget' ? 'รอเพดานคำขอไทล์คืนโควตา ไม่ข้ามไปแสดงเวลาเฟรมใหม่' :
+              playback.phase === 'buffering' ? 'กำลังรอไทล์ของเฟรมที่เลือก ยังไม่เลื่อนไปเฟรมถัดไป' :
+              playback.phase === 'failed' ? 'หยุดเล่นเพราะโหลดไม่สำเร็จ ลองรีเฟรชหรือเลือกเฟรมใหม่' :
+              playback.phase === 'suspended' ? 'พักอัตโนมัติเมื่อแอปอยู่เบื้องหลัง จะตรวจความพร้อมเมื่อกลับมา' :
+              'ภาพย้อนหลังทีละเฟรม เป้าหมายประมาณ 2–3 วินาทีต่อเฟรม อาจช้าลงเมื่อเครือข่ายหรือโควตาไม่พร้อม'}</p>}
             <dl>
               <div>
                 <dt>ภาพที่เลือก</dt>

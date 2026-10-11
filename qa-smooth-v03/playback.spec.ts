@@ -28,6 +28,8 @@ test('real radar pixels, cadence, Pause, manual scrub and stable map', async ({ 
   const engine=await map.getAttribute('data-map-engine');
   if(info.project.name==='leaflet-reduced') expect(engine).toBe('leaflet-fallback');
   const host=await map.elementHandle();
+  const canvas=engine==='maplibre'?await page.locator('.maplibregl-canvas').elementHandle():null;
+  const heapStart=await page.evaluate(()=>(performance as any).memory?.usedJSHeapSize??null);
   const time=page.getByTestId('radar-time'), status=page.getByTestId('radar-presentation');
   await expect(status).toHaveAttribute('data-status','unverified',{timeout:40000});
   const clip={x:8,y:150,width:374,height:350};
@@ -62,10 +64,11 @@ test('real radar pixels, cadence, Pause, manual scrub and stable map', async ({ 
   await page.waitForTimeout(1000);const baseA=await page.screenshot({clip});await page.waitForTimeout(1000);const baseB=await page.screenshot({clip});
   const basemapControl=difference(baseA,baseB);expect(basemapControl.changedPixels).toBeLessThanOrEqual(10);
   expect(await page.evaluate(node=>node===document.querySelector('.map-canvas'),host)).toBe(true);
+  if(canvas) expect(await page.evaluate(node=>node===document.querySelector('.maplibregl-canvas'),canvas)).toBe(true);
   const observations=await page.evaluate(()=>(window as any).__SMOOTH);
   const sorted=observations.frames.filter((n:number)=>n<1000).sort((a:number,b:number)=>a-b);
   const peak=Math.max(0,...requests.map(t=>requests.filter(v=>v.at>t.at-60000&&v.at<=t.at).length));expect(peak).toBeLessThanOrEqual(80);
-  const result={phase,browser:info.project.name,baseURL:info.project.use.baseURL,engine,firstAdvanceMs:advances[0]!.at,intervalsMs:intervals,advances,pixelChanges,basemapControl,requests:requests.length,peakRolling60s:peak,uniqueTileURLs:new Set(requests.map(x=>x.url)).size,sameMapHost:true,canvasCount:await page.locator('canvas').count(),rAF:{count:observations.frames.length,p95Ms:sorted[Math.floor(sorted.length*.95)],excludedOver1000Ms:observations.frames.length-sorted.length},longTasks:observations.tasks,heap:await page.evaluate(()=>(performance as any).memory?.usedJSHeapSize??null),errors,limitations:'Transport is not pixel-complete confirmation. Pixel differences demonstrate sampled visible imagery, not complete viewport coverage. Linux browsers; not physical iPhone.'};
+  const result={phase,browser:info.project.name,baseURL:info.project.use.baseURL,engine,firstAdvanceMs:advances[0]!.at,intervalsMs:intervals,advances,pixelChanges,basemapControl,requests:requests.length,peakRolling60s:peak,uniqueTileURLs:new Set(requests.map(x=>x.url)).size,sameMapHost:true,sameGLCanvas:canvas?true:null,heapStart,canvasCount:await page.locator('canvas').count(),rAF:{count:observations.frames.length,p95Ms:sorted[Math.floor(sorted.length*.95)],excludedOver1000Ms:observations.frames.length-sorted.length},longTasks:observations.tasks,heap:await page.evaluate(()=>(performance as any).memory?.usedJSHeapSize??null),errors,limitations:'Transport is not pixel-complete confirmation. Pixel differences demonstrate sampled visible imagery, not complete viewport coverage. Linux browsers; not physical iPhone.'};
   await info.attach('smooth-playback-measurements',{body:Buffer.from(JSON.stringify(result,null,2)),contentType:'application/json'});
   expect(errors).toEqual([]);
 });

@@ -1,7 +1,9 @@
 import type { RadarFrame } from './types';
 import type { RadarPresentation } from './presentation';
 export const FIRST_FRAME_DELAY_MS = 1500;
-export const FRAME_INTERVAL_MS = 5000;
+export const FRAME_INTERVAL_MS = 2500;
+// Let a late-loading frame remain qualified briefly instead of immediately skipping it.
+export const READY_DWELL_MS = 750;
 const CHECK_MS = 500;
 export type PlaybackPhase = 'paused' | 'playing' | 'buffering' | 'budget' | 'suspended' | 'failed' | 'unavailable';
 export interface PlaybackSnapshot { playing: boolean; phase: PlaybackPhase; reason: string }
@@ -15,6 +17,8 @@ export class RadarPlayback {
   private index = 0;
   private timer: ReturnType<typeof setTimeout> | undefined;
   private nextAt = 0;
+  private readyKey: string | undefined;
+  private readySince: number | undefined;
   private state: PlaybackSnapshot = { playing: false, phase: 'paused', reason: 'user' };
   private listeners = new Set<() => void>();
   constructor(private environment: () => PlaybackEnvironment,
@@ -40,6 +44,8 @@ export class RadarPlayback {
     if (this.frames.length < 2 || !this.environment().enabled) return;
     this.intent(true); this.publish('buffering', 'starting', true);
     this.nextAt = Date.now() + FIRST_FRAME_DELAY_MS;
+    this.readyKey = undefined; this.readySince = undefined;
+    this.observeReadiness(this.environment());
     if (this.environment().hidden) this.publish('suspended', 'background');
     else this.schedule(FIRST_FRAME_DELAY_MS);
   };
@@ -52,9 +58,17 @@ export class RadarPlayback {
   };
   visibility = () => {
     this.clear(); if (!this.state.playing) return;
+    this.readyKey = undefined; this.readySince = undefined;
     if (this.environment().hidden) this.publish('suspended', 'background');
-    else { this.publish('buffering', 'resume'); this.nextAt = Date.now() + FIRST_FRAME_DELAY_MS; this.schedule(FIRST_FRAME_DELAY_MS); }
+    else { this.publish('buffering', 'resume'); this.observeReadiness(this.environment()); this.nextAt = Date.now() + FIRST_FRAME_DELAY_MS; this.schedule(FIRST_FRAME_DELAY_MS); }
   };
+  private observeReadiness(e: PlaybackEnvironment) {
+    const p = e.presentation?.key === e.key ? e.presentation : undefined;
+    const qualified = !e.refreshing && p?.status === 'unverified' && p.evidence !== 'no-current-frame-tiles-confirmed';
+    if (!qualified) { this.readyKey = undefined; this.readySince = undefined; return false; }
+    if (this.readyKey !== e.key) { this.readyKey = e.key; this.readySince = Date.now(); }
+    return true;
+  }
   private tick = () => {
     this.timer = undefined; if (!this.state.playing) return;
     const e = this.environment();
@@ -63,13 +77,15 @@ export class RadarPlayback {
     if (e.error) { this.stop('metadata-failed', 'failed'); return; }
     const p = e.presentation?.key === e.key ? e.presentation : undefined;
     if (p?.status === 'failed') { this.stop('tiles-failed', 'failed'); return; }
+    const qualified = this.observeReadiness(e);
     if (e.remaining === 0) this.publish('budget', 'rolling-minute');
-    else if (e.refreshing || !p || p.status !== 'unverified' || p.evidence === 'no-current-frame-tiles-confirmed') this.publish('buffering', 'tiles-unverified');
+    else if (!qualified) this.publish('buffering', e.refreshing ? 'metadata-refresh' : 'tiles-unverified');
     else {
       this.publish('playing', 'transport-qualified-not-pixels');
-      if (Date.now() >= this.nextAt) {
+      if (Date.now() >= this.nextAt && Date.now() - this.readySince! >= READY_DWELL_MS) {
         this.index = (this.index + 1) % this.frames.length;
         this.nextAt = Date.now() + FRAME_INTERVAL_MS;
+        this.readyKey = undefined; this.readySince = undefined;
         this.selectIndex(this.index);
         this.publish('buffering', 'next-selected-frame');
       }

@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { render, screen, fireEvent, cleanup, act } from "@testing-library/react";
 import { RadarControls } from "../components/RadarControls";
 import { normalizeRadar } from "../providers/radar";
+import { RadarPlayback, type PlaybackEnvironment } from "../radar/playback";
 const now = Date.parse("2026-10-11T03:00:00Z") / 1000;
 function props(latest = now - 600) {
   return {
@@ -74,4 +75,26 @@ describe("Radar presentation trust", () => {
     fireEvent.click(screen.getByRole("button", { name: "รายละเอียดเรดาร์" }));
     expect(screen.getByRole("button", { name: "รีเฟรชเรดาร์" })).toBeEnabled();
   });
+});
+
+it("shows immediate start, honest buffering, budget wait and failure independently of selected time", () => {
+  vi.useFakeTimers();
+  const options = props();
+  const e: PlaybackEnvironment = {hidden:false, enabled:true, refreshing:false, error:false, remaining:80, key:'frame',
+    presentation:{key:'frame',requestedTime:now-600,displayedTime:null,status:'pending',evidence:'awaiting-transport'}};
+  const controller = new RadarPlayback(()=>e, vi.fn(), vi.fn());
+  controller.setFrames(options.radar.frames);
+  const view = render(<RadarControls {...options} playback={controller} requestKey="frame" />);
+  const selectedTime = screen.getByTestId('radar-time').getAttribute('datetime');
+  act(()=>controller.play());
+  expect(screen.getByTestId('radar-playback')).toHaveTextContent('เริ่มเล่น');
+  act(()=>vi.advanceTimersByTime(1500));
+  expect(screen.getByTestId('radar-playback')).toHaveTextContent('รอภาพ');
+  e.remaining=0; act(()=>vi.advanceTimersByTime(500));
+  expect(screen.getByTestId('radar-playback')).toHaveTextContent('รอโควตา');
+  e.remaining=1; e.presentation!.status='failed'; act(()=>vi.advanceTimersByTime(500));
+  expect(screen.getByTestId('radar-playback')).toHaveTextContent('เล่นไม่สำเร็จ');
+  expect(screen.getByTestId('radar-time')).toHaveAttribute('datetime',selectedTime);
+  view.unmount(); controller.dispose(); expect(vi.getTimerCount()).toBe(0);
+  vi.useRealTimers();
 });

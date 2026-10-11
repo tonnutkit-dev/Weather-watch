@@ -1,6 +1,6 @@
 import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest';
 import { act, render, screen, fireEvent } from '@testing-library/react';
-import { RadarPlayback, FIRST_FRAME_DELAY_MS, FRAME_INTERVAL_MS, type PlaybackEnvironment } from '../radar/playback';
+import { RadarPlayback, FIRST_FRAME_DELAY_MS, FRAME_INTERVAL_MS, READY_DWELL_MS, type PlaybackEnvironment } from '../radar/playback';
 import { RadarPresentationStore } from '../radar/presentation';
 import { useRadarPlayback } from '../radar/usePlayback';
 import { normalizeRadar } from '../providers/radar';
@@ -20,7 +20,7 @@ describe('radar automatic playback contract', () => {
     vi.advanceTimersByTime(2000); expect(select).not.toHaveBeenCalled();
     vi.advanceTimersByTime(13000); expect(select).toHaveBeenCalledTimes(1); clearInterval(timer);
   });
-  it('responds immediately, advances at1.5s, loops last→first and continues every5s', () => {
+  it('responds immediately, advances at1.5s, loops last→first and continues every2.5s', () => {
     const { player, selected, intent } = fixture(); player.play();
     expect(intent).toHaveBeenLastCalledWith(true); expect(player.getSnapshot().playing).toBe(true);
     vi.advanceTimersByTime(1499); expect(selected).not.toHaveBeenCalled();
@@ -41,7 +41,8 @@ describe('radar automatic playback contract', () => {
     e.presentation!.status = 'unverified'; e.presentation!.evidence = 'no-current-frame-tiles-confirmed';
     vi.advanceTimersByTime(5000); expect(selected).not.toHaveBeenCalled();
     e.presentation!.key = 'superseded'; e.presentation!.evidence = 'transport-complete'; vi.advanceTimersByTime(5000); expect(selected).not.toHaveBeenCalled();
-    e.presentation!.key = e.key; vi.advanceTimersByTime(500); expect(selected).toHaveBeenCalledTimes(1);
+    e.presentation!.key = e.key; vi.advanceTimersByTime(500); expect(selected).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(1000); expect(selected).toHaveBeenCalledTimes(1);
     expect(e.presentation!.displayedTime).toBeNull(); player.dispose();
   });
   it('failed tiles stop intent and do not pretend playback succeeded', () => {
@@ -65,7 +66,29 @@ describe('radar automatic playback contract', () => {
     const { player, selected, e } = fixture(); player.scrub(1); player.play(); e.refreshing = true;
     player.setFrames([...frames, { time: 400, path: '/d' }]); selected.mockClear();
     vi.advanceTimersByTime(6000); expect(selected).not.toHaveBeenCalled(); expect(player.getSnapshot().playing).toBe(true);
-    e.refreshing = false; vi.advanceTimersByTime(500); expect(selected).toHaveBeenLastCalledWith(2); player.dispose();
+    e.refreshing = false; vi.advanceTimersByTime(1500); expect(selected).toHaveBeenLastCalledWith(2); player.dispose();
+  });
+
+  it('holds a late-qualified real frame briefly before advancing instead of flashing through it', () => {
+    const { player, selected, e } = fixture(); e.presentation!.status = 'pending'; player.play();
+    vi.advanceTimersByTime(10000); expect(selected).not.toHaveBeenCalled();
+    e.presentation!.status = 'unverified'; vi.advanceTimersByTime(500); expect(selected).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(READY_DWELL_MS - 1); expect(selected).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(501); expect(selected).toHaveBeenCalledTimes(1); player.dispose();
+  });
+  it('rapid viewport/theme generations invalidate old readiness and preserve qualified timestamps', () => {
+    const { player, selected, e } = fixture(); player.play();
+    e.key = 'new-theme-and-viewport'; vi.advanceTimersByTime(5000); expect(selected).not.toHaveBeenCalled();
+    e.presentation = { ...e.presentation!, key:e.key, status:'pending' }; vi.advanceTimersByTime(5000); expect(selected).not.toHaveBeenCalled();
+    e.presentation.status = 'unverified'; vi.advanceTimersByTime(500); expect(selected).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(1000); expect(selected).toHaveBeenCalledTimes(1); expect(e.presentation.displayedTime).toBeNull(); player.dispose();
+  });
+  it('a long buffer never catches up multiple missed frames, and repeated ticks do not notify stable status', () => {
+    const { player, selected, e } = fixture(); const changed = vi.fn(); player.subscribe(changed);
+    e.presentation!.status = 'pending'; player.play(); vi.advanceTimersByTime(60000);
+    expect(selected).not.toHaveBeenCalled(); expect(changed.mock.calls.length).toBeLessThanOrEqual(2);
+    e.presentation!.status = 'unverified'; vi.advanceTimersByTime(1500); expect(selected).toHaveBeenCalledTimes(1);
+    vi.advanceTimersByTime(FRAME_INTERVAL_MS); expect(selected).toHaveBeenCalledTimes(2); player.dispose();
   });
   it('inactive layer, one-frame history or metadata failure does not run a loop', () => {
     const { player, e } = fixture(); e.enabled = false; player.play(); expect(vi.getTimerCount()).toBe(0);

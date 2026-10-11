@@ -11,9 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
-      WW_SMOOTH_PHASE: baseline
-      WW_EXPECT_INTERVAL: 5000
-      WW_E2E_BASE_URL: https://weather-watch-v03-p0-owner-qa-ton.tonnutkit.chatgpt.site/
+      WW_SMOOTH_PHASE: candidate
+      WW_EXPECT_INTERVAL: 2500
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with: { fetch-depth: 0 }
@@ -27,13 +26,23 @@ jobs:
       - run: npm run typecheck && npm test && npm run build && npm run verify:pages
       - id: browsers
         run: npx playwright install --with-deps chromium webkit
+      - name: Original browser regressions
+        run: npm run test:e2e
+      - name: Previous hotfix automatic playback regression
+        if: ${{ !cancelled() && steps.browsers.outcome == 'success' }}
+        run: npx playwright test --config qa-playback-v03/playwright.config.ts
       - name: Real frames, perceptible imagery and interval measurements
+        if: ${{ !cancelled() && steps.browsers.outcome == 'success' }}
         run: npx playwright test --config qa-smooth-v03/playwright.config.ts
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
           name: radar-smooth-v03-${{ github.run_id }}
           path: |
+            playwright-report/
+            test-results/
+            qa-playback-v03/browser-report/
+            qa-playback-v03/test-results/
             qa-smooth-v03/browser-report/
             qa-smooth-v03/test-results/
           retention-days: 90
