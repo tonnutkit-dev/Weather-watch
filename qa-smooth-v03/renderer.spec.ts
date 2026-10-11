@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
 const { PNG }=createRequire(import.meta.url)('playwright-core/lib/utilsBundle');
 const fixture=JSON.parse(readFileSync('diagnostics-p0/provider-fixtures.json','utf8'));
-function image(color:number[]){const p=new PNG({width:64,height:64});for(let i=0;i<p.data.length;i+=4){p.data[i]=color[0];p.data[i+1]=color[1];p.data[i+2]=color[2];p.data[i+3]=200;}return PNG.sync.write(p);}
+function image(color:number[]){const p=new PNG({width:512,height:512});for(let i=0;i<p.data.length;i+=4){p.data[i]=color[0];p.data[i+1]=color[1];p.data[i+2]=color[2];p.data[i+3]=200;}return PNG.sync.write(p);}
 function changed(a:Buffer,b:Buffer){const aa=PNG.sync.read(a),bb=PNG.sync.read(b);let n=0;for(let i=0;i<aa.data.length;i+=4)if(Math.max(...[0,1,2].map(c=>Math.abs(aa.data[i+c]-bb.data[i+c])))>8)n++;return n;}
 test('LAB distinct decoded imagery, delayed dwell, corrupt PNG and viewport/resource lifecycle',async({page},info)=>{
   test.skip(!!process.env.WW_E2E_BASE_URL,'Fixture renderer laboratory never substitutes data on the deployed/live verification path.');
@@ -38,14 +38,16 @@ test('LAB distinct decoded imagery, delayed dwell, corrupt PNG and viewport/reso
   await expect(status).toHaveAttribute('data-status','pending');
   await expect(page.getByTestId('radar-playback')).toHaveAttribute('data-phase','buffering');
   await expect(status).toHaveAttribute('data-status','unverified',{timeout:10000});
-  const first=await page.screenshot({clip});expect(changed(initial,first)).toBeGreaterThan(20000);
+  let first=await page.screenshot({clip});
+  await info.attach('LAB-initial-before-pixel-assert',{body:initial,contentType:'image/png'});
+  await expect.poll(async()=>{first=await page.screenshot({clip});expect(await time.getAttribute('datetime')).toBe(new Date(1000*1000).toISOString());return changed(initial,first);},{timeout:750,intervals:[50]}).toBeGreaterThan(20000);
   await expect(time).toHaveAttribute('datetime',new Date(1600*1000).toISOString(),{timeout:5000});
   const transitions=await page.evaluate(()=>(window as any).__RADAR_TRANSITIONS);
   const ready=transitions.find((x:any)=>x.time===new Date(1000*1000).toISOString()&&x.status==='unverified');
   const next=transitions.find((x:any)=>x.time===new Date(1600*1000).toISOString());
   expect(ready).toBeDefined();expect(next).toBeDefined();const dwell=next.at-ready.at;
   expect(dwell).toBeGreaterThanOrEqual(750);
-  await expect(status).toHaveAttribute('data-status','unverified',{timeout:5000});const second=await page.screenshot({clip});expect(changed(first,second)).toBeGreaterThan(20000);
+  await expect(status).toHaveAttribute('data-status','unverified',{timeout:5000});let second=await page.screenshot({clip});await expect.poll(async()=>{second=await page.screenshot({clip});expect(await time.getAttribute('datetime')).toBe(new Date(1600*1000).toISOString());return changed(first,second);},{timeout:750,intervals:[50]}).toBeGreaterThan(20000);
   await expect(status).toHaveAttribute('data-status','failed',{timeout:7000});
   await expect(page.getByTestId('radar-playback')).toHaveAttribute('data-phase','failed',{timeout:2000});
   expect(await map.getAttribute('data-radar-displayed-frame')).toBe('');await expect(map).toHaveAttribute('data-map-status','ready');

@@ -37,13 +37,14 @@ test('real radar pixels, cadence, Pause, manual scrub and stable map', async ({ 
   const start=Date.now(); let previous=await time.getAttribute('datetime');
   await page.getByRole('button',{name:'เล่นเรดาร์ย้อนหลัง',exact:true}).click();
   await expect(page.getByRole('button',{name:'หยุดเรดาร์',exact:true})).toHaveAttribute('aria-pressed','true');
-  const advances:{at:number,time:string|null,status:string|null}[]=[], images:Buffer[]=[],pixelChanges:any[]=[];
+  const advances:{at:number,time:string|null,status:string|null,qualifiedAt?:number,visibleSampleAt?:number}[]=[], images:Buffer[]=[],pixelChanges:any[]=[];
   for(let i=0;i<6;i++) {
     await expect.poll(()=>time.getAttribute('datetime'),{timeout:i===0?2000:25000,intervals:[50]}).not.toBe(previous);
     const selected=await time.getAttribute('datetime'); advances.push({at:Date.now()-start,time:selected,status:await status.getAttribute('data-status')}); previous=selected;
     await expect(status).toHaveAttribute('data-status','unverified',{timeout:20000});
+    advances[i]!.qualifiedAt=Date.now()-start;
     expect(await map.getAttribute('data-radar-displayed-frame')).toBe('');
-    const img=await page.screenshot({clip}); images.push(img);
+    const img=await page.screenshot({clip}); images.push(img); advances[i]!.visibleSampleAt=Date.now()-start;
     pixelChanges.push(difference(i===0?originalImage:images[i-1]!,img));
     await info.attach(`actual-radar-frame-${i}`,{body:img,contentType:'image/png'});
   }
@@ -68,7 +69,7 @@ test('real radar pixels, cadence, Pause, manual scrub and stable map', async ({ 
   const observations=await page.evaluate(()=>(window as any).__SMOOTH);
   const sorted=observations.frames.filter((n:number)=>n<1000).sort((a:number,b:number)=>a-b);
   const peak=Math.max(0,...requests.map(t=>requests.filter(v=>v.at>t.at-60000&&v.at<=t.at).length));expect(peak).toBeLessThanOrEqual(80);
-  const result={phase,browser:info.project.name,baseURL:info.project.use.baseURL,engine,firstAdvanceMs:advances[0]!.at,intervalsMs:intervals,advances,pixelChanges,basemapControl,requests:requests.length,peakRolling60s:peak,uniqueTileURLs:new Set(requests.map(x=>x.url)).size,sameMapHost:true,sameGLCanvas:canvas?true:null,heapStart,canvasCount:await page.locator('canvas').count(),rAF:{count:observations.frames.length,p95Ms:sorted[Math.floor(sorted.length*.95)],excludedOver1000Ms:observations.frames.length-sorted.length},longTasks:observations.tasks,heap:await page.evaluate(()=>(performance as any).memory?.usedJSHeapSize??null),errors,limitations:'Transport is not pixel-complete confirmation. Pixel differences demonstrate sampled visible imagery, not complete viewport coverage. Linux browsers; not physical iPhone.'};
+  const result={phase,browser:info.project.name,baseURL:info.project.use.baseURL,engine,firstAdvanceMs:advances[0]!.at,firstVisibleSampleMs:advances[0]!.visibleSampleAt,intervalsMs:intervals,advances,pixelChanges,basemapControl,requests:requests.length,peakRolling60s:peak,uniqueTileURLs:new Set(requests.map(x=>x.url)).size,sameMapHost:true,sameGLCanvas:canvas?true:null,heapStart,canvasCount:await page.locator('canvas').count(),rAF:{count:observations.frames.length,p95Ms:sorted[Math.floor(sorted.length*.95)],excludedOver1000Ms:observations.frames.length-sorted.length},longTasks:observations.tasks,heap:await page.evaluate(()=>(performance as any).memory?.usedJSHeapSize??null),errors,limitations:'Transport is not pixel-complete confirmation. Pixel differences demonstrate sampled visible imagery, not complete viewport coverage. Linux browsers; not physical iPhone.'};
   await info.attach('smooth-playback-measurements',{body:Buffer.from(JSON.stringify(result,null,2)),contentType:'application/json'});
   expect(errors).toEqual([]);
 });
