@@ -1,0 +1,56 @@
+name: Weather Watch V0.3 isolated performance baseline
+on:
+  push:
+    branches: [work/performance-reliability-baseline-v03]
+    paths: [audit-v03/**, .github/workflows/performance-baseline-v03.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: weather-watch-performance-baseline-v03
+  cancel-in-progress: false
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24
+          cache: npm
+      - name: Verify audit source boundaries
+        run: |
+          git fetch origin main work/premium-visual-exploration
+          test -z "$(git diff --name-only origin/main HEAD -- src package.json package-lock.json vite.config.ts DESIGN.md .github/workflows/pages.yml)"
+          git rev-parse origin/main origin/work/premium-visual-exploration
+      - name: Reproducible install
+        run: npm ci
+      - name: Original type checks and unit tests
+        run: npm run typecheck && npm test
+      - name: Unchanged production build and Pages path checks
+        run: npm run build && npm run verify:pages
+      - name: Diagnostic build with observation hooks only
+        run: npx vite build --config audit-v03/vite.diagnostic.config.ts
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+      - name: Measure production startup and diagnostic interactions
+        env:
+          WW_AUDIT_SUSTAIN_MS: '600000'
+        run: node audit-v03/run-baseline.mjs
+      - name: Run original live regression suite
+        if: always()
+        run: npm run test:e2e
+      - name: Retain raw measurements, traces and screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: performance-baseline-v03-${{ github.run_id }}
+          path: |
+            audit-v03/raw/
+            playwright-report/
+            test-results/
+          retention-days: 30
+      - name: Report failures without publishing
+        if: failure()
+        run: echo '::error::Audit or original regression failed. Inspect retained evidence. This workflow has no deployment job.'
