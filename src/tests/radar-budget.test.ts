@@ -2,6 +2,7 @@ vi.mock('../radar/decode',()=>({decodeRadarImage:vi.fn(async()=>{})}));
 // Isolated transport mechanics: decoder has separate lifecycle/corruption tests.
 // Synthetic binary bytes test cache mechanics; never used in product views.
 import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest';
+import {decodeRadarImage} from '../radar/decode';
 const url=(n:number)=>`https://tilecache.rainviewer.com/v2/radar/audit-${n}/512/5/25/15/2/1_0.png`;
 let transport:ReturnType<typeof vi.fn>;
 beforeEach(()=>{vi.resetModules();vi.useFakeTimers();vi.setSystemTime(new Date('2026-10-11T00:00:00Z'));transport=vi.fn(async()=>new Response(new Uint8Array([1,2,3,4])));vi.stubGlobal('fetch',transport);});
@@ -61,4 +62,12 @@ it('cached images return immediately at zero capacity without a new network star
   await Promise.all(Array.from({length:80},(_,i)=>radarImage(url(i),new AbortController().signal)));
   expect(remainingBudget()).toBe(0);await radarImage(url(0),new AbortController().signal);
   expect(transport).toHaveBeenCalledTimes(80);expect(remainingBudget()).toBe(0);
+});
+
+it('a rejected decoder does not admit corrupt bytes to the successful image cache',async()=>{
+  const {radarImage}=await import('../radar/budget');
+  vi.mocked(decodeRadarImage).mockRejectedValueOnce(new Error('corrupt PNG'));
+  await expect(radarImage(url(0),new AbortController().signal)).rejects.toThrow('corrupt PNG');
+  await radarImage(url(0),new AbortController().signal);expect(transport).toHaveBeenCalledTimes(2);
+  await radarImage(url(0),new AbortController().signal);expect(transport).toHaveBeenCalledTimes(2);
 });

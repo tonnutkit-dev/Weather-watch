@@ -26,6 +26,8 @@ jobs:
       - run: npm run typecheck && npm test && npm run build && npm run verify:pages
       - id: browsers
         run: npx playwright install --with-deps chromium webkit
+      - name: Deterministic independent-audit renderer checks
+        run: npx playwright test renderer.spec.ts --config qa-smooth-v03/playwright.config.ts
       - name: Original browser regressions
         run: npm run test:e2e
       - name: Previous hotfix automatic playback regression
@@ -33,7 +35,7 @@ jobs:
         run: npx playwright test --config qa-playback-v03/playwright.config.ts
       - name: Real frames, perceptible imagery and interval measurements
         if: ${{ !cancelled() && steps.browsers.outcome == 'success' }}
-        run: npx playwright test --config qa-smooth-v03/playwright.config.ts
+        run: npx playwright test playback.spec.ts --config qa-smooth-v03/playwright.config.ts
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
