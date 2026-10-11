@@ -10,7 +10,7 @@ Exploration only. This file does not supersede the production DESIGN.md. Adopt a
 | surface | #fbfcf8 | #1b3236 |
 | raised | #e8ede8 | #263e41 |
 | ink | #203d3e | #f0f2e9 |
-| secondary | #607674 | #adc0bb |
+| secondary | #586e6c | #adc0bb |
 | border | #d5dfd9 | #3a5151 |
 | accent | #235f75 | #a2ccd0 |
 | accent soft | #dce9e9 | #324f55 |

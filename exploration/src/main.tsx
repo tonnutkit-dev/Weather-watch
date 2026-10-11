@@ -18,7 +18,7 @@ function App() {
     const [systemDark, setSystemDark] = useState(matchMedia('(prefers-color-scheme: dark)').matches);
     const theme: Theme = appearance === 'dark' || (appearance === 'system' && systemDark) ? 'dark' : 'light';
     const [sheet, setSheet] = useState<Sheet>('collapsed');
-    const [dialog, setDialog] = useState<'location' | 'settings' | 'radar' | null>(null);
+    const [dialog, setDialog] = useState<'location' | 'settings' | 'radar' | 'layers' | null>(null);
     const [selected, setSelected] = useState<DemoLocation>(demoLocations[0]);
     const [layers, setLayers] = useState(false), [rain, setRain] = useState(true), [recenter, setRecenter] = useState(0);
     const [frame, setFrame] = useState(2), [playing, setPlaying] = useState(false);
@@ -52,7 +52,7 @@ function App() {
         }
     }, [dialog]);
     function preference(value: string) { setAppearance(value); localStorage.setItem('ww:exploration:appearance', value); const u = new URL(location.href); u.searchParams.set('theme', value); history.replaceState(null, '', u); }
-    function open(value: 'location' | 'settings' | 'radar') { setLayers(false); setDialog(value); }
+    function open(value: 'location' | 'settings' | 'radar' | 'layers') { setLayers(false); setDialog(value); }
     const details = directions[direction];
     return <main className={`prototype direction-${direction} sheet-${sheet}`} data-direction={direction}>
     <header className="app-header">
@@ -77,7 +77,7 @@ function App() {
       <section className="map-pane" aria-label="สำรวจพื้นที่">
         <MapScene direction={direction} theme={theme} location={selected} rain={rain} frame={frame} recenter={recenter}/>
         <div className="map-heading"><span className="section-index">THE WEATHER AROUND YOU</span><h2>อากาศรอบตัว</h2><span className="map-context">แผนที่จริง · ชั้นฝนตัวอย่าง</span></div>
-        <div className="map-tools"><div className="layer-anchor"><button className="map-button" aria-label="ชั้นข้อมูล" aria-expanded={layers} onClick={() => setLayers(!layers)}><Layers /></button>{layers && <div className="layer-popover"><h3>ชั้นข้อมูลบนแผนที่</h3><button aria-pressed={rain} onClick={() => setRain(!rain)}><Droplets size={17}/> ฝนตัวอย่าง <span>{rain ? 'เปิด' : 'ปิด'}</span></button><p>รูปพื้นที่ฝนเป็นภาพประกอบดีไซน์ ไม่ใช่เรดาร์จริง</p></div>}</div><button className="map-button" aria-label="กลับไปยังสถานที่ที่เลือก" onClick={() => setRecenter(n => n + 1)}><Crosshair /></button></div>
+        <div className="map-tools"><div className="layer-anchor"><button className="map-button" aria-label="ชั้นข้อมูล" aria-expanded={layers || dialog==='layers'} onClick={() => sheet==='collapsed' ? setLayers(!layers) : open('layers')}><Layers /></button>{layers && <div className="layer-popover"><h3>ชั้นข้อมูลบนแผนที่</h3><button aria-pressed={rain} onClick={() => setRain(!rain)}><Droplets size={17}/> ฝนตัวอย่าง <span>{rain ? 'เปิด' : 'ปิด'}</span></button><p>รูปพื้นที่ฝนเป็นภาพประกอบดีไซน์ ไม่ใช่เรดาร์จริง</p></div>}</div><button className="map-button" aria-label="กลับไปยังสถานที่ที่เลือก" onClick={() => setRecenter(n => n + 1)}><Crosshair /></button></div>
         
         <div className="map-data-note"><span>EXPLORATION {details.label}</span><p>สีฝนตัวอย่าง</p></div>
         <div className="radar-strip" aria-label="เครื่องเล่นภาพฝนตัวอย่าง">
@@ -109,10 +109,11 @@ function App() {
       </section>
     </div>
     <dialog ref={modal} onCancel={() => setDialog(null)} className="modal">
-      <div className="modal-header"><h2>{dialog === 'location' ? 'เลือกสถานที่' : dialog === 'settings' ? 'การแสดงผล' : 'ภาพฝนตัวอย่าง'}</h2><button className="icon-button" aria-label="ปิด" onClick={() => setDialog(null)}><X /></button></div>
+      <div className="modal-header"><h2>{dialog === 'location' ? 'เลือกสถานที่' : dialog === 'settings' ? 'การแสดงผล' : dialog==='layers' ? 'ชั้นข้อมูล' : 'ภาพฝนตัวอย่าง'}</h2><button className="icon-button" aria-label="ปิด" onClick={() => setDialog(null)}><X /></button></div>
       {dialog === 'location' && <><label className="search-field"><Search size={18}/><input placeholder="ค้นหาสถานที่ในต้นแบบ" aria-label="ค้นหาสถานที่ในต้นแบบ" value={query} onChange={e => setQuery(e.target.value)}/></label><p className="modal-description">ต้นแบบเลือกได้ 5 เมืองเพื่อทดสอบ layout แอปจริงยังคงรองรับ 77 จังหวัดไทย</p><div className="location-results">{demoLocations.filter(l => l.name.includes(query)).map(l => <button key={l.name} onClick={() => { setSelected(l); setDialog(null); }}><MapPin size={18}/><span>{l.name}<small>{l.country === 'TH' ? 'ประเทศไทย' : 'จีน · ' + l.zone}</small></span><ArrowUpRight size={17}/></button>)}</div><p className="modal-description">เปลี่ยนพิกัดแผนที่จริง · ค่าอากาศยังเป็นตัวอย่างชุดเดียว</p></>}
       {dialog === 'settings' && <><p className="modal-description">เลือกโทนภาพสำหรับเปรียบเทียบดีไซน์</p><div className="theme-choices">{[{ value: 'system', label: 'ตามอุปกรณ์' }, { value: 'light', label: 'สว่าง' }, { value: 'dark', label: 'มืด' }].map(t => <button aria-pressed={appearance === t.value} key={t.value} onClick={() => preference(t.value)}>{t.value === 'dark' ? <Moon /> : t.value === 'light' ? <Sun /> : <SlidersHorizontal />}{t.label}</button>)}</div><a className="review-link" href="./index.html"><ArrowLeft size={17}/> กลับหน้าเปรียบเทียบ A / B / C</a></>}
-      {dialog === 'radar' && <><p className="modal-description">11 ตุลาคม 2569 · {frameLabel(frame)} น. (เวลาตัวอย่าง)</p><div className="radar-detail"><span className="section-index">VISUAL STUDY, NOT LIVE RADAR</span><h3>ดูการจัดวาง โดยไม่ปะปนกับข้อมูลจริง</h3><p>พื้นที่สีฟ้าเป็นรูปทรงประกอบที่สร้างในต้นแบบ ปุ่มเล่นเปลี่ยนเฉพาะความเข้มของภาพตัวอย่าง ไม่ใช่เรดาร์ย้อนหลังหรือ Nowcast</p><p>ระบบ RainViewer ของแอปเดิมไม่ได้ถูกแก้ไข การเลือกดีไซน์จะนำไปใช้กับเฟรมจริงและ timestamp เดิม</p><div className="demo-legend"><span />สีตัวอย่างอ่อน → เข้ม ไม่มีหน่วยความเข้มฝน</div></div></>}
+      {dialog === 'layers' && <div className="layer-dialog"><button aria-pressed={rain} onClick={()=>setRain(!rain)}><Droplets size={18}/> ฝนตัวอย่าง <span>{rain?'เปิด':'ปิด'}</span></button><p className="modal-description">สีฝนเป็นภาพประกอบเพื่อประเมินดีไซน์ ไม่ใช่เรดาร์จริง</p></div>}
+            {dialog === 'radar' && <><p className="modal-description">11 ตุลาคม 2569 · {frameLabel(frame)} น. (เวลาตัวอย่าง)</p><div className="radar-detail"><span className="section-index">VISUAL STUDY, NOT LIVE RADAR</span><h3>ดูการจัดวาง โดยไม่ปะปนกับข้อมูลจริง</h3><p>พื้นที่สีฟ้าเป็นรูปทรงประกอบที่สร้างในต้นแบบ ปุ่มเล่นเปลี่ยนเฉพาะความเข้มของภาพตัวอย่าง ไม่ใช่เรดาร์ย้อนหลังหรือ Nowcast</p><p>ระบบ RainViewer ของแอปเดิมไม่ได้ถูกแก้ไข การเลือกดีไซน์จะนำไปใช้กับเฟรมจริงและ timestamp เดิม</p><div className="demo-legend"><span />สีตัวอย่างอ่อน → เข้ม ไม่มีหน่วยความเข้มฝน</div></div></>}
     </dialog>
   </main>;
 }
