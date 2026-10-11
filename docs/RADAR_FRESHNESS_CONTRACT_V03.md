@@ -1,0 +1,27 @@
+# P0 reliability contracts — implementation candidate
+
+## R01: selected time is not displayed-image time
+
+`radarRequestKey` identifies frame path/time, geographic point, theme and enabled layer. `RadarPresentationGate` increments a generation when this context changes, and rejects completion callbacks belonging to older generations. Visibility suspension and renderer teardown cancel the current generation. Viewport movement invalidates readiness without creating another source or map. Local URL fragments identify the request generation; they are stripped **before** the unchanged image cache and HTTP transport. The same 80/min rolling application cap, five-minute cache, ninety entries, historical API and one radar source remain in place. No frame prefetch, interpolation or future frames.
+
+States: `pending`, `unverified`, `failed`, `cancelled`. `requestedTime` records intent. `displayedTime` is explicitly **null** in this correction: neither public renderer API proves complete current-frame coverage of the visible viewport. This deliberately conservative buffering presentation is allowed by the work order's instruction to communicate uncertainty when verification is incomplete. The compact time is always qualified **เลือก** (selected), never an unqualified displayed-image timestamp. Failure does not assign the new time to old pixels.
+
+MapLibre evidence: generation-tagged transport completion, pending/error accounting, followed by public `idle`. This can establish that current-generation bytes completed and the renderer settled; it cannot establish that all visible pixels are current-frame pixels. `isSourceLoaded` alone is not used. MapLibre 6.13 considers errored tiles loaded; source reload can temporarily retain older textures. Decode errors with no exact generation evidence are reported as map tile warnings, never as positive confirmation.
+
+Leaflet evidence: exact generation captured at `createTile`, image `onload` after decoding, abort checks, grid `load` and a paint opportunity. Offscreen/parent/missing tiles prevent a complete viewport proof here too; status remains `unverified`, explicitly communicated. Late generation callbacks cannot mark the current request successful or failed.
+
+**Not implemented:** verified full-viewport displayed-frame acknowledgement, double-buffering, alternative source strategy, REA experiment integration. Lead should approve any richer pixel/viewport contract separately. This fix removes the false timestamp claim without pretending a generic source-ready event proves full imagery.
+
+## R02: source expiry and refresh admission
+
+Current modeled weather is usable only below a two-hour **source-age** limit. Modeled AQ is usable only below three hours. At the boundary inputs expire. Missing/invalid timestamps and timestamps over five minutes in the future are unavailable. `fetchedAt` labels cache age only: refetching an old source never renews it. Original source/provenance timestamps are preserved, and MODELED/FORECAST/OBSERVED/OFFICIAL_ALERT categories are not changed.
+
+Presentation distinguishes fresh, cached-but-usable, expired, refreshing, refresh-failed, unavailable. Failure and fetching are also independent flags so an expired failed refresh remains expired with a failure notice. Retained readings stay inspectable with original times. Failed or expired inputs do not support Calm/Notable/Attention; situation becomes Unknown. Invalid inputs are removed from current map temperature/AQI markers while the map remains usable.
+
+Clock: one timeout at the next source deadline, rescheduled at data change; visibility/connectivity events reevaluate actual wall time. No per-second/global animation clock. Timers in suspended tabs are backed by resume reevaluation.
+
+Refresh: ten-minute foreground check, plus focus, visibility resume and online restoration. Admission is per exact weather/AQ location key, based on last **attempt**, including retries. Skip hidden/offline/inflight requests. Automatic cooldown ten minutes; manual cooldown thirty seconds; key history bounded to 128 entries. Only the currently active exact keys are refetched, with `cancelRefetch: false`. No invalidation of every cached city. Returning locations retain Query's stale/cache behavior. Initial query and existing one-retry policy remain intact; existing twelve-second HTTP timeout remains unchanged. Explicit reconnect policy prevents TanStack default reconnect from bypassing this admission gate.
+
+Maximum unattended foreground cadence: six scheduled starts/provider/hour, up to twelve with the existing retry, for a stable location. Manual requests are user initiated and capped; rapid clicks/resume events cannot create a burst. No hidden-tab polling requests. This is far below Open-Meteo's published free non-commercial limits (600/min, 5,000/hour, 10,000/day), and balances model freshness with mobile networking. No paid services or new credentials.
+
+Reference sources checked during implementation: [MapLibre MapSourceDataEvent](https://maplibre.org/maplibre-gl-js/docs/API/classes/MapSourceDataEvent/), pinned MapLibre 6.13 `raster_tile_source.ts`/tile manager source; [Leaflet 1.9.4](https://leafletjs.com/reference-1.9.4.html); [TanStack defaults](https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults); [Open-Meteo terms](https://open-meteo.com/en/terms); [RainViewer transition](https://www.rainviewer.com/api/transition-faq.html). Provider adapters and budget module are unchanged.

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useEffect, useCallback } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   CloudSun,
   Search,
@@ -37,6 +37,10 @@ import type { SheetState } from "../components/SituationPanel";
 import { RadarControls } from "../components/RadarControls";
 import { Modal } from "../components/Modal";
 import { MapBoundary } from "../components/MapBoundary";
+import { freshness } from "../reliability/freshness";
+import { useSourceClock } from "../reliability/useFreshness";
+import { recordRefresh, useBoundedRefresh } from "../reliability/useRefresh";
+import { radarRequestKey, type RadarPresentation } from "../radar/presentation";
 import { value } from "../shared/time";
 const MapCanvas = lazy(() => import("../maps/MapCanvas"));
 function initialLocation() {
@@ -50,8 +54,9 @@ function initialLocation() {
   }
 }
 export default function App() {
-  const theme = useTheme(),
-    client = useQueryClient();
+  const theme = useTheme();
+  const [radarPresentation, setRadarPresentation] = useState<RadarPresentation>();
+  const reportRadar = useCallback((state: RadarPresentation) => setRadarPresentation(state), []);
   const [location, setLocation] = useState<Location>(initialLocation),
     [favorites, setFavorites] = useState(() =>
       readFavorites().filter(isSupportedLocation),
@@ -83,28 +88,24 @@ export default function App() {
     )
       setPlaying(false);
   }, [sheet]);
+  const weatherKey = ["weather", location.country, location.latitude, location.longitude, location.timezone];
+  const airKey = ["air", location.country, location.latitude, location.longitude, location.timezone];
   const weather = useQuery({
-    queryKey: [
-      "weather",
-      location.country,
-      location.latitude,
-      location.longitude,
-      location.timezone,
-    ],
-    queryFn: ({ signal }) => getWeather(location, signal),
-    staleTime: 600000,
+    queryKey: weatherKey,
+    queryFn: ({ signal }) => { recordRefresh(weatherKey); return getWeather(location, signal); },
+    staleTime: 600000, refetchOnReconnect: false, refetchOnWindowFocus: false,
   });
   const air = useQuery({
-    queryKey: [
-      "air",
-      location.country,
-      location.latitude,
-      location.longitude,
-      location.timezone,
-    ],
-    queryFn: ({ signal }) => getAirQuality(location, signal),
-    staleTime: 600000,
+    queryKey: airKey,
+    queryFn: ({ signal }) => { recordRefresh(airKey); return getAirQuality(location, signal); },
+    staleTime: 600000, refetchOnReconnect: false, refetchOnWindowFocus: false,
   });
+  const refresh = useBoundedRefresh(weatherKey, airKey);
+  const now = useSourceClock(weather.data?.current.time, air.data?.time);
+  const weatherFreshness = freshness(weather.data?.current.time, weather.data?.currentMeta.fetchedAt,
+    'weather', weather.isFetching, weather.isError, now);
+  const airFreshness = freshness(air.data?.time, air.data?.meta.fetchedAt,
+    'air', air.isFetching, air.isError, now);
   const radar = useQuery({
     queryKey: ["radar"],
     queryFn: ({ signal }) => getRadar(signal),
@@ -210,16 +211,14 @@ export default function App() {
       favorite ? "ลบตำแหน่งโปรดแล้ว" : "บันทึกตำแหน่งนี้ไว้ในอุปกรณ์แล้ว",
     );
   };
-  const refresh = () => {
-    void client.invalidateQueries({ queryKey: ["weather"] });
-    void client.invalidateQueries({ queryKey: ["air"] });
-  };
   const onView = (v: typeof view) => {
     setView(v);
     if (window.innerWidth < 760) setSheet("expanded");
   };
-  const w = weather.isError ? undefined : weather.data,
-    a = air.isError ? undefined : air.data;
+  const w = weatherFreshness.assessmentAllowed ? weather.data : undefined,
+    a = airFreshness.assessmentAllowed ? air.data : undefined;
+  const presentationKey = radarRequestKey({ frame: radar.data?.frames[index], location, theme: theme.theme, layers });
+  const presentation = radarPresentation?.key === presentationKey ? radarPresentation : undefined;
   return (
     <div className={`app sheet-state-${sheet}`}>
       <header className="app-header">
@@ -327,6 +326,7 @@ export default function App() {
             >
               <MapCanvas
                 location={location}
+                onRadarPresentation={reportRadar}
                 theme={theme.theme}
                 layers={layers}
                 radar={radar.data}
@@ -406,6 +406,7 @@ export default function App() {
             <>
               <RadarControls
                 radar={radar.data}
+                presentation={presentation}
                 index={index}
                 playing={playing}
                 onIndex={(n) => {
@@ -442,13 +443,14 @@ export default function App() {
         </section>
         <SituationPanel
           location={location}
+          now={now}
           weather={weather}
           air={air}
           sheet={sheet}
           onSheet={setSheet}
           favorite={favorite}
           onFavorite={save}
-          onRefresh={refresh}
+          onRefresh={() => refresh()}
           view={view}
           onView={onView}
         />
@@ -456,7 +458,7 @@ export default function App() {
       {!online && (
         <div className="offline-banner" role="status">
           ไม่มีการเชื่อมต่ออินเทอร์เน็ต ข้อมูลที่ดึงแล้วอาจไม่เป็นปัจจุบัน{" "}
-          <button onClick={refresh}>ลองใหม่</button>
+          <button onClick={() => refresh()}>ลองใหม่</button>
         </div>
       )}
       {(message || geoLoading) && (

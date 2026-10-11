@@ -1,0 +1,60 @@
+name: Weather Watch V0.3 isolated P0 reliability QA
+on:
+  push:
+    branches: [work/p0-reliability-correction-v03]
+    paths: [src/**, tests/**, diagnostics-p0/**, .github/workflows/p0-reliability-v03.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: weather-watch-p0-reliability-v03
+  cancel-in-progress: false
+jobs:
+  correction-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24
+          cache: npm
+      - name: Verify protected source boundaries
+        run: |
+          git fetch origin main work/premium-visual-exploration
+          git diff --exit-code origin/main HEAD -- src/providers src/radar/budget.ts src/design-system DESIGN.md package.json package-lock.json vite.config.ts .github/workflows/pages.yml
+          git rev-parse origin/main origin/work/premium-visual-exploration
+      - run: npm ci
+      - name: Production typecheck, full unit suite, build, Pages subdirectory check
+        run: npm run typecheck && npm test && npm run build && npm run verify:pages
+      - name: Build isolated observer and matched main baseline
+        run: |
+          npx vite build --config diagnostics-p0/vite.diagnostic.config.ts
+          git worktree add --detach diagnostics-p0/baseline 2036e2ac788cb31d25fd387cb40520ad95c408a6
+          ln -s "$GITHUB_WORKSPACE/node_modules" diagnostics-p0/baseline/node_modules
+          mkdir -p diagnostics-p0/baseline/diagnostics-p0
+          cp diagnostics-p0/vite.diagnostic.config.ts diagnostics-p0/baseline/diagnostics-p0/
+          cd diagnostics-p0/baseline
+          npm run build
+          npx vite build --config diagnostics-p0/vite.diagnostic.config.ts
+      - run: npx playwright install --with-deps chromium
+      - name: Deterministic R01/R02 failures and matched before/after measurements
+        run: node diagnostics-p0/run-corrections.mjs
+      - name: Original live-network browser regressions (reported separately)
+        if: always()
+        run: npm run test:e2e
+      - name: Publish screenshots, traces and machine-readable evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: p0-reliability-v03-${{ github.run_id }}
+          path: |
+            diagnostics-p0/raw/
+            playwright-report/
+            test-results/
+          retention-days: 90
+      - name: Report QA failure (no deployment)
+        if: failure()
+        run: echo '::error::P0 correction QA failed. Inspect the evidence artifact. This workflow has no merge or deployment job.'

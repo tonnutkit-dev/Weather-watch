@@ -5,21 +5,37 @@ import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?url";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { MapProps } from "./MapCanvas";
 import { radarTiles } from "../providers/radar";
+import { RadarPresentationGate, radarRequestKey, registerRadarGate, taggedRadarUrl, radarTransport } from "../radar/presentation";
 import { radarImage } from "../radar/budget";
 import { value } from "../shared/time";
 import { mapBottomInset, observeMapLayout } from "./layout";
 maplibregl.setWorkerUrl(workerUrl);
-maplibregl.addProtocol("wwradar", async (params, controller) => ({
-  data: await radarImage(
-    params.url.replace(/^wwradar:/, "https:"),
-    controller.signal,
-  ),
-}));
+maplibregl.addProtocol("wwradar", async (params, controller) => {
+  const request = radarTransport(params.url);
+  try {
+    const data = await radarImage(request.url, controller.signal);
+    request.finish('success');
+    return { data };
+  } catch (error) {
+    request.finish(controller.signal.aborted ? 'aborted' : 'failed');
+    throw error;
+  }
+});
 export default function GLCanvas(props: MapProps) {
   const host = useRef<HTMLDivElement>(null),
     map = useRef<Map | null>(null),
     current = useRef(props);
   current.current = props;
+  const gate = useRef<RadarPresentationGate | null>(null);
+  if (!gate.current) gate.current = new RadarPresentationGate(state => {
+    current.current.onRadarPresentation?.(state);
+    if (host.current) { host.current.dataset.radarPresentation = state.status; host.current.dataset.radarDisplayedFrame = ''; }
+  });
+  const registration = useRef<ReturnType<typeof registerRadarGate> | null>(null);
+  const prepareRadar = () => {
+    const p = current.current;
+    gate.current!.begin(radarRequestKey(p), p.frame?.time ?? null, p.layers.radar && !!p.frame && !document.hidden);
+  };
   const styleReady = useRef(false);
   const [status, setStatus] = useState<"loading" | "ready" | "error">(
       "loading",
@@ -125,7 +141,9 @@ export default function GLCanvas(props: MapProps) {
     ] as const)
       m.setLayoutProperty(id, "visibility", show ? "visible" : "none");
     if (p.radar && p.frame) {
-      const tile = radarTiles(p.radar, p.frame).replace(/^https:/, "wwradar:");
+      prepareRadar();
+      const tile = taggedRadarUrl(radarTiles(p.radar, p.frame).replace(/^https:/, "wwradar:"),
+        registration.current!.id, gate.current!.generation);
       if (!m.getSource("ww-radar")) {
         m.addSource("ww-radar", {
           type: "raster",
@@ -189,6 +207,8 @@ export default function GLCanvas(props: MapProps) {
   useEffect(() => {
     if (!host.current) return;
     const p = current.current;
+    registration.current = registerRadarGate(gate.current!);
+    prepareRadar();
     try {
       const m = new maplibregl.Map({
         container: host.current,
@@ -209,6 +229,14 @@ export default function GLCanvas(props: MapProps) {
       };
       recordView();
       m.on("moveend", recordView);
+      m.on('movestart', () => gate.current!.viewport());
+      m.on('resize', () => gate.current!.viewport());
+      m.on('idle', () => { if (!document.hidden) gate.current!.settle('current-generation-transport-complete;maplibre-idle;viewport-pixels-unverified'); });
+      const visibility = () => {
+        if (document.hidden) gate.current!.suspend();
+        else { gate.current!.suspend(); prepareRadar(); sync.current(); m.triggerRepaint(); }
+      };
+      document.addEventListener('visibilitychange', visibility);
       m.setPadding({
         top: 0,
         left: 0,
@@ -251,6 +279,8 @@ export default function GLCanvas(props: MapProps) {
         });
       });
       return () => {
+        document.removeEventListener('visibilitychange', visibility);
+        gate.current!.suspend(); registration.current?.dispose(); registration.current = null;
         disconnectLayout();
         m.remove();
         map.current = null;
@@ -263,6 +293,8 @@ export default function GLCanvas(props: MapProps) {
   useEffect(() => {
     const m = map.current;
     if (m) {
+      gate.current!.suspend();
+      prepareRadar();
       styleReady.current = false;
       setStyleTheme(null);
       m.setStyle(
@@ -271,6 +303,7 @@ export default function GLCanvas(props: MapProps) {
     }
   }, [props.theme]);
   useEffect(() => {
+    prepareRadar();
     sync.current();
   }, [
     props.layers,

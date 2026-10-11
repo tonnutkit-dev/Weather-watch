@@ -4,7 +4,9 @@ import type { Radar } from "../radar/types";
 import { timeLabel } from "../shared/time";
 import { isRadarStale } from "../providers/radar";
 import { Modal } from "./Modal";
+import type { RadarPresentation } from "../radar/presentation";
 interface Props {
+  presentation?: RadarPresentation;
   radar?: Radar;
   index: number;
   playing: boolean;
@@ -47,7 +49,10 @@ export function RadarControls(p: Props) {
     <>
       <div className="radar-controls" aria-label="ควบคุมเรดาร์ย้อนหลัง">
         <div className="radar-caption">
-          <span>เรดาร์ย้อนหลัง</span>
+          <span data-testid="radar-presentation" data-status={p.presentation?.status ?? 'pending'}>
+            {p.presentation?.status === 'failed' ? 'ภาพโหลดไม่สำเร็จ' :
+              p.presentation?.status === 'unverified' ? 'ภาพยังไม่ยืนยัน' :
+                p.presentation?.status === 'cancelled' ? 'พักการโหลดภาพ' : 'รอภาพเรดาร์'}</span>
           <span
             className={
               stale || p.error ? "radar-freshness stale" : "radar-freshness"
@@ -65,12 +70,12 @@ export function RadarControls(p: Props) {
                     : ""}
           </span>
           <time
-            data-testid="radar-time"
+            data-testid="radar-time" aria-label="เวลาเฟรมที่เลือก ไม่ใช่การยืนยันภาพบนแผนที่"
             dateTime={
               frame ? new Date(frame.time * 1000).toISOString() : undefined
             }
           >
-            {timeLabel(frame?.time, p.timezone)}
+            เลือก {timeLabel(frame?.time, p.timezone)}
           </time>
         </div>
         <div className="radar-playline">
@@ -113,9 +118,13 @@ export function RadarControls(p: Props) {
           onClose={() => setDetails(false)}
         >
           <div className="radar-details">
+            <p role="status">{p.presentation?.status === 'failed' ? 'ไทล์ของเฟรมนี้โหลดไม่สำเร็จ ภาพที่เหลืออาจเป็นเฟรมก่อนหน้า' :
+              p.presentation?.status === 'pending' || !p.presentation ? 'กำลังรอไทล์ของเฟรมที่เลือก ภาพบนแผนที่อาจยังเป็นเฟรมก่อนหน้า' :
+                'ยังยืนยันภาพครบทั้งมุมมองไม่ได้ ไทล์ที่โหลดแล้วไม่ยืนยันความครอบคลุมหรือว่าไม่มีฝน'}</p>
+            <p className="micro">หลักฐาน renderer: {p.presentation?.evidence ?? 'request-selected'} · ไม่ใช้ source idle เป็นหลักฐานยืนยันภาพทุกพิกเซล</p>
             <dl>
               <div>
-                <dt>ภาพที่เลือก</dt>
+                <dt>เฟรมที่ร้องขอ (ยังไม่ยืนยันภาพ)</dt>
                 <dd>{fullTime(frame?.time)}</dd>
               </div>
               <div>

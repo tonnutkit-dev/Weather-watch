@@ -3,6 +3,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { MapProps } from "./MapCanvas";
 import { radarTiles } from "../providers/radar";
+import { RadarPresentationGate, radarRequestKey, registerRadarGate, taggedRadarUrl, radarTransport } from "../radar/presentation";
 import { radarImage } from "../radar/budget";
 import { value } from "../shared/time";
 import { mapBottomInset, observeMapLayout } from "./layout";
@@ -26,17 +27,21 @@ class BoundedRadarLayer extends L.TileLayer {
     img.setAttribute("role", "presentation");
     const controller = new AbortController();
     this.controllers.set(img, controller);
-    radarImage(this.getTileUrl(coords), controller.signal)
+    const request = radarTransport(this.getTileUrl(coords));
+    controller.signal.addEventListener('abort', () => request.finish('aborted'), { once: true });
+    radarImage(request.url, controller.signal)
       .then((data) => {
         if (controller.signal.aborted) return;
         const blob = URL.createObjectURL(
           new Blob([data], { type: "image/png" }),
         );
-        img.onload = () => done(undefined, img);
-        img.onerror = () => done(new Error("Radar image decoding failed"), img);
+        img.onload = () => { if (controller.signal.aborted) return;
+          request.finish('success'); done(undefined, img); };
+        img.onerror = () => { request.finish('failed'); done(new Error("Radar image decoding failed"), img); };
         img.src = blob;
       })
       .catch((error) => {
+        request.finish(controller.signal.aborted ? 'aborted' : 'failed');
         if (!controller.signal.aborted)
           done(
             error instanceof Error
@@ -53,6 +58,12 @@ export default function RasterCanvas(p: MapProps) {
     map = useRef<L.Map | null>(null),
     latest = useRef(p);
   latest.current = p;
+  const gate = useRef<RadarPresentationGate | null>(null);
+  if (!gate.current) gate.current = new RadarPresentationGate(state => {
+    latest.current.onRadarPresentation?.(state);
+    if (host.current) { host.current.dataset.radarPresentation = state.status; host.current.dataset.radarDisplayedFrame = ''; }
+  });
+  const registration = useRef<ReturnType<typeof registerRadarGate> | null>(null);
   const base = useRef<L.TileLayer | null>(null),
     radar = useRef<BoundedRadarLayer | null>(null),
     coverage = useRef<BoundedRadarLayer | null>(null);
@@ -83,6 +94,19 @@ export default function RasterCanvas(p: MapProps) {
       scrollWheelZoom: true,
     });
     map.current = m;
+    registration.current = registerRadarGate(gate.current!);
+    m.on('movestart zoomstart resize', () => gate.current!.viewport());
+    m.on('moveend zoomend', () => { if (!radar.current?.isLoading() && !document.hidden)
+      gate.current!.settle('leaflet-load;current-generation-image-decode;viewport-pixels-unverified'); });
+    const visibility = () => {
+      gate.current!.suspend();
+      if (!document.hidden) {
+        const p = latest.current;
+        gate.current!.begin(radarRequestKey(p), p.frame?.time ?? null, p.layers.radar && !!p.frame);
+        if (p.radar && p.frame && radar.current) radar.current.setUrl(taggedRadarUrl(radarTiles(p.radar, p.frame), registration.current!.id, gate.current!.generation));
+      }
+    };
+    document.addEventListener('visibilitychange', visibility);
 
     m.attributionControl.setPrefix(false);
     L.control.zoom({ position: "topright" }).addTo(m);
@@ -128,6 +152,8 @@ export default function RasterCanvas(p: MapProps) {
       15000,
     );
     return () => {
+      document.removeEventListener('visibilitychange', visibility);
+      gate.current!.suspend(); registration.current?.dispose(); registration.current = null;
       clearTimeout(deadline);
       disconnectLayout();
       m.remove();
@@ -237,9 +263,12 @@ export default function RasterCanvas(p: MapProps) {
   }, [p.mapAction, p.location]);
   useEffect(() => {
     const m = map.current;
-    if (!m || !p.radar || !p.frame) return;
+    if (!m) return;
+    gate.current!.begin(radarRequestKey(p), p.frame?.time ?? null, p.layers.radar && !!p.frame && !document.hidden);
+    if (!p.radar || !p.frame) return;
+    const frameUrl = taggedRadarUrl(radarTiles(p.radar, p.frame), registration.current!.id, gate.current!.generation);
     if (!radar.current) {
-      radar.current = new BoundedRadarLayer(radarTiles(p.radar, p.frame), {
+      radar.current = new BoundedRadarLayer(frameUrl, {
         pane: "radar",
         tileSize: 512,
         zoomOffset: -1,
@@ -256,19 +285,17 @@ export default function RasterCanvas(p: MapProps) {
         radarFailed.current = false;
         setRadarStatus("loading");
       });
-      radar.current.on("load", () =>
-        setRadarStatus(radarFailed.current ? "error" : "ready"),
-      );
+      radar.current.on("load", () => {
+        setRadarStatus(radarFailed.current ? "error" : "ready");
+        requestAnimationFrame(() => { if (!document.hidden) gate.current!.settle('leaflet-load;current-generation-image-decode;viewport-pixels-unverified'); });
+      });
       radar.current.on("tileerror", () => {
         radarFailed.current = true;
         setRadarStatus("error");
       });
-    } else if (
-      radar.current
-        .getTileUrl({ x: 0, y: 0, z: 8 } as L.Coords)
-        .split("/512/")[0] !== radarTiles(p.radar, p.frame).split("/512/")[0]
-    ) {
-      radar.current.setUrl(radarTiles(p.radar, p.frame));
+    } else if (radar.current.getTileUrl({ x: 0, y: 0, z: 8 } as L.Coords) !==
+      frameUrl.replace('{z}', '7').replace('{x}', '0').replace('{y}', '0')) {
+      radar.current.setUrl(frameUrl);
       setRadarStatus("loading");
     }
     radar.current.setOpacity(p.opacity);
@@ -290,7 +317,7 @@ export default function RasterCanvas(p: MapProps) {
       );
     if (p.layers.coverage) coverage.current.addTo(m);
     else coverage.current.remove();
-  }, [p.radar, p.frame, p.opacity, p.layers.radar, p.layers.coverage]);
+  }, [p.radar, p.frame, p.opacity, p.layers.radar, p.layers.coverage, p.location, p.theme]);
   return (
     <>
       <div

@@ -9,3 +9,7 @@ test-results/
 
 # Raw provider documentation HTML is transient audit input, not distributable application source.
 evidence/*.html
+# Isolated P0 lab output is published as Actions artifacts, never shipped.
+diagnostics-p0/raw/
+diagnostics-p0/dist-diagnostic/
+diagnostics-p0/baseline/
