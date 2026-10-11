@@ -98,6 +98,7 @@ button:hover:not(:disabled){
   background:var(--accent-soft)
 }
 .prototype{
+  color:var(--ink);
   min-height:100dvh;
   --header-h:82px;
   --notice-h:28px;
@@ -556,14 +557,14 @@ button:hover:not(:disabled){
 }
 .radar-timeline input{
   width:100%;
-  height:32px;
+  height:44px;
   margin:0;
   display:block;
   accent-color:var(--accent);
   cursor:pointer
 }
 .radar-strip .icon-button{
-  min-width:38px
+  min-width:44px
 }
 .map-caption{
   position:absolute;
@@ -770,7 +771,7 @@ button:hover:not(:disabled){
   background:var(--raised)
 }
 .hour time{
-  font:400 10px 'Noto Sans Thai',sans-serif;
+  font:400 12px 'Noto Sans Thai',sans-serif;
   color:var(--muted)
 }
 .hour>strong{
@@ -795,7 +796,7 @@ button:hover:not(:disabled){
   height:36px
 }
 .compact .hour time{
-  font-size:9px
+  font-size:11px
 }
 .compact .hour strong{
   font-size:18px
@@ -1015,6 +1016,10 @@ button:hover:not(:disabled){
   border-radius:6px
 }
 /* A — Paper-like editorial composition: linear modules, no nested card wall. */
+.direction-a .brand>span {font-family:Arial,sans-serif;font-size:17px;letter-spacing:1.4px;font-weight:500;text-transform:uppercase}
+.direction-a .temperature {font-family:Georgia,serif;font-weight:400;letter-spacing:-10px}
+.direction-a .temperature>span {font-family:Arial,sans-serif;letter-spacing:-3px}
+
 .direction-a .map-pane{
   border-radius:6px;
   box-shadow:none
@@ -1649,10 +1654,10 @@ button:hover:not(:disabled){
     font-size:12px
   }
   .radar-timeline input{
-    height:32px
+    height:44px
   }
   .radar-strip .icon-button{
-    min-width:40px;
+    min-width:44px;
     height:44px
   }
   .maplibregl-ctrl-attrib{
@@ -1801,7 +1806,9 @@ button:hover:not(:disabled){
   .direction-a .weather-overview{
     padding:15px 25px 13px
   }
+  .direction-a .brand>span{font-size:12px;letter-spacing:1.5px}
   .direction-a .weather-hero{
+    flex-direction:row-reverse;justify-content:space-between;
     gap:28px;
     height:89px
   }
@@ -1841,11 +1848,11 @@ button:hover:not(:disabled){
     gap:25px
   }
   .direction-b .weather-art{
-    width:126px;
-    height:108px;
+    width:114px;
+    height:94px;
     position:absolute;
-    right:24px;
-    top:38px;
+    right:18px;
+    top:-12px;
     opacity:.95
   }
   .direction-b .condition-line{
@@ -1935,7 +1942,7 @@ button:hover:not(:disabled){
     font-size:10px
   }
   .hour time{
-    font-size:10px
+    font-size:12px
   }
   .hour>strong{
     font-size:19px
@@ -1974,8 +1981,8 @@ button:hover:not(:disabled){
   }
   .direction-b .weather-art{
     width:106px;
-    height:92px;
-    top:28px
+    height:82px;
+    top:-10px
   }
   .situation-summary h2,.direction-c .situation-summary h2{
     font-size:17px

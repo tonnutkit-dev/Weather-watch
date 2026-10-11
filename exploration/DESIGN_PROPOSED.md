@@ -23,7 +23,7 @@ A uses paper #f6f5f1 / #142129, surface #fffefb / #1b2b34, ink #172d37 / #eef1eb
 
 ## Typography and rhythm
 
-Bundled Noto Sans Thai 300/400/500/600 (SIL OFL); Latin/numerical display uses system Arial, tabular values, tight large numeral kerning. Mobile display 91–99px, short screen 81px; desktop 125–167px. Thai location 17px mobile / 21–25px desktop; section heading 15–22px; primary condition 13–14px; body 13–15px; contextual disclosure 11–12px. Tiny Latin edition labels are decorative hierarchy only; never use them as the sole indication of data type/status. Source attribution remains a provider-readable technical exception and is always available.
+Bundled Noto Sans Thai 300/400/500/600 (SIL OFL); C/B numerical display uses system Arial; A deliberately uses system Georgia serif for a different editorial identity. Tabular values and tight large numeral kerning. System face metrics must be checked on iOS before adoption. Mobile display 91–99px, short screen 81px; desktop 125–167px. Thai location 17px mobile / 21–25px desktop; section heading 15–22px; primary condition 13–14px; body 13–15px; contextual disclosure 11–12px. Tiny Latin edition labels are decorative hierarchy only; never use them as the sole indication of data type/status. Source attribution remains a provider-readable technical exception and is always available.
 
 Scale 4/8/12/16/20/24/32/40/64px. A: rules and 5–9px corner treatment. B: 22–24px islands and round radar dock. C: 17–22px primary surface, 12–14px controls, 10–12px forecast/PM grouping. Avoid a card for every metric. Use one subtle 8px/26px shadow where separation is necessary; C map/radar borders often replace shadow.
 

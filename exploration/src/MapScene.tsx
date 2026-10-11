@@ -51,13 +51,13 @@ export default function MapScene({ direction, theme, location, rain, frame, rece
                             layer.layout = { ...layer.layout, visibility: 'none' };
                     }
                     if (layer.type === 'line') {
-                        if (/road|bridge|tunnel/.test(key))
-                            layer.paint = { ...layer.paint, 'line-color': road, 'line-opacity': .38 };
+                        if (/road|highway|railway|bridge|tunnel/.test(key))
+                            layer.paint = { ...layer.paint, 'line-color': road, 'line-opacity': .3 };
                         if (/boundary/.test(key))
                             layer.paint = { ...layer.paint, 'line-color': text, 'line-opacity': .25 };
                     }
                     if (layer.type === 'symbol') {
-                        if (/poi|road|housenumber|waterway|airport|suburb|neighbourhood/.test(key))
+                        if (/country|poi|road|highway|housenumber|waterway|airport|suburb|neighbourhood/.test(key))
                             layer.layout = { ...layer.layout, visibility: 'none' };
                         else
                             layer.paint = { ...layer.paint, 'text-color': text, 'text-halo-color': land, 'text-halo-width': 1 };
@@ -66,18 +66,20 @@ export default function MapScene({ direction, theme, location, rain, frame, rece
                 if (disposed || !ref.current)
                     return;
                 const selected = current.current.location;
-                const m = new ml.Map({ container: ref.current, style, center: [selected.lon, selected.lat + .22], zoom: 6.8, maxZoom: 15, minZoom: 3, attributionControl: false, renderWorldCopies: false });
+                const m = new ml.Map({ container: ref.current, style, center: [selected.lon, selected.lat - .12], zoom: 6.8, maxZoom: 15, minZoom: 3, attributionControl: false, renderWorldCopies: false });
                 map.current = m;
                 m.addControl(new ml.AttributionControl({ compact: false }), 'bottom-left');
                 m.addControl(new ml.ScaleControl({ maxWidth: 65, unit: 'metric' }), 'bottom-right');
                 m.on('load', () => {
                     if (disposed)
                         return;
-                    m.addSource('illustration', { type: 'geojson', data: { type: 'FeatureCollection', features: [
-                                { type: 'Feature', properties: { intensity: 1 }, geometry: { type: 'Polygon', coordinates: [[[99.4, 14.35], [99.65, 14.85], [100.2, 14.65], [100.7, 14.25], [100.35, 13.93], [99.9, 14.12], [99.4, 14.35]]] } },
-                                { type: 'Feature', properties: { intensity: 2 }, geometry: { type: 'Polygon', coordinates: [[[99.78, 14.4], [99.9, 14.63], [100.24, 14.48], [100.39, 14.22], [100.16, 14.1], [99.89, 14.25], [99.78, 14.4]]] } },
-                                { type: 'Feature', properties: { intensity: 1 }, geometry: { type: 'Polygon', coordinates: [[[101, 13.15], [101.4, 13.5], [101.9, 13.1], [101.82, 12.72], [101.4, 12.8], [101, 13.15]]] } },
-                            ] } });
+                    const area=(lon:number,lat:number,width:number,height:number,intensity:number) => {
+                        const ring=Array.from({length:49},(_,i)=>{const t=i/48*Math.PI*2;const w=1+.08*Math.sin(3*t)+.04*Math.cos(5*t);return [lon+Math.cos(t)*width*w,lat+Math.sin(t)*height*w];});
+                        return {type:'Feature' as const,properties:{intensity},geometry:{type:'Polygon' as const,coordinates:[ring]}};
+                    };
+                    m.addSource('illustration',{type:'geojson',data:{type:'FeatureCollection',features:[
+                        area(99.95,14.43,.7,.37,1),area(100.06,14.39,.44,.23,2),area(101.4,13.05,.46,.27,1)
+                    ]}});
                     const before = m.getStyle().layers.find(l => l.type === 'symbol')?.id;
                     m.addLayer({ id: 'illustrative-rain', type: 'fill', source: 'illustration', paint: { 'fill-color': ['match', ['get', 'intensity'], 2, theme === 'dark' ? '#87aaca' : '#7ea6be', theme === 'dark' ? '#4e84a7' : '#a9c5d8'], 'fill-opacity': .6 }, layout: { visibility: current.current.rain ? 'visible' : 'none' } }, before);
                     m.addLayer({ id: 'illustrative-rain-edge', type: 'line', source: 'illustration', paint: { 'line-color': theme === 'dark' ? '#97b8d0' : '#7097b1', 'line-width': 1, 'line-opacity': .48 }, layout: { visibility: current.current.rain ? 'visible' : 'none' } }, before);
@@ -117,7 +119,7 @@ export default function MapScene({ direction, theme, location, rain, frame, rece
             m.setLayoutProperty(id, 'visibility', rain ? 'visible' : 'none');
         m.setPaintProperty('illustrative-rain', 'fill-opacity', .36 + frame * .13);
     }, [rain, frame]);
-    useEffect(() => { map.current?.easeTo({ center: [location.lon, location.lat + .22], zoom: 6.8, duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 350 }); }, [recenter, location]);
+    useEffect(() => { map.current?.easeTo({ center: [location.lon, location.lat - .12], zoom: 6.8, duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 350 }); }, [recenter, location]);
     return <div className="map-scene" data-map-status={status} data-map-zoom={zoom} data-rain-visible={rain}>
     <div className="map-canvas" ref={ref} aria-label="แผนที่จริง ปัดเพื่อเลื่อน จีบนิ้วเพื่อซูม หรือใช้ปุ่มลูกศรและบวกลบบนแป้นพิมพ์"/>
     {status === 'loading' && <div className="map-state" role="status">กำลังเปิดแผนที่…</div>}

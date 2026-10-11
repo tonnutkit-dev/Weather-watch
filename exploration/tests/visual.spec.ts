@@ -14,7 +14,7 @@ async function geometry(page: Page) {
         const rect = (selector: string) => { const e = document.querySelector<HTMLElement>(selector); if (!e || getComputedStyle(e).display === 'none' || !e.getClientRects().length)
             return null; return e.getBoundingClientRect().toJSON(); };
         return { width: innerWidth, height: innerHeight, documentWidth: document.documentElement.scrollWidth,
-            header: rect('.app-header'), weather: rect('.weather-overview'), map: rect('.map-pane'), sheet: rect('.situation-sheet'), tools: rect('.map-tools'), radar: rect('.radar-strip'), temperature: rect('.temperature'), condition: rect('.condition-line'), attribution: rect('.maplibregl-ctrl-attrib'), slider: rect('.radar-timeline input'), sheetScroll: rect('.sheet-scroll') };
+            header: rect('.app-header'), weather: rect('.weather-overview'), map: rect('.map-pane'), sheet: rect('.situation-sheet'), tools: rect('.map-tools'), radar: rect('.radar-strip'), temperature: rect('.temperature'), weatherArt:rect('.weather-overview .weather-art'), mapLabel:rect('.map-location-label'), condition: rect('.condition-line'), attribution: rect('.maplibregl-ctrl-attrib'), slider: rect('.radar-timeline input'), sheetScroll: rect('.sheet-scroll') };
     });
 }
 function collision(a: {
@@ -35,14 +35,22 @@ async function composition(page: Page) {
     expect(collision(g.tools, g.sheet)).toBe(false);
     expect(collision(g.tools, g.radar)).toBe(false);
     expect(collision(g.radar, g.sheet)).toBe(false);
+    expect(collision(g.weatherArt,g.condition)).toBe(false);
+    expect(collision(g.mapLabel,g.radar)).toBe(false);
     expect(g.attribution).not.toBeNull();
     expect(collision(g.attribution, g.sheet)).toBe(false);
     if (g.radar && g.slider) {
         expect(g.slider.y + g.slider.height).toBeLessThanOrEqual(g.radar.y + g.radar.height);
         expect(g.slider.x + g.slider.width).toBeLessThanOrEqual(g.radar.x + g.radar.width);
     }
+    const contrast=await page.locator('.prototype').evaluate(el=>{
+        const style=getComputedStyle(el),hex=(key:string)=>style.getPropertyValue(key).trim();
+        const luminance=(value:string)=>{const rgb=[1,3,5].map(i=>parseInt(value.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return rgb[0]!* .2126+rgb[1]!* .7152+rgb[2]!* .0722;};
+        return ['--ink','--muted'].flatMap(fg=>['--paper','--surface'].map(bg=>{const a=luminance(hex(fg)),b=luminance(hex(bg));return {fg,bg,ratio:(Math.max(a,b)+.05)/(Math.min(a,b)+.05)};}));
+    });
+    for(const item of contrast)expect(item.ratio,`${item.fg} on ${item.bg}`).toBeGreaterThanOrEqual(4.5);
     await expect(page.locator('.study-notice')).toContainText('ข้อมูลอากาศและฝนเป็นตัวอย่าง');
-    return g;
+    return {...g,contrast};
 }
 for (const direction of directions) {
     test.describe(`Direction ${direction.toUpperCase()} mobile`, () => {
@@ -53,6 +61,7 @@ for (const direction of directions) {
                 await page.setViewportSize(size);
                 const errors: string[] = [];
                 page.on('pageerror', e => errors.push(e.message));
+        page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
                 const matrix = [];
                 for (const theme of ['light', 'dark']) {
                     await ready(page, direction, theme);
@@ -83,6 +92,7 @@ for (const direction of directions) {
             await page.setViewportSize(size);
             const errors: string[] = [];
             page.on('pageerror', e => errors.push(e.message));
+        page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
             const matrix = [];
             for (const theme of ['light', 'dark']) {
                 await ready(page, direction, theme);
@@ -112,7 +122,7 @@ for (const direction of directions) {
         await expect(page.getByRole('dialog')).not.toBeVisible();
         await expect(page.getByRole('button', { name: 'รายละเอียดภาพฝนตัวอย่าง' })).toBeFocused();
         await page.getByRole('button', { name: 'ชั้นข้อมูล', exact: true }).click();
-        await page.getByRole('button', { name: /ฝนตัวอย่าง/ }).click();
+        await page.getByRole('button', { name: /^ฝนตัวอย่าง /  }).click();
         await expect(page.locator('.map-scene')).toHaveAttribute('data-rain-visible', 'false');
         await page.getByRole('button', { name: 'ชั้นข้อมูล', exact: true }).click();
         const before = Number(await page.locator('.map-scene').getAttribute('data-map-zoom'));
@@ -121,6 +131,15 @@ for (const direction of directions) {
         await expect.poll(async () => Number(await page.locator('.map-scene').getAttribute('data-map-zoom'))).toBeGreaterThan(before);
         await page.getByRole('button', { name: 'กลับไปยังสถานที่ที่เลือก' }).click();
         await expect.poll(async () => Number(await page.locator('.map-scene').getAttribute('data-map-zoom'))).toBeCloseTo(6.8, 1);
+        const touchMap=await page.context().newCDPSession(page);
+        const mapBox=await page.locator('.map-pane').boundingBox();if(!mapBox)throw new Error('Missing map area');
+        const cx=mapBox.x+mapBox.width*.4,cy=mapBox.y+mapBox.height*.35;
+        const points=(spread:number)=>[{x:cx-spread,y:cy-8,radiusX:3,radiusY:3,id:1},{x:cx+spread,y:cy+8,radiusX:3,radiusY:3,id:2}];
+        await touchMap.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:points(18)});
+        for(const spread of [25,35,45]){await touchMap.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:points(spread)});await page.waitForTimeout(50);}
+        await touchMap.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+        await expect.poll(async()=>Number(await page.locator('.map-scene').getAttribute('data-map-zoom'))).toBeGreaterThan(6.8);
+        await touchMap.detach();
         await page.getByRole('button', { name: 'เลือกสถานที่', exact: true }).click();
         await page.getByRole('button', { name: /ซีอาน/ }).click();
         await expect(page.getByRole('heading', { name: 'ซีอาน', exact: true })).toBeVisible();
@@ -139,7 +158,20 @@ for (const direction of directions) {
         await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
         await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
         expect(await page.locator('.situation-sheet').evaluate(e => getComputedStyle(e).transitionDuration)).toBe('0s');
-        await info.attach(`${direction}-interactions`, { body: Buffer.from(JSON.stringify({ locationSwitch: true, themePersistence: true, systemTheme: true, reducedMotion: true, mapKeyboardZoom: true, recenter: true, layers: true, demoPlayback: true, dialogFocusReturn: true })), contentType: 'application/json' });
+        const client=await page.context().newCDPSession(page);
+        const handle=await page.locator('.sheet-handle-row').boundingBox();
+        if(!handle)throw new Error('Missing drag area');
+        const touch={x:handle.x+handle.width/2,y:handle.y+12,radiusX:4,radiusY:4,id:1};
+        await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[touch]});
+        await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{...touch,y:touch.y-65}]});
+        await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+        await expect(page.locator('.prototype')).toHaveClass(/sheet-half/);
+        await page.getByRole('button',{name:'ชั้นข้อมูล',exact:true}).click();
+        await expect(page.getByRole('dialog')).toContainText('สีฝนเป็นภาพประกอบ');
+        await page.getByRole('button',{name:'ปิด',exact:true}).click();
+        await page.getByRole('button',{name:'ยุบแผง',exact:true}).click();
+        await client.detach();
+        await info.attach(`${direction}-interactions`, { body: Buffer.from(JSON.stringify({ locationSwitch: true, themePersistence: true, systemTheme: true, reducedMotion: true, mapKeyboardZoom: true, touchPinch:true, touchSheetDrag:true, expandedLayerDialog:true, recenter: true, layers: true, demoPlayback: true, dialogFocusReturn: true })), contentType: 'application/json' });
     });
 }
 test('comparison gallery: three real views side by side in light/dark', async ({ page }, info) => {

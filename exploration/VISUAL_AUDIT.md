@@ -19,7 +19,7 @@ Inspected production DESIGN.md, source layout/styles, actual deployed mobile lig
 
 ## Three deliberately different compositions
 
-**A — Premium Editorial Calm.** Paper-like neutral canvas, strongest typographic scale, low-radius map, thin rule divisions and linear modules. Desktop is an editorial left column paired with a restrained map; mobile feels like a weather edition before entering the map. Strength: calm, very readable, inexpensive. Tradeoff: restrained brand memory and less immersive spatial personality.
+**A — Premium Editorial Calm.** Paper-like neutral canvas, serif display numerals and a reversed mobile weather-art composition, low-radius map, thin rule divisions and linear modules. Desktop is an editorial left column paired with a restrained map; mobile feels like a weather edition before entering the map. Strength: calm, very readable, inexpensive. Tradeoff: restrained brand memory and less immersive spatial personality.
 
 **B — Atmospheric Map Premium.** Map fills the desktop composition; a weather island floats on the left and expanded contextual detail relocates to the right. Mobile uses edge-to-edge map, atmospheric blues and a rounded radar dock. Strength: spatial immersion and unmistakable weather context. Tradeoff: more floating surfaces and greater collision/contrast complexity on small phones; map focus can compete with editorial hierarchy.
 
