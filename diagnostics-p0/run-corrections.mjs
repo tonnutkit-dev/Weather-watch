@@ -32,7 +32,7 @@ async function context({after=true,size={width:390,height:844},fallback=false,cp
       };
       target.removeEventListener = (type, listener, options) => { listeners.get(type)?.delete(listener); remove(type, listener, options); };
     }
-    window.__WW_GLOBAL_LISTENER_COUNTS = () => rows.map(row => Object.fromEntries([...row].map(([type, set]) => [type, set.size])));
+    window.__WW_GLOBAL_LISTENER_COUNTS = () => rows.map(row => Object.fromEntries([...row].filter(([, set]) => set.size > 0).map(([type, set]) => [type, set.size])));
   });
   if(fallback)await c.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(kind,...rest){return /webgl/.test(kind)?null:original.call(this,kind,...rest);};});
   sessions.add(c);
