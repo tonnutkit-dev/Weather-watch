@@ -86,7 +86,8 @@ test('source expiry and Unknown using real loaded readings and simulated offline
   await expect(page.locator('.situation-panel')).toHaveAttribute('data-weather-freshness', 'expired');
   await expect(page.locator('.situation-panel')).toHaveAttribute('data-air-freshness', 'expired');
   await expect(page.locator('.situation-panel')).toHaveAttribute('data-verdict', 'Unknown');
-  await expect(page.getByText('ข้อมูลหมดอายุ · ยังประเมินไม่ได้', { exact: false }).first()).toBeVisible();
+  await expect(page.locator('.summary-message')).toHaveText('ข้อมูลหมดอายุ · ยังประเมินไม่ได้');
+  await expect(page.locator('.summary-message')).toBeVisible();
   const after = await snapshot(page); expect(after.temperature).toBe(before.temperature);
   await expect(page.locator('.map-canvas')).toHaveAttribute('data-map-status', 'ready');
   await info.attach('simulated-elapsed-time-real-source-readings', { body: Buffer.from(JSON.stringify({ note: 'Test-only browser clock advance; initial readings from live providers, no fabricated values or radar fixture pixels', before, after }, null, 2)), contentType: 'application/json' });
