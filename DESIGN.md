@@ -52,3 +52,5 @@ WebGL-unavailable devices use Leaflet/OpenTopoMap 2D tiles. The relief basemap i
 ## V0.2 correction evidence
 
 Owner iPhone screenshot IMG_4505.png (11 October 2026) shows competing region/location/layer/legend/playback controls. This correction retains the approved brand palette and typography, changing the composition rather than merely spacing. The AQ overlay is labeled “AQI จุดนี้”: CAMS modeled US AQI at a selected point, never a regional heatmap. Acceptance checks use 375×667, 390×844, 430×932, tablet and desktop: all mobile sheet states in light/dark, unobstructed map space, visible default temperature/condition, overlay intersections, attribution and actual touch/keyboard map interaction.
+
+Accessible labels inside horizontally scrolling forecast cards must have a containing block (`.hour-card { position: relative }`). Keep those labels available to screen readers without expanding the document width; do not hide the problem by loosening overflow assertions.

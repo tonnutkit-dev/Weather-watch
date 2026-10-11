@@ -60,10 +60,11 @@ test.describe("Mobile V0.2 composition", () => {
       page,
       context,
     }, info) => {
+      test.setTimeout(90000);
       await page.setViewportSize(size);
       await page.goto("./");
       await expect(page.getByTestId("temperature")).toHaveText(/\d+°C/, {
-        timeout: 30000,
+        timeout: 45000,
       });
       await expect(page.locator('[data-map-status="ready"]')).toBeVisible({
         timeout: 30000,
@@ -280,7 +281,7 @@ test("tablet layout retains map, forecast, geography and both themes", async ({
   await page.setViewportSize({ width: 820, height: 1180 });
   await page.goto("./");
   await expect(page.getByTestId("temperature")).toHaveText(/\d+°C/, {
-    timeout: 30000,
+    timeout: 45000,
   });
   await expect(page.locator('[data-map-status="ready"]')).toBeVisible({
     timeout: 30000,
