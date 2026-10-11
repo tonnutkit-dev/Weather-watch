@@ -124,8 +124,8 @@ export function RadarControls(p: Props) {
             <p className="micro">หลักฐาน renderer: {p.presentation?.evidence ?? 'request-selected'} · ไม่ใช้ source idle เป็นหลักฐานยืนยันภาพทุกพิกเซล</p>
             <dl>
               <div>
-                <dt>เฟรมที่ร้องขอ (ยังไม่ยืนยันภาพ)</dt>
-                <dd>{fullTime(frame?.time)}</dd>
+                <dt>ภาพที่เลือก</dt>
+                <dd>{fullTime(frame?.time)} · เฟรมที่ร้องขอ ยังไม่ยืนยันภาพบนแผนที่</dd>
               </div>
               <div>
                 <dt>ภาพล่าสุด</dt>
