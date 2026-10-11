@@ -10,7 +10,7 @@ const fixture=JSON.parse(await readFile('diagnostics-p0/provider-fixtures.json',
 const now=fixture.weather.body.current.time*1000+60000;
 const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=','base64');
 const results={environment:{baseline:'2036e2ac788cb31d25fd387cb40520ad95c408a6',correction:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),node:process.version,platform:os.platform(),cpu:os.cpus()[0]?.model,physicalIphone:false,softwareGPU:true,fixtureClock:new Date(now).toISOString(),notes:['Deterministic recorded provider responses, synthetic test PNG tiles and minimal LAB basemap. Never exposed by production.','No representative field INP, physical display FPS, GPU memory, battery or thermal measurement.','Matched lab measurements constrain UI/raster overhead; do not replace real-world basemap performance acceptance.']},checks:[],loads:[],interactions:[],failures:[]};
-const servers=[];
+const servers=[]; const sessions = new Set();
 for(const [port,root,diagnostic] of [[4173,'.',false],[4175,'.',true],[4174,'diagnostics-p0/baseline',false],[4176,'diagnostics-p0/baseline',true]]) {
   servers.push(spawn('node',[`${process.cwd()}/node_modules/vite/bin/vite.js`,'preview',...(diagnostic?['--config','diagnostics-p0/vite.diagnostic.config.ts']:[]),'--host','127.0.0.1','--port',String(port)],{cwd:root,stdio:'ignore'}));
 }
@@ -22,6 +22,7 @@ async function context({after=true,size={width:390,height:844},fallback=false,cp
   const c=await browser.newContext({viewport:size,isMobile:size.width<760,hasTouch:size.width<760,colorScheme:'light',reducedMotion:reduced?'reduce':'no-preference'});
   await c.addInitScript(installObserver);
   if(fallback)await c.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(kind,...rest){return /webgl/.test(kind)?null:original.call(this,kind,...rest);};});
+  sessions.add(c);
   const page=await c.newPage(), cdp=await c.newCDPSession(page);
   await cdp.send('Performance.enable'); await cdp.send('Network.enable'); await cdp.send('Emulation.setCPUThrottlingRate',{rate:cpu});
   if(slow)await cdp.send('Network.emulateNetworkConditions',{offline:false,latency:150,downloadThroughput:200000,uploadThroughput:93750});
@@ -48,7 +49,7 @@ async function select(s,index){await s.page.locator('.radar-controls input[type=
 async function theme(s,dark){await s.page.getByRole('button',{name:'การแสดงผลและตั้งค่า',exact:true}).click();await s.page.getByRole('button',{name:dark?'มืด':'สว่าง',exact:true}).click();await s.page.getByRole('button',{name:'ปิด',exact:true}).click();}
 async function city(s,name){await s.page.getByRole('button',{name:'ค้นหาตำแหน่ง',exact:true}).click();await s.page.locator('.secondary-locations summary').click();await s.page.locator('.china-options button').filter({hasText:name}).click();}
 async function save(name,value){await writeFile(`${out}/${name}.json`,JSON.stringify(value,null,2)+'\n');}
-async function check(name,fn){console.log('CHECK',name);try{const evidence=await fn();results.checks.push({name,status:'passed',evidence});}catch(e){results.failures.push({name,error:e.stack});console.error('FAILED',name,e.message);}await save('results',results);}
+async function check(name,fn){console.log('CHECK',name);try{const evidence=await fn();results.checks.push({name,status:'passed',evidence});}catch(e){results.failures.push({name,error:e.stack});console.error('FAILED',name,e.message);}await save('results',results);for (const c of sessions) { await c.close(); sessions.delete(c); }}
 try {
   for(const after of [false,true])for(const fallback of [false,true])await check(`${after?'after':'before'}-radar-${fallback?'leaflet':'maplibre'}`,async()=>{
     const s=await context({after,fallback});await s.c.tracing.start({screenshots:true,snapshots:true});await open(s);
@@ -87,7 +88,7 @@ try {
     const failedCounts={weather:s.state.weatherCalls,air:s.state.airCalls};
     await s.page.clock.fastForward(30001);
     await s.page.getByRole('button',{name:'การแสดงผลและตั้งค่า',exact:true}).click();await s.page.getByRole('button',{name:'รีเฟรชอากาศและคุณภาพอากาศ',exact:true}).click();await sleep(300);await s.page.clock.fastForward(1100);await sleep(300);
-    assert.match((await snapshot(s)).temperature,/\d/);
+    assert.match((await snapshot(s)).temperature,/\d/);assert.equal((await snapshot(s)).weatherFreshness,'refresh-failed');
     s.state.weather='ok';await s.page.clock.fastForward(600001);await sleep(300);const recovered=await snapshot(s);assert.equal(recovered.weatherFreshness,'fresh');
     for(const name of ['ซีอาน','เฉิงตู','ฉงชิ่ง'])await city(s,name);await sleep(400);
     const final=await snapshot(s);assert.equal(final.mapInstances,1);assert.equal(s.state.errors.length,0);
@@ -100,6 +101,16 @@ try {
     s.state.weather='timeout';await s.page.clock.fastForward(600001);await sleep(13000);await s.page.clock.fastForward(1100);await sleep(13000);
     const timeout=await snapshot(s);assert.equal(timeout.verdict,'Unknown');assert.equal(timeout.weatherFreshness,'expired');
     await s.c.close();return {offline,timeout,counts:{weather:s.state.weatherCalls,air:s.state.airCalls}};
+  });
+  await check('after-partial-AQ-failure-slow-load-and-missing-tiles',async()=>{
+    const s=await context();s.state.responseDelay=700;await open(s);const initial=await snapshot(s);
+    assert.equal(initial.verdict,'Notable');s.state.responseDelay=0;s.state.air='503';
+    await s.page.clock.fastForward(600001);await sleep(300);await s.page.clock.fastForward(1100);await sleep(300);
+    const partial=await snapshot(s);assert.equal(partial.airFreshness,'refresh-failed');assert.equal(partial.verdict,'Unknown');assert.equal(partial.weatherFreshness,'fresh');
+    s.state.tiles='missing';await select(s,0);await sleep(500);assert.equal((await snapshot(s)).radarStatus,'failed');
+    await s.page.clock.fastForward(7200001);await sleep(300);const expired=await snapshot(s);assert.equal(expired.verdict,'Unknown');
+    const count=s.state.airCalls;await s.page.evaluate(()=>{for(let i=0;i<10;i++){window.dispatchEvent(new Event('online'));window.dispatchEvent(new Event('focus'));}});await sleep(300);
+    assert.equal(s.state.airCalls,count);await s.c.close();return {initial,partial,expired,counts:{weather:s.state.weatherCalls,air:s.state.airCalls}};
   });
   for(const size of [{width:375,height:667},{width:390,height:844},{width:430,height:932}])for(const dark of [false,true])await check(`after-geometry-${size.width}-${dark?'dark':'light'}`,async()=>{
     const s=await context({size,reduced:true});await open(s);if(dark)await theme(s,true);const rows=[];

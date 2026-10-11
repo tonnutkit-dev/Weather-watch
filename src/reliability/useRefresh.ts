@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { RefreshGate, REFRESH_INTERVAL } from './freshness';
 const gate = new RefreshGate();
+export function automaticRefreshAllowed(key: readonly unknown[]) { return gate.allow(JSON.stringify(key), false); }
 export function recordRefresh(key: readonly unknown[]) { gate.record(JSON.stringify(key)); }
 export function useBoundedRefresh(weatherKey: readonly unknown[], airKey: readonly unknown[]) {
   const client = useQueryClient();

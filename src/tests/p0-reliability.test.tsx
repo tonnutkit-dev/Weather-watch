@@ -35,6 +35,14 @@ describe('R02 source validity and request admission', () => {
     act(() => window.dispatchEvent(new Event('online')));
     expect(result.current).toBe(at + 10800002);
   });
+  it('reevaluates cache age and a successful unchanged-source refetch', () => {
+    vi.useFakeTimers(); vi.setSystemTime(at);
+    const { result, rerender } = renderHook(({ fetched }) => useSourceClock(at / 1000, at / 1000, fetched, fetched), { initialProps: { fetched: at / 1000 } });
+    act(() => vi.advanceTimersByTime(600001));
+    expect(freshness(at / 1000, at / 1000, 'weather', false, false, result.current).state).toBe('cached');
+    act(() => { vi.setSystemTime(at + 900000); rerender({ fetched: (at + 900000) / 1000 }); });
+    expect(result.current).toBe(at + 900000);
+  });
   it('bounds foreground/manual requests independently by location', () => {
     const gate = new RefreshGate(); gate.record('TH', at);
     expect(gate.allow('TH', false, at + 599999)).toBe(false);

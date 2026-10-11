@@ -39,7 +39,7 @@ import { Modal } from "../components/Modal";
 import { MapBoundary } from "../components/MapBoundary";
 import { freshness } from "../reliability/freshness";
 import { useSourceClock } from "../reliability/useFreshness";
-import { recordRefresh, useBoundedRefresh } from "../reliability/useRefresh";
+import { recordRefresh, useBoundedRefresh, automaticRefreshAllowed } from "../reliability/useRefresh";
 import { radarRequestKey, type RadarPresentation } from "../radar/presentation";
 import { value } from "../shared/time";
 const MapCanvas = lazy(() => import("../maps/MapCanvas"));
@@ -94,14 +94,16 @@ export default function App() {
     queryKey: weatherKey,
     queryFn: ({ signal }) => { recordRefresh(weatherKey); return getWeather(location, signal); },
     staleTime: 600000, refetchOnReconnect: false, refetchOnWindowFocus: false,
+    retryOnMount: false, refetchOnMount: (query) => automaticRefreshAllowed(query.queryKey),
   });
   const air = useQuery({
     queryKey: airKey,
     queryFn: ({ signal }) => { recordRefresh(airKey); return getAirQuality(location, signal); },
     staleTime: 600000, refetchOnReconnect: false, refetchOnWindowFocus: false,
+    retryOnMount: false, refetchOnMount: (query) => automaticRefreshAllowed(query.queryKey),
   });
   const refresh = useBoundedRefresh(weatherKey, airKey);
-  const now = useSourceClock(weather.data?.current.time, air.data?.time);
+  const now = useSourceClock(weather.data?.current.time, air.data?.time, weather.data?.currentMeta.fetchedAt, air.data?.meta.fetchedAt);
   const weatherFreshness = freshness(weather.data?.current.time, weather.data?.currentMeta.fetchedAt,
     'weather', weather.isFetching, weather.isError, now);
   const airFreshness = freshness(air.data?.time, air.data?.meta.fetchedAt,
