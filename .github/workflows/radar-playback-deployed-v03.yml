@@ -29,7 +29,20 @@ jobs:
           for(const a of integrity.assets) {
             const r = await fetch(new URL(a.path, base)); if(!r.ok) throw Error(`asset HTTP ${r.status}: ${a.path}`);
             const bytes = Buffer.from(await r.arrayBuffer());
-            if(createHash('sha256').update(bytes).digest('hex') !== a.sha256) {
+            let sourceBytes = bytes;
+            // Cloudflare adds a request-specific JS-detection suffix to public HTML.
+            // Only that identified suffix may be removed; all application bytes still must match.
+            if(a.path==='index.html') {
+              const html = bytes.toString();
+              const suffix = html.match(/<script>\(function\(\)\{function c\(\).*?<\/script>(?=<\/body><\/html>\s*$)/s)?.[0];
+              if(suffix?.includes('window.__CF$cv$params') && suffix.includes('/cdn-cgi/challenge-platform/scripts/jsd/main.js')) {
+                mkdirSync('deployed-integrity-evidence', {recursive:true});
+                writeFileSync('deployed-integrity-evidence/cloudflare-served-index.html', bytes);
+                sourceBytes = Buffer.from(html.replace(suffix, ''));
+                console.log('Identified Cloudflare JS-detection suffix; verifying the remaining HTML against its exact build hash.');
+              }
+            }
+            if(createHash('sha256').update(sourceBytes).digest('hex') !== a.sha256) {
               mkdirSync('deployed-integrity-evidence', {recursive:true});
               writeFileSync(`deployed-integrity-evidence/${a.path.replaceAll('/','_')}`, bytes);
               console.log(JSON.stringify({path:a.path,expected:a.sha256,actual:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length,contentType:r.headers.get('content-type')}));
