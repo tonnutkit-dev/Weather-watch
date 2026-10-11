@@ -12,7 +12,7 @@ export function useSourceClock(weatherTime?: number | null, airTime?: number | n
         weatherFetchedAt == null ? null : weatherFetchedAt * 1000 + REFRESH_INTERVAL,
         airFetchedAt == null ? null : airFetchedAt * 1000 + REFRESH_INTERVAL]
         .filter((x): x is number => x != null && Number.isFinite(x) && x > at);
-      if (deadlines.length) timer = setTimeout(update, Math.min(...deadlines) - at + 1);
+      if (deadlines.length) timer = setTimeout(update, Math.min(2147483647, Math.min(...deadlines) - at + 1));
     };
     const update = () => { reevaluate(version => version + 1); schedule(); };
     // Data arrival already rendered with actual wall time. Do not render App again here.
