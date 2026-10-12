@@ -34,6 +34,9 @@ jobs:
           tar -czf qa-rc-v03/artifacts/root-rc-unpublished.tar.gz -C dist-owner-rc .
           sha256sum qa-rc-v03/artifacts/root-rc-unpublished.tar.gz > qa-rc-v03/artifacts/root-rc.sha256
       - run: npx playwright install --with-deps chromium webkit
+      - name: Root base browser acceptance before lengthy fault suites
+        env: {WW_RC_ROOT: '1', DEBUG: 'pw:webserver'}
+        run: npx playwright test --config qa-rc-v03/playwright.config.ts --grep 'System|failure'
       - run: npx vite build --config qa-provider-v03/vite.config.ts
       - name: Existing approved HTTP tests, assertions unchanged
         run: npx playwright test --config qa-provider-v03/playwright.config.ts --grep HTTP
@@ -45,10 +48,6 @@ jobs:
       - name: Existing LAB faults and ready-map offline
         if: ${{ !cancelled() }}
         run: npx playwright test --config qa-provider-v03/playwright.config.ts --grep LAB
-      - name: Root base browser acceptance
-        if: ${{ !cancelled() }}
-        env: {WW_RC_ROOT: '1'}
-        run: npx playwright test --config qa-rc-v03/playwright.config.ts --grep 'System|failure'
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
