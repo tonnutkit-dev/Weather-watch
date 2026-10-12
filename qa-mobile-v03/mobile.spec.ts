@@ -9,6 +9,7 @@ const profiles=[
  {name:'landscape-667x375',width:667,height:375,target:100},
  {name:'landscape-844x390',width:844,height:390,target:150},
  {name:'safe-390x844',width:390,height:844,target:300,safe:true},
+ {name:'safe-landscape-844x390',width:844,height:390,target:140,safe:true},
  {name:'browser-short-375x567',width:375,height:567,target:140},
  {name:'dynamic-390x720',width:390,height:720,target:240},
 ];
@@ -34,10 +35,10 @@ for(const profile of profiles)test(`matched geometry ${profile.name}`,async({pag
  await page.route('https://air-quality-api.open-meteo.com/v1/air-quality**',r=>r.fulfill({json:fixture.air.body}));
  // ONLY recorded weather/AQ. Basemap and historical radar use their real network resources.
  await page.setViewportSize(profile);await page.goto('./');await expect(page.getByTestId('temperature')).toHaveText(/\d+°C/);await expect(page.locator('.map-canvas')).toHaveAttribute('data-map-status','ready',{timeout:30000});
- if(profile.safe)await page.evaluate(()=>{
-  const css=Array.from(document.styleSheets).flatMap(s=>{try{return Array.from(s.cssRules).map(r=>r.cssText);}catch{return [];}}).join('\n').replace(/env\(safe-area-inset-top\)/g,'24px').replace(/env\(safe-area-inset-bottom\)/g,'34px').replace(/env\(safe-area-inset-left\)/g,'0px').replace(/env\(safe-area-inset-right\)/g,'0px');
+ if(profile.safe)await page.evaluate(({landscape})=>{
+  const css=Array.from(document.styleSheets).flatMap(s=>{try{return Array.from(s.cssRules).map(r=>r.cssText);}catch{return [];}}).join('\n').replace(/env\(safe-area-inset-top\)/g,landscape?'0px':'24px').replace(/env\(safe-area-inset-bottom\)/g,landscape?'21px':'34px').replace(/env\(safe-area-inset-left\)/g,landscape?'44px':'0px').replace(/env\(safe-area-inset-right\)/g,landscape?'44px':'0px');
   const style=document.createElement('style');style.textContent=css;document.head.append(style);
- });
+ },{landscape:profile.width>profile.height});
  const canvas=await page.locator('.maplibregl-canvas').elementHandle();const rows:any[]=[];
  for(const dark of [false,true]){
   await theme(page,dark);
@@ -88,4 +89,15 @@ test('live mobile source and radar controls remain accessible',async({page},info
  await page.getByRole('button',{name:'ขยายแผง',exact:true}).click();await expect(page.locator('.mobile-weather-detail')).toBeVisible();
  await page.locator('.panel-scroll').evaluate(el=>el.scrollTop=el.scrollHeight);await expect(page.locator('.data-footer')).toBeInViewport();
  await page.getByRole('button',{name:'ยุบแผง',exact:true}).click();await page.getByRole('button',{name:'รายละเอียดเรดาร์'}).click();await expect(page.getByRole('dialog')).toBeVisible();await expect(page.getByText('ภาพที่เลือก',{exact:true})).toBeVisible();
+});
+test('landscape actual one-finger pan and two-finger zoom retain canvas',async({page,context},info)=>{
+ test.skip(baseline||info.project.name!=='chromium'||!!process.env.WW_E2E_BASE_URL);
+ await page.route('https://api.open-meteo.com/v1/forecast**',r=>r.fulfill({json:fixture.weather.body}));await page.route('https://air-quality-api.open-meteo.com/v1/air-quality**',r=>r.fulfill({json:fixture.air.body}));
+ await page.setViewportSize({width:844,height:390});await page.goto('./');const map=page.locator('.map-canvas');await expect(map).toHaveAttribute('data-map-status','ready',{timeout:30000});
+ const canvas=await page.locator('.maplibregl-canvas').elementHandle();const lane=await measure(page);const x=lane.map.x+lane.map.width*.4,y=(lane.corridor.top+lane.corridor.bottom)/2;
+ expect(lane.corridor.height).toBeGreaterThanOrEqual(150);const cdp=await context.newCDPSession(page);const center=await map.getAttribute('data-map-center');
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:0}]});for(let i=1;i<=8;i++){await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x+i*8,y,id:0}]});await page.waitForTimeout(20);}await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await expect.poll(()=>map.getAttribute('data-map-center')).not.toBe(center);
+ const zoom=await map.getAttribute('data-map-zoom');const fingers=(s:number)=>[{x:x-s,y,id:0},{x:x+s,y,id:1}];await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:fingers(30)});for(let i=1;i<=8;i++){await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:fingers(30+i*2)});await page.waitForTimeout(20);}await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await expect.poll(()=>map.getAttribute('data-map-zoom')).not.toBe(zoom);
+ await page.getByRole('button',{name:'ขยายแผง',exact:true}).click();await page.getByRole('button',{name:'ขยายแผง',exact:true}).click();await theme(page,true);expect(await page.evaluate(n=>n===document.querySelector('.maplibregl-canvas'),canvas)).toBe(true);
+ await page.getByRole('button',{name:'กลับไปยังตำแหน่งที่เลือก'}).click();await expect.poll(()=>map.getAttribute('data-map-center')).toBe('13.7563,100.5018');await info.attach('landscape-touch',{body:Buffer.from(JSON.stringify({pan:true,pinch:true,recenter:true,sameCanvas:true,geometry:lane})),contentType:'application/json'});await cdp.detach();
 });

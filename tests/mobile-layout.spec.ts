@@ -146,8 +146,8 @@ test.describe("Signature Hybrid mobile composition", () => {
                 `${mode}/${state}: overlays ${i} and ${j}`,
               ).toBe(false);
           if (state === "collapsed") {
-            expect(g.sheet!.height).toBeGreaterThanOrEqual(130);
-            expect(g.sheet!.height).toBeLessThanOrEqual(160);
+            expect(g.sheet!.height).toBeGreaterThanOrEqual(80); // Owner correction: collapsed verdict sheet must occupy 80–100px.
+            expect(g.sheet!.height).toBeLessThanOrEqual(100);
             expect(g.radar!.height).toBeGreaterThanOrEqual(64);
             expect(g.radar!.height).toBeLessThanOrEqual(88);
             expect(

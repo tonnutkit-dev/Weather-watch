@@ -38,6 +38,14 @@ jobs:
       - name: Matched UI performance and desktop unchanged
         if: ${{ !cancelled() }}
         run: npx playwright test --config qa-visual-v03/playwright.config.ts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: mobile-geometry-preview-${{ github.run_id }}
+          path: |
+            qa-mobile-v03/test-results/
+            qa-mobile-v03/browser-report/
+          retention-days: 90
       - name: Existing mobile, touch, sheet and provider regressions
         if: ${{ !cancelled() }}
         run: npm run test:e2e
