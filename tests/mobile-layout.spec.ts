@@ -152,7 +152,7 @@ test.describe("Signature Hybrid mobile composition", () => {
             expect(g.radar!.height).toBeLessThanOrEqual(88);
             expect(
               g.radar!.y - (g.toolbar!.y + g.toolbar!.height),
-            ).toBeGreaterThan(100); // Approved top summary consumes space; retain >=100px clear gesture corridor at 375×667.
+            ).toBeGreaterThanOrEqual(size.width === 375 ? 240 : 300); // Owner map-first gate: count only the lane below toolbar and above radar.
             await expect(page.locator(".summary-message")).toBeInViewport({
               ratio: 1,
             });

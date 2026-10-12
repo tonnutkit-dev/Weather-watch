@@ -1,0 +1,69 @@
+name: Weather Watch mobile map correction QA
+on:
+  push:
+    branches: [work/mobile-map-correction-v03]
+    paths: [src/**, tests/**, qa-mobile-v03/**, .github/workflows/mobile-map-v03.yml]
+permissions: {contents: read}
+jobs:
+  mobile-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - name: Protect main, providers and radar scheduler
+        run: |
+          test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
+          git diff --exit-code 2b7e11caf7d104484cd9c058c2936f42a652a0f4 HEAD -- src/providers src/radar src/reliability src/app/App.tsx src/maps/GLCanvas.tsx src/maps/RasterCanvas.tsx src/maps/MapCanvas.tsx src/maps/BoundedRadarLayer.ts package.json package-lock.json vite.config.ts .github/workflows/pages.yml
+      - run: npm ci && npm run typecheck && npm test && npm run build && npm run verify:pages
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Matched original Design C geometry and UI performance
+        run: |
+          git worktree add /tmp/ww-mobile-before 2b7e11caf7d104484cd9c058c2936f42a652a0f4
+          cp -r qa-mobile-v03 /tmp/ww-mobile-before/
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/ww-mobile-before/node_modules
+          cd /tmp/ww-mobile-before
+          npm run build
+          WW_MOBILE_PHASE=baseline npx playwright test --config qa-mobile-v03/playwright.config.ts --grep 'matched geometry'
+      - name: Original Design C UI benchmark independently of geometry
+        if: ${{ !cancelled() }}
+        run: |
+          cd /tmp/ww-mobile-before
+          WW_VISUAL_PHASE=baseline npx playwright test --config qa-visual-v03/playwright.config.ts --grep 'matched UI'
+      - name: Corrected matched geometry, safe area, landscape, fallback and live source
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-mobile-v03/playwright.config.ts
+      - name: Matched UI performance and desktop unchanged
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-visual-v03/playwright.config.ts
+      - name: Existing mobile, touch, sheet and provider regressions
+        if: ${{ !cancelled() }}
+        run: npm run test:e2e
+      - name: Existing automatic Play Pause scrub regression
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-playback-v03/playwright.config.ts
+      - name: Existing real radar pixel-readiness and cadence checks
+        if: ${{ !cancelled() }}
+        run: npx playwright test playback.spec.ts --config qa-smooth-v03/playwright.config.ts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: mobile-map-v03-${{ github.run_id }}
+          path: |
+            /tmp/ww-mobile-before/qa-mobile-v03/test-results/
+            /tmp/ww-mobile-before/qa-mobile-v03/browser-report/
+            /tmp/ww-mobile-before/qa-visual-v03/test-results/
+            /tmp/ww-mobile-before/qa-visual-v03/browser-report/
+            qa-mobile-v03/test-results/
+            qa-mobile-v03/browser-report/
+            qa-visual-v03/test-results/
+            qa-visual-v03/browser-report/
+            test-results/
+            playwright-report/
+            qa-playback-v03/test-results/
+            qa-playback-v03/browser-report/
+            qa-smooth-v03/test-results/
+            qa-smooth-v03/browser-report/
+          retention-days: 90

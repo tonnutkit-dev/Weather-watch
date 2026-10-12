@@ -6,7 +6,7 @@ Approved by TON for isolated V0.3 integration. Visual source: exploration commit
 
 70% Premium Editorial / 30% Atmospheric Map. Quiet warm paper, deep teal surfaces, generous typography, precise hairlines and a single weather summary. Weather Watch keeps its name; the sun-and-current mark comes from approved C. THE WEATHER EDIT is secondary identity, never a substitute for Thai labels or provenance.
 
-Desktop: a 350px editorial column (300px tablet, 390px wide desktop) holds current weather above independently scrolling outlook. The map occupies the broad right column. Mobile: compact 56px header, one 210px weather overview (184px on short phones), central interactive map with 10px side insets, and a 148px collapsed situation sheet. The current temperature stays visible above the map in every sheet state.
+Desktop: a 350px editorial column (300px tablet, 390px wide desktop) holds current weather above independently scrolling outlook. The map occupies the broad right column. Mobile correction: 56px header, compact 118px weather overview, dominant interactive map with 10px side insets, and a 92px collapsed verdict sheet (plus safe bottom). Short landscape uses an editorial side rail so the sheet never covers the map. Desktop composition is preserved. The current temperature stays visible above the map in every sheet state.
 
 ## Tokens
 
@@ -23,15 +23,15 @@ Desktop: a 350px editorial column (300px tablet, 390px wide desktop) holds curre
 | on accent | #ffffff | #153035 |
 | warning | #936821 | #e2bf7a |
 
-Thai: locally bundled Noto Sans Thai 400/500/600/700, SIL OFL. Temperature: system Arial with tabular figures; 114px desktop, 100px tablet, 83px mobile, 70px short mobile. Temperature source remains real modeled data, with full condition and original source time. Thai body 13–15px; provider metadata 11–12px; technical map credits may be smaller. Focus 3px accent. Spacing 4/8/12/16/20/24/28/36px. Surface radius 18–22px, controls 12–14px. One soft 8px/26px shadow where separation is needed. No backdrop blur or ambient animation.
+Thai: locally bundled Noto Sans Thai 400/500/600/700, SIL OFL. Temperature: system Arial with tabular figures; 114px desktop, 100px tablet, 44px mobile, 38px short landscape. Temperature source remains real modeled data, with full condition and original source time. Thai body 13–15px; provider metadata 11–12px; technical map credits may be smaller. Focus 3px accent. Spacing 4/8/12/16/20/24/28/36px. Surface radius 18–22px, controls 12–14px. One soft 8px/26px shadow where separation is needed. No backdrop blur or ambient animation.
 
 ## Map, radar and sheet
 
 Preserve existing OpenFreeMap Positron/Dark style sources, with an isolated one-shot basemap decorator: muted land/water and legible labels; hide building/minor-road labels only and primary MapLibre lifecycle, genuine historical radar palette and Leaflet/OpenTopoMap fallback. Approved prototype illustrative rain, map constructor and demo values must never enter this application. Atmospheric quality comes from framing, palette and uncluttered controls; no color filter is applied to radar.
 
-One 44px layer selector and recenter control. Existing keyboard/pinch gestures remain. Desktop zoom is positioned below the unified toolbar; current-location access stays in search. Radar strip remains 76px, selected time explicitly qualified, displayedTime:null, existing loading/unverified/failure states unchanged. No faster timer or truthfulness correction is included in this visual work.
+One 44px layer selector and recenter control. Existing keyboard/pinch gestures remain. Desktop zoom is positioned below the unified toolbar; current-location access stays in search. Desktop radar strip remains 76px; mobile strip starts at 64px and grows to keep loading/unverified/failure and coverage/freshness text fully visible, selected time explicitly qualified, displayedTime:null, existing loading/unverified/failure states unchanged. No faster timer or truthfulness correction is included in this visual work.
 
-Mobile sheet: collapsed148px plus safe bottom, half bounded43dvh, expanded leaves130px of actual map below the top summary. The two expanded states remain distinct where screen height permits. The map, radar and attribution use existing actual-height camera layout observation. Header/overview never remount the map. Expanded sheet hides the radar dock while preserving existing playback policy. Drag and44px expand/collapse buttons remain equivalent. Scroll is confined to panel; collapsing resets it. At very short landscape heights hide the radar dock and reduce summary geometry rather than cover essential controls. Real iOS keyboard/safe-area/landscape acceptance remains owner QA.
+Mobile sheet: collapsed92px plus safe bottom, half bounded43dvh, expanded leaves130px of actual map below the top summary. The two expanded states remain distinct where screen height permits. The map, radar and attribution use existing actual-height camera layout observation. Header/overview never remount the map. Expanded sheet hides the radar dock while preserving existing playback policy. Drag and44px expand/collapse buttons remain equivalent. Scroll is confined to panel; collapsing resets it. At short landscape heights keep radar controls visible on the map and move weather/details into a separate side rail. Camera padding measures real intersections rather than assuming the side rail covers the map. Real iOS keyboard/safe-area/landscape acceptance remains owner QA.
 
 ## Trust and detail hierarchy
 
@@ -43,7 +43,7 @@ Buttons150ms; sheet200ms; no continuous visual effect. Existing Reduced Motion r
 
 ## Regression contracts
 
-Test375×667,390×844,430×932,820×1180 and1440×1000 in both themes. Current temperature/condition always visible, no horizontal overflow, attribution visible, no overlay collision, gestures actually land on the map, same canvas through sheet/theme/location transitions. The old220px clear-map gap assumed no top weather summary; Design C replaces it with>=100px clear gesture corridor at the shortest supported phone, plus130px of map in expanded state. This is an explicit composition change, not relaxation of a renderer test. Pixel tests retain original thresholds using a fixed340×200 map-only crop derived from actual map bounds.
+Test375×667,390×844,430×932,820×1180 and1440×1000 in both themes. Current temperature/condition always visible, no horizontal overflow, attribution visible, no overlay collision, gestures actually land on the map, same canvas through sheet/theme/location transitions. The owner rejected the former ~101px clear-map corridor. The mobile correction requires >=240px unobstructed vertical corridor at375×667 and >=300px at390×844, with every overlay excluded, plus130px of map in expanded portrait. Safe-area/browser-height reductions are measured separately and disclosed. No clipping of controls to meet a number. This is an explicit composition change, not relaxation of a renderer test. Pixel tests retain original thresholds using a fixed340×200 map-only crop derived from actual map bounds.
 
 Known inherited technical risk: WebKit transport readiness can precede sampled pixels; the baseline LAB flake remains open. Visual integration must not claim it was corrected. Physical iPhone and sustained GPU/battery acceptance are not established by CI.
 

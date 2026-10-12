@@ -143,6 +143,9 @@ export function SituationPanel(p: SituationProps) {
           <span className="data-tag">WW</span>
         </div>
         {w && <div className="detail-metrics">
+                <p className="mobile-weather-detail">
+                  รู้สึกเหมือน {value(w.current.apparent)}° · สูง {value(w.daily[0]?.high)}° / ต่ำ {value(w.daily[0]?.low)}°
+                </p>
                 <div className="current-metadata">
                   <span role="status" data-testid="weather-freshness">{freshnessLabel[wf.state]}{wf.failed && wf.state !== 'refresh-failed' ? ' · อัปเดตไม่สำเร็จ' : ''} · เวลาแหล่งข้อมูล {timeLabel(w.current.time, p.location.timezone, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                   <span className="data-tag">MODELED</span>
