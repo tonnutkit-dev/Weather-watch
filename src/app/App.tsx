@@ -1,11 +1,9 @@
 import { lazy, Suspense, useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
-  CloudSun,
   Search,
   Settings2,
   ChevronDown,
-  MapPin,
   Layers,
   CloudRain,
   Leaf,
@@ -32,6 +30,8 @@ import { getRadar } from "../providers/radar";
 import { useTheme } from "../shared/theme";
 import { readFavorites, saveFavorites } from "../shared/preferences";
 import { LocationSearch } from "../components/LocationSearch";
+import { WeatherOverview } from "../components/WeatherOverview";
+import { BrandMark } from "../components/BrandMark";
 import { SituationPanel } from "../components/SituationPanel";
 import type { SheetState } from "../components/SituationPanel";
 import { RadarControls } from "../components/RadarControls";
@@ -208,11 +208,11 @@ export default function App() {
           aria-label="Weather Watch หน้าแรก"
         >
           <span className="brand-icon">
-            <CloudSun size={27} strokeWidth={1.7} />
+            <BrandMark />
           </span>
           <span>
             <strong>Weather Watch</strong>
-            <small>รู้ทันอากาศรอบตัว</small>
+            <small>THE WEATHER, CONSIDERED.</small>
           </span>
         </a>
         <nav className="header-nav" aria-label="มุมมอง">
@@ -295,6 +295,7 @@ export default function App() {
         </span>
       </div>
       <main className="workspace">
+        <WeatherOverview location={location} weather={weather} now={now} favorite={favorite} onFavorite={save} onRefresh={() => refresh()} onSearch={() => setModal("search")} />
         <section className="map-section" aria-label="แผนที่และเรดาร์ฝน">
           <MapBoundary>
             <Suspense
@@ -323,18 +324,7 @@ export default function App() {
               />
             </Suspense>
           </MapBoundary>
-          <div className="map-heading">
-            <span className="eyebrow">YOUR WEATHER, IN CONTEXT</span>
-            <button className="map-location" onClick={() => setModal("search")}>
-              <MapPin size={18} />
-              <span>{location.name}</span>
-              <ChevronDown size={16} />
-            </button>
-            <small>
-              {location.country === "TH" ? "ประเทศไทย" : "ประเทศจีน"} ·
-              เลือกจุดบนแผนที่เพื่อดูอากาศ
-            </small>
-          </div>
+          <div className="map-heading"><span className="eyebrow">THE WEATHER AROUND YOU</span><h2>อากาศรอบตัว</h2><small>แผนที่ · เรดาร์ย้อนหลัง</small></div>
           <div className="map-layer-chips" aria-label="ชั้นข้อมูลแผนที่">
             <button
               className={layers.radar ? "selected" : ""}
@@ -610,7 +600,7 @@ export default function App() {
               อาจไม่ครบทุกอำเภอ
             </p>
             <p className="micro">
-              Prototype 0.2 · ใช้ส่วนตัว · ไม่มีบัญชีผู้ใช้และไม่มีการบันทึก GPS
+              Owner QA 0.3 · ใช้ส่วนตัว · ไม่มีบัญชีผู้ใช้และไม่มีการบันทึก GPS
               อัตโนมัติ
             </p>
           </div>

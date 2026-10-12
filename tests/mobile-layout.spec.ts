@@ -53,7 +53,7 @@ async function theme(page: Page, mode: "light" | "dark") {
     { timeout: 30000 },
   );
 }
-test.describe("Mobile V0.2 composition", () => {
+test.describe("Signature Hybrid mobile composition", () => {
   test.use({ hasTouch: true, isMobile: true });
   for (const size of sizes) {
     test(`${size.width}×${size.height}: all sheet states, light/dark, controls and map`, async ({
@@ -147,7 +147,7 @@ test.describe("Mobile V0.2 composition", () => {
             expect(g.radar!.height).toBeLessThanOrEqual(88);
             expect(
               g.radar!.y - (g.toolbar!.y + g.toolbar!.height),
-            ).toBeGreaterThan(220);
+            ).toBeGreaterThan(100); // Approved top summary consumes space; retain >=100px clear gesture corridor at 375×667.
             await expect(page.locator(".summary-message")).toBeInViewport({
               ratio: 1,
             });
@@ -179,14 +179,17 @@ test.describe("Mobile V0.2 composition", () => {
       const beforeZoom = await map.getAttribute("data-map-zoom");
       // Actual Chromium touch pinch, independent of hidden zoom buttons.
       const cdp = await context.newCDPSession(page);
-      // Assert that the gesture actually targets the map after sheet transitions.
-      await expect.poll(() => page.evaluate(() =>
-        !!document.elementFromPoint(140, 230)?.closest('.maplibregl-canvas'))).toBe(true);
+      const bounds = await map.boundingBox();
+      if (!bounds) throw Error("Missing map");
+      const gestureY = bounds.y + 110;
+      // Derive gesture coordinates from the integrated map, not the former full-height layout.
+      await expect.poll(() => page.evaluate(y =>
+        !!document.elementFromPoint(140, y)?.closest('.maplibregl-canvas'), gestureY))).toBe(true);
       // Send real two-finger DOM touch input: compositor-only synthesized pinch can
       // zoom the browser or do nothing in headless mobile Chromium. Zoom assertion stays unchanged.
       const fingers = (spread: number) => [
-        { x: 140 - spread, y: 230, id: 0, radiusX: 3, radiusY: 3, force: 1 },
-        { x: 140 + spread, y: 230, id: 1, radiusX: 3, radiusY: 3, force: 1 },
+        { x: 140 - spread, y: gestureY, id: 0, radiusX: 3, radiusY: 3, force: 1 },
+        { x: 140 + spread, y: gestureY, id: 1, radiusX: 3, radiusY: 3, force: 1 },
       ];
       await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: fingers(36) });
       for (let step = 1; step <= 8; step++) {
@@ -230,9 +233,9 @@ test.describe("Mobile V0.2 composition", () => {
         .poll(() => map.getAttribute("data-map-zoom"), { timeout: 10000 })
         .not.toBe(afterPinch);
       const beforePan = await map.getAttribute("data-map-center");
-      await page.mouse.move(120, 230);
+      await page.mouse.move(120, gestureY);
       await page.mouse.down();
-      await page.mouse.move(200, 260, { steps: 8 });
+      await page.mouse.move(200, gestureY + 30, { steps: 8 });
       await page.mouse.up();
       await expect
         .poll(() => map.getAttribute("data-map-center"), { timeout: 10000 })

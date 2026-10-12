@@ -1,0 +1,60 @@
+name: Weather Watch Design C integrated visual regression
+on:
+  push:
+    branches: [work/premium-visual-integration-v03]
+    paths: [src/**, tests/**, qa-visual-v03/**, qa-smooth-v03/**, .github/workflows/premium-visual-v03.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - name: Protect functional baseline and main
+        run: |
+          test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
+          git diff --exit-code d7791d88c8de70793d76d5a53565ab46eb245204 HEAD -- src/providers src/radar src/reliability src/maps package.json package-lock.json vite.config.ts .github/workflows/pages.yml
+      - run: npm ci
+      - run: npm run typecheck && npm test && npm run build && npm run verify:pages
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Matched baseline UI benchmark
+        run: |
+          git worktree add /tmp/ww-visual-baseline d7791d88c8de70793d76d5a53565ab46eb245204
+          cp -r qa-visual-v03 /tmp/ww-visual-baseline/
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/ww-visual-baseline/node_modules
+          cd /tmp/ww-visual-baseline
+          npm run build
+          WW_VISUAL_PHASE=baseline npx playwright test --config qa-visual-v03/playwright.config.ts --grep 'matched UI'
+          cp -r qa-visual-v03/test-results "$GITHUB_WORKSPACE/baseline-visual-results"
+      - name: Candidate matched benchmark and desktop/tablet screenshots
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-visual-v03/playwright.config.ts
+      - name: Mobile sizes, sheets, themes and original regressions
+        if: ${{ !cancelled() }}
+        run: npm run test:e2e
+      - name: Existing playback regression
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-playback-v03/playwright.config.ts
+      - name: Real radar pixel and cadence regression
+        if: ${{ !cancelled() }}
+        run: npx playwright test playback.spec.ts --config qa-smooth-v03/playwright.config.ts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: premium-visual-v03-${{ github.run_id }}
+          path: |
+            baseline-visual-results/
+            qa-visual-v03/browser-report/
+            qa-visual-v03/test-results/
+            playwright-report/
+            test-results/
+            qa-playback-v03/browser-report/
+            qa-playback-v03/test-results/
+            qa-smooth-v03/browser-report/
+            qa-smooth-v03/test-results/
+          retention-days: 90

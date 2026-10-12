@@ -1,8 +1,6 @@
 import { useRef, useEffect } from "react";
 import type { UseQueryResult } from "@tanstack/react-query";
 import {
-  MapPin,
-  Star,
   Droplets,
   Wind,
   Gauge,
@@ -12,12 +10,10 @@ import {
   Waves,
   ExternalLink,
   ShieldAlert,
-  RefreshCw,
 } from "lucide-react";
 import type { Location } from "../locations/types";
 import type { Weather } from "../weather/types";
 import type { AirQuality } from "../air-quality/types";
-import { WeatherIcon, condition } from "./WeatherIcon";
 import { Forecast } from "./Forecast";
 import { aqiLabel } from "../providers/airQuality";
 import { freshness, freshnessLabel } from "../reliability/freshness";
@@ -25,7 +21,7 @@ import { situation } from "../shared/situation";
 import { timeLabel, value, windDirection } from "../shared/time";
 import { alertFoundation } from "../alerts/types";
 export type SheetState = "collapsed" | "half" | "expanded";
-interface Props {
+export interface SituationProps {
   now?: number;
   location: Location;
   weather: UseQueryResult<Weather, Error>;
@@ -38,7 +34,7 @@ interface Props {
   view: "overview" | "forecast" | "environment";
   onView: (v: "overview" | "forecast" | "environment") => void;
 }
-export function SituationPanel(p: Props) {
+export function SituationPanel(p: SituationProps) {
   const w = p.weather.data, a = p.air.data;
   const wf = freshness(w?.current.time, w?.currentMeta.fetchedAt, 'weather', p.weather.isFetching, p.weather.isError, p.now);
   const af = freshness(a?.time, a?.meta.fetchedAt, 'air', p.air.isFetching, p.air.isError, p.now);
@@ -131,61 +127,22 @@ export function SituationPanel(p: Props) {
         </div>
       </div>
       <div className="panel-scroll" ref={scroll}>
-        <div className="current-section">
-          <div className="location-title">
-            <MapPin size={18} />
-            <div>
-              <h1>{p.location.name}</h1>
-              <span>
-                แบบจำลอง Open-Meteo ·{" "}
-                {timeLabel(w?.current.time, p.location.timezone)}
-              </span>
-            </div>
-            <button
-              className={`icon-button favorite-button ${p.favorite ? "saved" : ""}`}
-              aria-label={p.favorite ? "ลบตำแหน่งโปรด" : "บันทึกตำแหน่งโปรด"}
-              aria-pressed={p.favorite}
-              onClick={p.onFavorite}
-            >
-              <Star size={19} fill={p.favorite ? "currentColor" : "none"} />
-            </button>
+        <div className="outlook-heading"><span className="eyebrow">A LITTLE PERSPECTIVE</span><h2>มองไปข้างหน้า</h2></div>
+        <p className={`summary-message verdict-${v.verdict.toLowerCase()}`}>
+          <span className="verdict-dot" />
+          <span>{!wf.assessmentAllowed || !af.assessmentAllowed ?
+            wf.failed || af.failed ? 'อัปเดตไม่สำเร็จ · ยังประเมินไม่ได้' :
+              wf.state === 'expired' || af.state === 'expired' ? 'ข้อมูลหมดอายุ · ยังประเมินไม่ได้' : v.title : `แบบจำลอง · ${v.title}`}</span>
+        </p>
+        <div className={`verdict verdict-${v.verdict.toLowerCase()}`}>
+          <span className="verdict-dot" />
+          <div>
+            <strong>{v.title}</strong>
+            <p>{v.reason}</p>
           </div>
-          {p.weather.isPending ? (
-            <div className="weather-loading" role="status">
-              <div className="skeleton temperature-skeleton" />
-              <p>กำลังโหลดอากาศสำหรับตำแหน่งนี้…</p>
-            </div>
-          ) : p.weather.isError && !w ? (
-            <div className="data-error" role="alert">
-              <strong>โหลดข้อมูลอากาศไม่ได้</strong>
-              <p>{p.weather.error.message}</p>
-              <button className="text-button" onClick={p.onRefresh}>
-                <RefreshCw size={15} /> ลองใหม่
-              </button>
-            </div>
-          ) : (
-            w && (
-              <>
-                <div className="current-weather">
-                  <WeatherIcon
-                    code={w.current.code}
-                    isDay={w.current.isDay}
-                    size={96}
-                  />
-                  <div>
-                    <div className="temperature" data-testid="temperature">
-                      {value(w.current.temperature)}
-                      <span>°C</span>
-                    </div>
-                    <p data-testid="weather-condition">
-                      {condition(w.current.code)}
-                    </p>
-                    <small>
-                      รู้สึกเหมือน {value(w.current.apparent)}° · สูง{" "}
-                      {value(w.daily[0]?.high)}° / ต่ำ {value(w.daily[0]?.low)}°
-                    </small>
-                  </div>
-                </div>
+          <span className="data-tag">WW</span>
+        </div>
+        {w && <div className="detail-metrics">
                 <div className="current-metadata">
                   <span role="status" data-testid="weather-freshness">{freshnessLabel[wf.state]}{wf.failed && wf.state !== 'refresh-failed' ? ' · อัปเดตไม่สำเร็จ' : ''} · เวลาแหล่งข้อมูล {timeLabel(w.current.time, p.location.timezone, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                   <span className="data-tag">MODELED</span>
@@ -226,24 +183,7 @@ export function SituationPanel(p: Props) {
                     </span>
                   </div>
                 </div>
-              </>
-            )
-          )}
-        </div>
-        <p className={`summary-message verdict-${v.verdict.toLowerCase()}`}>
-          <span className="verdict-dot" />
-          <span>{!wf.assessmentAllowed || !af.assessmentAllowed ?
-            wf.failed || af.failed ? 'อัปเดตไม่สำเร็จ · ยังประเมินไม่ได้' :
-              wf.state === 'expired' || af.state === 'expired' ? 'ข้อมูลหมดอายุ · ยังประเมินไม่ได้' : v.title : `แบบจำลอง · ${v.title}`}</span>
-        </p>
-        <div className={`verdict verdict-${v.verdict.toLowerCase()}`}>
-          <span className="verdict-dot" />
-          <div>
-            <strong>{v.title}</strong>
-            <p>{v.reason}</p>
-          </div>
-          <span className="data-tag">WW</span>
-        </div>
+        </div>}
         <div className="panel-tabs" aria-label="รายละเอียดสถานการณ์">
           {(
             [

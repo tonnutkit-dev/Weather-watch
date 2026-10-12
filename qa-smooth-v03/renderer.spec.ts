@@ -32,7 +32,9 @@ test('LAB distinct decoded imagery, delayed dwell, corrupt PNG and viewport/reso
   });
   await page.goto('./');const map=page.locator('.map-canvas'),status=page.getByTestId('radar-presentation'),time=page.getByTestId('radar-time');
   await expect(map).toHaveAttribute('data-map-status','ready',{timeout:30000});await expect(status).toHaveAttribute('data-status','unverified',{timeout:20000});
-  const clip={x:8,y:150,width:374,height:350};const initial=await page.screenshot({clip});
+  const bounds=await map.boundingBox(); if(!bounds)throw Error('Missing map bounds');
+  // Same 340×200 map-only crop in both designs; excludes hero, toolbar and radar UI.
+  const clip={x:bounds.x+8,y:bounds.y+92,width:340,height:200};const initial=await page.screenshot({clip});
   await page.getByRole('button',{name:'เล่นเรดาร์ย้อนหลัง',exact:true}).click();
   await expect(time).toHaveAttribute('datetime',new Date(1000*1000).toISOString(),{timeout:2000});
   await expect(status).toHaveAttribute('data-status','pending');
@@ -55,7 +57,7 @@ test('LAB distinct decoded imagery, delayed dwell, corrupt PNG and viewport/reso
   const slider=page.getByRole('slider',{name:'เฟรมเรดาร์ย้อนหลัง',exact:true});await slider.focus();await slider.press('Home');
   const zoomAttribute=fallback?'data-zoom':'data-map-zoom',beforeZoom=await map.getAttribute(zoomAttribute);
   if(info.project.name==='webkit'){await page.locator('.maplibregl-canvas').focus();await page.keyboard.press('Equal');}
-  else{await page.mouse.move(180,270);await page.mouse.wheel(0,-400);}
+  else{await page.mouse.move(180,bounds.y+120);await page.mouse.wheel(0,-400);}
   await expect.poll(()=>map.getAttribute(zoomAttribute),{timeout:5000}).not.toBe(beforeZoom);await page.waitForTimeout(1200);
   await page.getByRole('button',{name:'เลือกชั้นข้อมูล'}).click();await page.getByRole('checkbox',{name:/เรดาร์ย้อนหลัง/}).uncheck();await page.getByRole('button',{name:'ปิด',exact:true}).click();await page.waitForTimeout(3500);
   if(fallback) expect(await page.evaluate(()=>(window as any).__RADAR_URLS.size)).toBe(0);

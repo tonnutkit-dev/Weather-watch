@@ -32,7 +32,9 @@ test('real radar pixels, cadence, Pause, manual scrub and stable map', async ({ 
   const heapStart=await page.evaluate(()=>(performance as any).memory?.usedJSHeapSize??null);
   const time=page.getByTestId('radar-time'), status=page.getByTestId('radar-presentation');
   await expect(status).toHaveAttribute('data-status','unverified',{timeout:40000});
-  const clip={x:8,y:150,width:374,height:350};
+  const bounds=await map.boundingBox(); if(!bounds)throw Error('Missing map bounds');
+  // Same 340×200 map-only crop in both designs; excludes hero, toolbar and radar UI.
+  const clip={x:bounds.x+8,y:bounds.y+92,width:340,height:200};
   const originalImage=await page.screenshot({clip});
   const start=Date.now(); let previous=await time.getAttribute('datetime');
   await page.getByRole('button',{name:'เล่นเรดาร์ย้อนหลัง',exact:true}).click();
