@@ -1,0 +1,91 @@
+name: Weather Watch isolated provider and WebKit diagnosis
+on:
+  push:
+    branches: [work/isolated-webkit-diagnosis-v03]
+    paths: [qa-provider-v03/**, .github/workflows/provider-diagnosis-v03.yml]
+permissions: {contents: read}
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - name: Guard immutable app and protected refs
+        run: |
+          test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
+          test "$(git rev-parse origin/work/mobile-map-correction-v03)" = 8ca9ae7afe67551d4a43de5ebf2fc0d47ec4c23a
+          git diff --exit-code 0ed053acdcf1b4e477e9f988d257902de4c081e3 HEAD -- src public DESIGN.md package.json package-lock.json vite.config.ts .github/workflows/pages.yml
+      - run: npm ci && npm run typecheck && npm test && npm run build && npm run verify:pages
+      - name: Freeze true Pages artifact before building LAB observer
+        run: |
+          node qa-provider-v03/artifacts.mjs
+          tar -czf qa-provider-v03/artifacts/candidate-pages.tar.gz -C dist .
+          sha256sum qa-provider-v03/artifacts/candidate-pages.tar.gz > qa-provider-v03/artifacts/candidate-pages.sha256
+      - name: Preserve known-good public production bytes without deploying
+        if: ${{ !cancelled() }}
+        run: |
+          node qa-provider-v03/archive-production.mjs
+          tar -czf qa-provider-v03/artifacts/known-good-public-2036.tar.gz -C qa-provider-v03/rollback-public .
+          sha256sum qa-provider-v03/artifacts/known-good-public-2036.tar.gz > qa-provider-v03/artifacts/known-good-public.sha256
+      - run: npx playwright install --with-deps chromium webkit
+        if: ${{ !cancelled() }}
+      - name: Build separate test-only QueryClient observer
+        if: ${{ !cancelled() }}
+        run: npx vite build --config qa-provider-v03/vite.config.ts
+      - name: LAB fault and native abort tests, no signal-lifetime instrumentation
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-provider-v03/playwright.config.ts --grep LAB
+      - name: Accepted geometry touch fallback and reduced-motion regression
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-mobile-v03/playwright.config.ts --grep-invert 'live mobile'
+      - name: Existing radar Play Pause scrub request-budget regression
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-playback-v03/playwright.config.ts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: provider-lab-and-frozen-pages-${{ github.run_id }}
+          path: |
+            qa-provider-v03/results/
+            qa-provider-v03/report/
+            qa-provider-v03/artifacts/
+            qa-mobile-v03/test-results/
+            qa-mobile-v03/browser-report/
+            qa-playback-v03/test-results/
+            qa-playback-v03/browser-report/
+          retention-days: 90
+  live:
+    strategy:
+      fail-fast: false
+      matrix: {mode: [control, observed, public]}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - name: Guard app bytes
+        run: git diff --exit-code 0ed053acdcf1b4e477e9f988d257902de4c081e3 HEAD -- src public package.json package-lock.json vite.config.ts
+      - run: npm ci && npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Separate observer build if needed
+        if: matrix.mode == 'observed'
+        run: npx vite build --config qa-provider-v03/vite.config.ts
+      - name: Original 45s live gate, three independent samples per engine, zero test retries
+        env:
+          WW_DIAG_CONTROL: ${{ matrix.mode == 'control' && '1' || '0' }}
+          WW_DIAG_SIGNALS: ${{ matrix.mode == 'observed' && '1' || '0' }}
+          WW_DIAG_PUBLIC_URL: ${{ matrix.mode == 'public' && 'https://weather-watch-v03-design-c-owner-qa-ton.tonnutkit.chatgpt.site/' || '' }}
+        run: npx playwright test --config qa-provider-v03/playwright.config.ts --grep LIVE
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: provider-live-${{ matrix.mode }}-${{ github.run_id }}
+          path: |
+            qa-provider-v03/results/
+            qa-provider-v03/report/
+          retention-days: 90
