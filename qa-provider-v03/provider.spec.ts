@@ -1,9 +1,12 @@
-import {test,expect,type Page,type TestInfo} from '@playwright/test';
+import {test as base,expect,type Page,type TestInfo} from '@playwright/test';
 import {readFileSync,writeFileSync} from 'node:fs';
 const fixture=JSON.parse(readFileSync('diagnostics-p0/provider-fixtures.json','utf8'));
 const publicURL=process.env.WW_DIAG_PUBLIC_URL;
 const control=process.env.WW_DIAG_CONTROL==='1';
 const instrument=process.env.WW_DIAG_SIGNALS==='1';
+const test=base.extend({contextOptions:async({contextOptions},use,info)=>{
+ await use({...contextOptions,recordHar:{path:info.outputPath('provider.har'),mode:'full',content:'embed',urlFilter:/open-meteo\.com|127\.0\.0\.1:4174/}});
+}});
 const provider=(url:string)=>/https:\/\/(api|air-quality-api)\.open-meteo\.com\//.test(url);
 async function observe(page:Page,info:TestInfo){
  const network:any[]=[];const errors:any[]=[];const origin=Date.now();
