@@ -2,7 +2,7 @@ name: Weather Watch isolated geometry diagnostics
 on:
   push:
     branches: [work/premium-visual-integration-v03]
-    paths: [qa-geometry-v03/**, .github/workflows/premium-geometry-v03.yml]
+    paths: [tests/mobile-layout.spec.ts, qa-geometry-v03/**, .github/workflows/premium-geometry-v03.yml]
 permissions: {contents: read}
 jobs:
   geometry:

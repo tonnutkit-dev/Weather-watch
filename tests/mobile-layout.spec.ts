@@ -236,21 +236,29 @@ test.describe("Signature Hybrid mobile composition", () => {
       await expect(page.getByTestId("temperature")).toBeInViewport({
         ratio: 1,
       });
+      const panY = await page.evaluate(() => {
+        const radar = document.querySelector('.radar-controls')!.getBoundingClientRect();
+        const map = document.querySelector('.map-canvas')!.getBoundingClientRect();
+        for (let y = radar.top - 32; y > map.top + 70; y -= 8) {
+          if ([100,120,140,160,180,200].every(x => document.elementFromPoint(x,y)?.closest('.maplibregl-canvas'))) return y;
+        }
+        throw new Error('No unobstructed touch-pan lane');
+      });
+      const beforePan = await map.getAttribute("data-map-center");
+      // Touch profile: use touch pan, not a synthetic mouse immediately after
+      // sheet touch events (browsers may suppress compatibility mouse input).
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:100,y:panY,id:0}]});
+      for(let step=1;step<=8;step++){
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:100+step*12,y:panY,id:0}]});
+        await page.waitForTimeout(20);
+      }
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      await expect.poll(() => map.getAttribute("data-map-center"), {timeout:10000}).not.toBe(beforePan);
       await cdp.detach();
       const afterPinch = await map.getAttribute("data-map-zoom");
       await canvas.focus();
       await page.keyboard.press("Equal");
-      await expect
-        .poll(() => map.getAttribute("data-map-zoom"), { timeout: 10000 })
-        .not.toBe(afterPinch);
-      const beforePan = await map.getAttribute("data-map-center");
-      await page.mouse.move(120, gestureY);
-      await page.mouse.down();
-      await page.mouse.move(200, gestureY + 30, { steps: 8 });
-      await page.mouse.up();
-      await expect
-        .poll(() => map.getAttribute("data-map-center"), { timeout: 10000 })
-        .not.toBe(beforePan);
+      await expect.poll(() => map.getAttribute("data-map-zoom"), {timeout:10000}).not.toBe(afterPinch);
       await page
         .getByRole("button", { name: "กลับไปยังตำแหน่งที่เลือก" })
         .click();
