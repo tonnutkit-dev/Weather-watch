@@ -1,8 +1,6 @@
 name: Weather Watch isolated provider and WebKit diagnosis
 on:
-  push:
-    branches: [work/isolated-webkit-diagnosis-v03]
-    paths: [qa-provider-v03/**, .github/workflows/provider-diagnosis-v03.yml]
+  workflow_dispatch:
 permissions: {contents: read}
 env:
   WW_DIAG_OFFLINE_ONLY: ${{ startsWith(github.event.head_commit.message, 'test(qa) offline-confirm') && '1' || '0' }}

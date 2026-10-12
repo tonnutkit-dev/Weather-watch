@@ -100,6 +100,7 @@ test('LAB offline and failed refresh preserve cache with Unknown',async({page,co
  test.skip(!!publicURL||control);const save=await observe(page,info);
  try{
   await labData(page,'ok');await page.goto('./');await expect(page.getByTestId('temperature')).toHaveText(/\d+°C/);
+  await expect(page.locator('.map-canvas')).toHaveAttribute('data-map-status','ready',{timeout:30000});
   const original=await page.getByTestId('temperature').innerText();await context.setOffline(true);await expect(page.locator('.offline-banner')).toBeVisible();await expect(page.locator('.offline-banner')).toContainText('ไม่มีการเชื่อมต่ออินเทอร์เน็ต');await context.setOffline(false);
   await page.unroute('https://api.open-meteo.com/**');await page.route('https://api.open-meteo.com/**',r=>r.abort('failed'));
   // TEST-only direct refetch bypasses admission UI to isolate query/cache settlement; policy is unchanged.
