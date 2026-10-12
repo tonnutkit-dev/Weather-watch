@@ -50,6 +50,7 @@ jobs:
           name: provider-lab-and-frozen-pages-${{ github.run_id }}
           path: |
             qa-provider-v03/results/
+            qa-provider-v03/qa-provider-v03/results/
             qa-provider-v03/report/
             qa-provider-v03/artifacts/
             qa-mobile-v03/test-results/
@@ -87,5 +88,6 @@ jobs:
           name: provider-live-${{ matrix.mode }}-${{ github.run_id }}
           path: |
             qa-provider-v03/results/
+            qa-provider-v03/qa-provider-v03/results/
             qa-provider-v03/report/
           retention-days: 90
