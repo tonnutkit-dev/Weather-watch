@@ -5,7 +5,7 @@ on:
     paths: [qa-provider-v03/**, .github/workflows/provider-diagnosis-v03.yml]
 permissions: {contents: read}
 env:
-  WW_DIAG_OFFLINE_ONLY: ${{ startsWith(github.event.head_commit.message, 'test(qa): correct offline assertion') && '1' || '0' }}
+  WW_DIAG_OFFLINE_ONLY: ${{ startsWith(github.event.head_commit.message, 'test(qa) offline-confirm') && '1' || '0' }}
 jobs:
   lab:
     runs-on: ubuntu-latest
@@ -75,7 +75,7 @@ jobs:
             qa-playback-v03/browser-report/
           retention-days: 90
   live:
-    if: ${{ !startsWith(github.event.head_commit.message, 'test(qa): correct offline assertion') }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'test(qa) offline-confirm') }}
     strategy:
       fail-fast: false
       matrix: {mode: [control, observed, public]}
