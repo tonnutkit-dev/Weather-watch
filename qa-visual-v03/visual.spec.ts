@@ -36,6 +36,9 @@ test('live integrated desktop/tablet light and dark screenshots',async({page},in
    await page.getByRole('button',{name:'การแสดงผลและตั้งค่า'}).click();await page.getByRole('button',{name:theme,exact:true}).click();await page.getByRole('button',{name:'ปิด',exact:true}).click();await expect(page.locator('.map-canvas')).toHaveAttribute('data-theme',theme==='มืด'?'dark':'light',{timeout:30000});
    await expect(page.getByTestId('temperature')).toBeInViewport({ratio:1});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
    expect(await page.evaluate(n=>n===document.querySelector('.maplibregl-canvas'),canvas)).toBe(true);
+   const toolbar=await page.locator('.map-toolbar').boundingBox(),zoom=await page.locator('.maplibregl-ctrl-top-right').boundingBox();
+   expect(toolbar).not.toBeNull();expect(zoom).not.toBeNull();
+   expect(Math.min(toolbar!.y+toolbar!.height,zoom!.y+zoom!.height)-Math.max(toolbar!.y,zoom!.y)).toBeLessThanOrEqual(0);
    await info.attach(`${size.width}-${theme==='มืด'?'dark':'light'}-live`,{body:await page.screenshot(),contentType:'image/png'});
   }
  }expect(errors).toEqual([]);

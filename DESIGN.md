@@ -6,7 +6,7 @@ Approved by TON for isolated V0.3 integration. Visual source: exploration commit
 
 70% Premium Editorial / 30% Atmospheric Map. Quiet warm paper, deep teal surfaces, generous typography, precise hairlines and a single weather summary. Weather Watch keeps its name; the sun-and-current mark comes from approved C. THE WEATHER EDIT is secondary identity, never a substitute for Thai labels or provenance.
 
-Desktop: a 350px editorial column (300px tablet, 390px wide desktop) holds current weather above independently scrolling outlook. The map occupies the broad right column. Mobile: compact 56px header, one 202px weather overview (176px on short phones), central interactive map with 10px side insets, and a 148px collapsed situation sheet. The current temperature stays visible above the map in every sheet state.
+Desktop: a 350px editorial column (300px tablet, 390px wide desktop) holds current weather above independently scrolling outlook. The map occupies the broad right column. Mobile: compact 56px header, one 210px weather overview (184px on short phones), central interactive map with 10px side insets, and a 148px collapsed situation sheet. The current temperature stays visible above the map in every sheet state.
 
 ## Tokens
 

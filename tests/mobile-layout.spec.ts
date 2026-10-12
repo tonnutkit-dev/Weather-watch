@@ -118,6 +118,11 @@ test.describe("Signature Hybrid mobile composition", () => {
           const g = await geometry(page);
           measurements.push({ mode, state, ...g });
           expect(g.overflow).toBe(false);
+          const locationTarget=await page.locator('.location-heading').boundingBox();
+          expect(locationTarget!.height).toBeGreaterThanOrEqual(44);
+          const titleBox=await page.locator('.location-title').boundingBox();
+          const sourceBox=await page.locator('.overview-freshness').boundingBox();
+          expect(titleBox!.y+titleBox!.height).toBeLessThanOrEqual(sourceBox!.y);
           expect(g.scrollLeft).toBe(0);
           await expect(page.getByTestId("temperature")).toBeInViewport({
             ratio: 1,
