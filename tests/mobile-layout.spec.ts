@@ -184,7 +184,7 @@ test.describe("Signature Hybrid mobile composition", () => {
       const gestureY = bounds.y + 110;
       // Derive gesture coordinates from the integrated map, not the former full-height layout.
       await expect.poll(() => page.evaluate(y =>
-        !!document.elementFromPoint(140, y)?.closest('.maplibregl-canvas'), gestureY))).toBe(true);
+        !!document.elementFromPoint(140, y)?.closest('.maplibregl-canvas'), gestureY)).toBe(true);
       // Send real two-finger DOM touch input: compositor-only synthesized pinch can
       // zoom the browser or do nothing in headless mobile Chromium. Zoom assertion stays unchanged.
       const fingers = (spread: number) => [
