@@ -1,0 +1,164 @@
+name: Weather Watch V0.3 RC preparation A only
+on:
+  push:
+    branches: [work/release-candidate-v03-01]
+permissions: {contents: read}
+env:
+  WW_RELEASE_CHANNEL: release-candidate
+jobs:
+  deterministic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - run: node qa-rc-v03/check-scope.mjs
+      - run: npm ci && npm run typecheck && npm test
+      - run: node --test qa-rc-v03/release.test.mjs
+      - run: npx tsc -p qa-rc-v03/tsconfig.json --pretty false
+      - name: Freeze Pages RC artifact, no publication
+        run: |
+          npm run build
+          npm run verify:pages
+          node qa-rc-v03/artifact-manifest.mjs
+          node qa-provider-v03/artifacts.mjs
+          tar -czf qa-rc-v03/artifacts/pages-rc.tar.gz -C dist .
+          sha256sum qa-rc-v03/artifacts/pages-rc.tar.gz > qa-rc-v03/artifacts/pages-rc.sha256
+      - name: Freeze unbound root RC artifact, no Site registered
+        run: |
+          npx vite build --base=/ --outDir=dist-owner-rc
+          WW_RELEASE_BASE=/ WW_RELEASE_DIRECTORY=dist-owner-rc npm run verify:pages
+          WW_RELEASE_BASE=/ WW_RELEASE_DIRECTORY=dist-owner-rc WW_RC_MANIFEST=qa-rc-v03/artifacts/root-manifest.json node qa-rc-v03/artifact-manifest.mjs
+          tar -czf qa-rc-v03/artifacts/root-rc-unpublished.tar.gz -C dist-owner-rc .
+          sha256sum qa-rc-v03/artifacts/root-rc-unpublished.tar.gz > qa-rc-v03/artifacts/root-rc.sha256
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npx vite build --config qa-provider-v03/vite.config.ts
+      - name: Existing approved HTTP tests, assertions unchanged
+        run: npx playwright test --config qa-provider-v03/playwright.config.ts --grep HTTP
+      - name: Retain HTTP results separately
+        if: always()
+        run: |
+          if [ -d qa-provider-v03/results ]; then mv qa-provider-v03/results qa-provider-v03/http-results; fi
+          if [ -d qa-provider-v03/report ]; then mv qa-provider-v03/report qa-provider-v03/http-report; fi
+      - name: Existing LAB faults and ready-map offline
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-provider-v03/playwright.config.ts --grep LAB
+      - name: Root base browser acceptance
+        if: ${{ !cancelled() }}
+        env: {WW_RC_ROOT: '1'}
+        run: npx playwright test --config qa-rc-v03/playwright.config.ts --grep 'System|failure'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: rc-deterministic-${{ github.run_id }}
+          path: |
+            qa-rc-v03/artifacts/
+            qa-rc-v03/test-results/
+            qa-rc-v03/browser-report/
+            qa-provider-v03/results/
+            qa-provider-v03/report/
+            qa-provider-v03/http-results/
+            qa-provider-v03/http-report/
+          retention-days: 90
+  live-and-geometry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - run: node qa-rc-v03/check-scope.mjs
+      - run: npm ci && npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Original live 45s success criterion, zero test retries
+        env: {WW_DIAG_CONTROL: '1'}
+        run: npx playwright test --config qa-provider-v03/playwright.config.ts --grep LIVE
+      - name: Separate LIVE weather and AQI terminal truth plus System/tablet/desktop
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-rc-v03/playwright.config.ts --grep-invert 'long session'
+      - name: Accepted mobile geometry touch fallback and Reduced Motion
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-mobile-v03/playwright.config.ts --grep-invert 'live mobile'
+      - name: Original mobile e2e with original single retry preserved
+        if: ${{ !cancelled() }}
+        run: npm run test:e2e
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: rc-live-geometry-${{ github.run_id }}
+          path: |
+            qa-provider-v03/results/
+            qa-provider-v03/report/
+            qa-rc-v03/test-results/
+            qa-rc-v03/browser-report/
+            qa-mobile-v03/test-results/
+            qa-mobile-v03/browser-report/
+            test-results/
+            playwright-report/
+          retention-days: 90
+  radar-and-performance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - run: node qa-rc-v03/check-scope.mjs
+      - run: npm ci && npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npx playwright test --config qa-playback-v03/playwright.config.ts
+      - if: ${{ !cancelled() }}
+        run: npx playwright test playback.spec.ts --config qa-smooth-v03/playwright.config.ts
+      - name: Same-runner matched candidate baseline
+        if: ${{ !cancelled() }}
+        run: |
+          git worktree add /tmp/ww-rc-before db854c5330512d23e3008507f6bcb115a05bdbf6
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/ww-rc-before/node_modules
+          cd /tmp/ww-rc-before
+          npm run build
+          WW_VISUAL_PHASE=rc-before npx playwright test --config qa-visual-v03/playwright.config.ts --grep 'matched UI'
+      - name: After metadata matched benchmark and exact runtime asset comparison
+        if: ${{ !cancelled() }}
+        run: |
+          WW_VISUAL_PHASE=rc-after npx playwright test --config qa-visual-v03/playwright.config.ts --grep 'matched UI'
+          node qa-rc-v03/compare-builds.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: rc-radar-performance-${{ github.run_id }}
+          path: |
+            qa-playback-v03/test-results/
+            qa-playback-v03/browser-report/
+            qa-smooth-v03/test-results/
+            qa-smooth-v03/browser-report/
+            qa-visual-v03/test-results/
+            qa-visual-v03/browser-report/
+            /tmp/ww-rc-before/qa-visual-v03/test-results/
+            /tmp/ww-rc-before/qa-visual-v03/browser-report/
+            qa-rc-v03/artifacts/
+          retention-days: 90
+  long-session:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - run: node qa-rc-v03/check-scope.mjs
+      - run: npm ci && npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Thirty real minutes, recorded weather/AQI and genuine map/radar
+        run: npx playwright test --config qa-rc-v03/playwright.config.ts --project chromium --grep 'long session'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: rc-long-session-${{ github.run_id }}
+          path: |
+            qa-rc-v03/test-results/
+            qa-rc-v03/browser-report/
+          retention-days: 90

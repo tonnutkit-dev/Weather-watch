@@ -19,6 +19,8 @@ jobs:
     name: Validate and build
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      WW_RELEASE_CHANNEL: production
     steps:
       - name: Checkout source
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -37,6 +39,14 @@ jobs:
         run: npm run build
       - name: Verify Pages assets and record public release metadata
         run: npm run verify:pages
+      - name: Freeze exact release manifest
+        run: node qa-rc-v03/artifact-manifest.mjs
+      - name: Retain immutable production manifest
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: pages-release-manifest-${{ github.sha }}
+          path: qa-rc-v03/artifacts/pages-manifest.json
+          retention-days: 90
       - name: Install Chromium for production browser QA
         run: npx playwright install --with-deps chromium
       - name: Check production UI, live providers and offline behavior
@@ -102,12 +112,19 @@ jobs:
     steps:
       - name: Checkout exact release
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Retrieve manifest from this exact build
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: pages-release-manifest-${{ github.sha }}
+          path: qa-rc-v03/artifacts
       - name: Set up Node 24
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 24
           cache: npm
       - name: Verify HTTPS and exact release SHA
+        env:
+          WW_RC_VERIFY_URL: https://tonnutkit-dev.github.io/Weather-watch/
         run: node scripts/verify_live_pages.mjs
       - name: Install reproducible browser QA dependencies
         run: npm ci
