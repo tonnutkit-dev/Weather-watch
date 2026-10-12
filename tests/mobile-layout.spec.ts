@@ -297,7 +297,12 @@ test("tablet layout retains map, forecast, geography and both themes", async ({
   await expect(page.locator('[data-map-status="ready"]')).toBeVisible({
     timeout: 30000,
   });
-  await expect(page.locator(".region-bar")).toBeVisible();
+  // Approved Design C consolidates region navigation into the location selector.
+  await expect(page.locator(".region-bar")).toBeHidden();
+  await page.getByRole("button", { name: "ค้นหาตำแหน่ง", exact: true }).click();
+  await page.locator(".secondary-locations summary").click();
+  await expect(page.locator(".china-options button")).toHaveCount(3);
+  await page.getByRole("button", { name: "ปิด", exact: true }).click();
   for (const mode of ["light", "dark"] as const) {
     if (mode === "dark") await theme(page, mode);
     await info.attach(`tablet-${mode}`, {

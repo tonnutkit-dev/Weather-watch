@@ -18,7 +18,13 @@ jobs:
       - name: Protect functional baseline and main
         run: |
           test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
-          git diff --exit-code d7791d88c8de70793d76d5a53565ab46eb245204 HEAD -- src/providers src/radar src/reliability src/maps package.json package-lock.json vite.config.ts .github/workflows/pages.yml
+          git diff --exit-code d7791d88c8de70793d76d5a53565ab46eb245204 HEAD -- src/providers src/radar src/reliability src/maps/MapCanvas.tsx src/maps/RasterCanvas.tsx src/maps/BoundedRadarLayer.ts src/maps/layout.ts package.json package-lock.json vite.config.ts .github/workflows/pages.yml
+          python3 - <<'PYGL'
+          import subprocess,pathlib
+          before=subprocess.check_output(['git','show','d7791d88c8de70793d76d5a53565ab46eb245204:src/maps/GLCanvas.tsx'],text=True)
+          after=pathlib.Path('src/maps/GLCanvas.tsx').read_text().replace('import { applyEditorialStyle } from "./editorialStyle";\n','').replace('        applyEditorialStyle(m, current.current.theme);\n','')
+          assert before==after,'Map lifecycle/radar logic changed'
+          PYGL
       - run: npm ci
       - run: npm run typecheck && npm test && npm run build && npm run verify:pages
       - run: npx playwright install --with-deps chromium webkit
@@ -31,6 +37,7 @@ jobs:
           npm run build
           WW_VISUAL_PHASE=baseline npx playwright test --config qa-visual-v03/playwright.config.ts --grep 'matched UI'
           cp -r qa-visual-v03/test-results "$GITHUB_WORKSPACE/baseline-visual-results"
+          cp -r qa-visual-v03/browser-report "$GITHUB_WORKSPACE/baseline-visual-report"
       - name: Candidate matched benchmark and desktop/tablet screenshots
         if: ${{ !cancelled() }}
         run: npx playwright test --config qa-visual-v03/playwright.config.ts
@@ -49,6 +56,7 @@ jobs:
           name: premium-visual-v03-${{ github.run_id }}
           path: |
             baseline-visual-results/
+            baseline-visual-report/
             qa-visual-v03/browser-report/
             qa-visual-v03/test-results/
             playwright-report/

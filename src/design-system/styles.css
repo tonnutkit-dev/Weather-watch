@@ -4,6 +4,7 @@
   --bg: #f0f2ed;
   --surface: #fbfcf8;
   --on-accent: #fff;
+  --cloud-top:#f3f9f9; --cloud-bottom:#adc8d1; --cloud-shade:#9bbbc7;
   --raised: #e8ede8;
   --text: #203d3e;
   --muted: #586e6c;
@@ -22,6 +23,7 @@
   --bg: #13272b;
   --surface: #1b3236;
   --on-accent: #153035;
+  --cloud-top:#d9e8e9; --cloud-bottom:#8cabbc; --cloud-shade:#769ba9;
   --raised: #263e41;
   --text: #f0f2e9;
   --muted: #adc0bb;
@@ -305,7 +307,7 @@ input[type="checkbox"] {
   inset: 0;
 }
 .map-heading {
-  position: absolute; top: 26px; left: 26px; pointer-events: none; color: var(--text); text-shadow: 0 1px 8px var(--surface);
+  position: absolute; top: 26px; left: 26px; pointer-events: none; color: var(--text); background:var(--glass); padding:12px 16px; border-radius:14px;
 }
 .eyebrow {
   font-size: 10px;
@@ -379,21 +381,14 @@ input[type="checkbox"] {
   box-shadow: var(--shadow);
   border-radius: 12px;
 }
-.map-locate {
-  position: absolute;
-  right: 18px;
-  top: 118px;
-}
+.map-locate { display:none; }
 .map-toolbar {
   position: absolute; top: 20px; right: 20px; display: flex; gap: 2px; padding: 3px; border: 1px solid var(--border); border-radius: 14px; background: var(--glass); box-shadow: var(--shadow);
 }
 .mobile-layer-button {
   display: inline-flex;
 }
-.maplibregl-ctrl-top-right {
-  right: 8px;
-  top: 12px;
-}
+.app .maplibregl-ctrl-top-right { right:10px; top:80px; }
 .maplibregl-ctrl-group {
   background: var(--surface) !important;
   border: 1px solid var(--border) !important;
@@ -1408,7 +1403,7 @@ input[type="checkbox"] {
 .outlook-heading .eyebrow { margin-bottom:4px; font-size:9px; }
 .detail-metrics { padding:0 18px; }
 .map-toolbar .map-recenter { border:0; box-shadow:none; background:none; }
-.maplibregl-ctrl-top-right, .leaflet-top.leaflet-right { top:80px; right:10px; }
+.app .leaflet-top.leaflet-right { top:80px; right:10px; }
 .current-weather > .weather-icon { width:110px; height:110px; }
 .location-title > svg { align-self:center; margin-top:0; width:15px; }
 .location-title h1 { font-size:22px; }
@@ -1451,7 +1446,7 @@ input[type="checkbox"] {
  .location-title { height:36px; gap:6px; }
  .location-title h1 { font-size:18px; }
  .location-heading { min-height:36px; }
- .location-title > div > span { font-size:11px; }
+ .location-title > div > span { display:none; }
  .location-title > svg { display:none; }
  .favorite-button { width:44px; height:44px; }
  .overview-freshness { font-size:11px; margin-top:4px; }

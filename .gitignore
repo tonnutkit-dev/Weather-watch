@@ -21,3 +21,8 @@ qa-playback-v03/browser-report/
 qa-playback-v03/test-results/
 qa-smooth-v03/browser-report/
 qa-smooth-v03/test-results/
+
+qa-visual-v03/browser-report/
+qa-visual-v03/test-results/
+baseline-visual-results/
+baseline-visual-report/

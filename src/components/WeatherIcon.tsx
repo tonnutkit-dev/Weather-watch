@@ -1,3 +1,4 @@
+import { useId } from "react";
 export function condition(code: number | null) {
   if (code === null) return "ไม่มีข้อมูลสภาพอากาศ";
   if (code === 0) return "ท้องฟ้าแจ่มใส";
@@ -18,6 +19,7 @@ export function WeatherIcon({
   isDay?: boolean | null;
   size?: number;
 }) {
+  const id = useId().replace(/:/g, "");
   const rain = code !== null && code >= 51,
     snow = code !== null && code >= 71 && code <= 77,
     cloud = code !== null && code > 0;
@@ -30,6 +32,7 @@ export function WeatherIcon({
       aria-hidden="true"
       className="weather-icon"
     >
+      <defs><linearGradient id={`${id}-cloud`} x1="0" y1="0" x2="0.2" y2="1"><stop stopColor="var(--cloud-top)"/><stop offset="1" stopColor="var(--cloud-bottom)"/></linearGradient></defs>
       {code === null ? (
         <text x="29" y="50" fill="currentColor" fontSize="36">
           ?
@@ -60,11 +63,11 @@ export function WeatherIcon({
             <>
               <path
                 d="M24 56c-20 0-20-25-3-25 5-18 31-17 36 1 21-2 25 24 4 24H24Z"
-                fill={rain ? "#81acd8" : "#d7e5f5"}
+                fill={`url(#${id}-cloud)`}
               />
               <path
                 d="M24 56c-13 0-18-9-13-16 2 7 6 10 14 10h36c8 0 12-3 14-7 2 8-4 13-14 13H24Z"
-                fill={rain ? "#6296c9" : "#bfd4ec"}
+                fill="var(--cloud-shade)"
               />
             </>
           )}
@@ -74,7 +77,7 @@ export function WeatherIcon({
               <path
                 key={x}
                 d={`m${x} 63-4 9`}
-                stroke="#3a91ec"
+                stroke="var(--blue)"
                 strokeWidth="4"
                 strokeLinecap="round"
               />

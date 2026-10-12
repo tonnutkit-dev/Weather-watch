@@ -1,3 +1,4 @@
+import { applyEditorialStyle } from "./editorialStyle";
 import { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
 import type { Map, GeoJSONSource, RasterTileSource } from "maplibre-gl";
@@ -252,6 +253,7 @@ export default function GLCanvas(props: MapProps) {
         sync.current();
       });
       m.on("style.load", () => {
+        applyEditorialStyle(m, current.current.theme);
         styleReady.current = true;
         setStyleTheme(current.current.theme);
         sync.current();

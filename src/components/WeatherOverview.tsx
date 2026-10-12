@@ -27,7 +27,7 @@ export function WeatherOverview(p: Pick<SituationProps, "location" | "weather" |
               <Star size={19} fill={p.favorite ? "currentColor" : "none"} />
             </button>
           </div>
-          <p className="overview-freshness">{freshnessLabel[wf.state]}{wf.failed ? " · อัปเดตไม่สำเร็จ" : ""}</p>
+          <p className="overview-freshness">แบบจำลอง · {timeLabel(w?.current.time, p.location.timezone)} · {freshnessLabel[wf.state]}{wf.failed ? " · อัปเดตไม่สำเร็จ" : ""}</p>
           {p.weather.isPending ? (
             <div className="weather-loading" role="status">
               <div className="skeleton temperature-skeleton" />

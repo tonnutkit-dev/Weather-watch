@@ -14,8 +14,8 @@ for(let run=0;run<3;run++) test(`matched UI benchmark ${run+1}`,async({page,cont
   for(const type of ['paint','largest-contentful-paint','layout-shift','longtask'])if(PerformanceObserver.supportedEntryTypes.includes(type))new PerformanceObserver(l=>{for(const e of l.getEntries() as any){if(e.name==='first-contentful-paint')m.fcp=e.startTime;if(type==='largest-contentful-paint')m.lcp=e.startTime;if(type==='layout-shift'&&!e.hadRecentInput)m.cls+=e.value;if(type==='longtask')m.long.push(e.duration);}}).observe({type,buffered:true});
  });
  const results=[];
- for(const cache of ['cold','warm']){
-  const session=await context.newCDPSession(page);if(cache==='cold')await session.send('Network.clearBrowserCache');
+ for(const cache of ['fresh-session','returning-session']){
+  const session=await context.newCDPSession(page);if(cache==='fresh-session')await session.send('Network.clearBrowserCache');
   await page.goto('./');await expect(page.getByTestId('temperature')).toHaveText(/\d+°C/);await expect(page.locator('.map-canvas')).toHaveAttribute('data-map-status','ready');
   const canvas=await page.locator('.maplibregl-canvas').elementHandle();
   await page.evaluate(()=>{const m=(window as any).__UI_METRICS;let last=performance.now();m.active=true;function tick(t:number){if(!m.active)return;m.frames.push(t-last);last=t;requestAnimationFrame(tick);}requestAnimationFrame(tick);});
@@ -25,7 +25,7 @@ for(let run=0;run<3;run++) test(`matched UI benchmark ${run+1}`,async({page,cont
   const metrics=await page.evaluate(()=>{const m=(window as any).__UI_METRICS;m.active=false;const f=m.frames.sort((a:number,b:number)=>a-b);return {...m,rafP95:f[Math.floor(f.length*.95)],heap:(performance as any).memory?.usedJSHeapSize,nodes:document.querySelectorAll('*').length,resources:performance.getEntriesByType('resource').map((r:any)=>({name:r.name,transfer:r.transferSize,encoded:r.encodedBodySize}))};});
   results.push({phase:process.env.WW_VISUAL_PHASE||'candidate',cache,run,...metrics});await session.detach();
  }
- await info.attach('matched-ui-metrics',{body:Buffer.from(JSON.stringify({results,errors,scope:'Linux Chromium UI-only benchmark, recorded weather/AQ, no radar, fixed LAB basemap. No iPhone/GPU claim.'},null,2)),contentType:'application/json'});expect(errors).toEqual([]);
+ await info.attach('matched-ui-metrics',{body:Buffer.from(JSON.stringify({results,errors,scope:'Linux Chromium UI-only benchmark, recorded weather/AQ, no radar, fixed LAB basemap. Routing disables HTTP cache: returning-session is not an HTTP warm-cache claim. No iPhone/GPU claim.'},null,2)),contentType:'application/json'});expect(errors).toEqual([]);
 });
 test('live integrated desktop/tablet light and dark screenshots',async({page},info)=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
