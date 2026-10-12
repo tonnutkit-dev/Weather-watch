@@ -186,10 +186,16 @@ test.describe("Signature Hybrid mobile composition", () => {
       const cdp = await context.newCDPSession(page);
       const bounds = await map.boundingBox();
       if (!bounds) throw Error("Missing map");
-      const gestureY = bounds.y + 110;
-      // Derive gesture coordinates from the integrated map, not the former full-height layout.
-      await expect.poll(() => page.evaluate(y =>
-        !!document.elementFromPoint(140, y)?.closest('.maplibregl-canvas'), gestureY)).toBe(true);
+      // Both fingertips (not only their midpoint) must hit the canvas. A location
+      // marker can intercept one finger in this shorter editorial map viewport.
+      const gestureY = await page.evaluate(() => {
+        const radar = document.querySelector('.radar-controls')!.getBoundingClientRect();
+        const map = document.querySelector('.map-canvas')!.getBoundingClientRect();
+        for (let y = radar.top - 24; y > map.top + 70; y -= 8) {
+          if ([88,104,140,176,192].every(x => document.elementFromPoint(x,y)?.closest('.maplibregl-canvas'))) return y;
+        }
+        throw new Error('No unobstructed two-finger map gesture lane');
+      });
       // Send real two-finger DOM touch input: compositor-only synthesized pinch can
       // zoom the browser or do nothing in headless mobile Chromium. Zoom assertion stays unchanged.
       const fingers = (spread: number) => [
