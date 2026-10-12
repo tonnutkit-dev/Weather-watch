@@ -1,0 +1,399 @@
+{
+  "run": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38215698304",
+  "overall": "FAIL: WebKit weather-loading gate timed out before radar assertions",
+  "integrity": {
+    "release": {
+      "version": "0.3-design-c-owner-qa",
+      "commit": "a695711dab58caca660657ab83564b3a59f9fccb",
+      "base": "/",
+      "diagnosticFixturesIncluded": false,
+      "builtAt": "2026-10-12T06:50:20.718Z"
+    },
+    "verifiedAssets": 36,
+    "protectedPages": "2036e2ac788cb31d25fd387cb40520ad95c408a6",
+    "protectedSmoothQA": "8f137edc921d677cd3693229b670506495057cd2"
+  },
+  "measurements": [
+    {
+      "report": "qa-playback-v03/browser-report",
+      "test": "real automatic Play/Pause, scrub, sheet, theme and budget on mobile",
+      "status": "passed",
+      "attachment": "playback-live-measurements",
+      "data": {
+        "baseURL": "https://weather-watch-v03-design-c-owner-qa-ton.tonnutkit.chatgpt.site/",
+        "firstSelectedFrameMs": 1623,
+        "requestCount": 14,
+        "peakRolling60s": 14,
+        "frameIntervals": {
+          "count": 846,
+          "p95Ms": 33.399999999999636,
+          "excludedOver1000ms": 0
+        },
+        "sameCanvas": true,
+        "errors": [],
+        "note": "Transport readiness is qualified only; selected time is not confirmed pixels. Linux Chromium emulation, not physical iPhone."
+      }
+    },
+    {
+      "report": "qa-smooth-v03/browser-report",
+      "test": "real radar pixels, cadence, Pause, manual scrub and stable map",
+      "status": "passed",
+      "attachment": "smooth-playback-measurements",
+      "data": {
+        "phase": "deployed",
+        "browser": "chromium",
+        "baseURL": "https://weather-watch-v03-design-c-owner-qa-ton.tonnutkit.chatgpt.site/",
+        "engine": "maplibre",
+        "firstAdvanceMs": 1676,
+        "firstVisibleSampleMs": 1915,
+        "intervalsMs": [
+          2498,
+          2504,
+          2511,
+          2471,
+          2520
+        ],
+        "advances": [
+          {
+            "at": 1676,
+            "time": "2026-10-12T05:00:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 1872,
+            "visibleSampleAt": 1915
+          },
+          {
+            "at": 4174,
+            "time": "2026-10-12T05:10:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 4972,
+            "visibleSampleAt": 5016
+          },
+          {
+            "at": 6678,
+            "time": "2026-10-12T05:20:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 7006,
+            "visibleSampleAt": 7049
+          },
+          {
+            "at": 9189,
+            "time": "2026-10-12T05:30:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 9403,
+            "visibleSampleAt": 9449
+          },
+          {
+            "at": 11660,
+            "time": "2026-10-12T05:40:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 11956,
+            "visibleSampleAt": 11999
+          },
+          {
+            "at": 14180,
+            "time": "2026-10-12T05:50:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 14310,
+            "visibleSampleAt": 14366
+          }
+        ],
+        "pixelChanges": [
+          {
+            "changedPixels": 7768,
+            "totalPixels": 68000,
+            "fraction": 0.11423529411764706
+          },
+          {
+            "changedPixels": 3467,
+            "totalPixels": 68000,
+            "fraction": 0.05098529411764706
+          },
+          {
+            "changedPixels": 2220,
+            "totalPixels": 68000,
+            "fraction": 0.03264705882352941
+          },
+          {
+            "changedPixels": 3517,
+            "totalPixels": 68000,
+            "fraction": 0.051720588235294115
+          },
+          {
+            "changedPixels": 4284,
+            "totalPixels": 68000,
+            "fraction": 0.063
+          },
+          {
+            "changedPixels": 2293,
+            "totalPixels": 68000,
+            "fraction": 0.03372058823529412
+          }
+        ],
+        "basemapControl": {
+          "changedPixels": 0,
+          "totalPixels": 68000,
+          "fraction": 0
+        },
+        "requests": 28,
+        "peakRolling60s": 28,
+        "uniqueTileURLs": 28,
+        "sameMapHost": true,
+        "sameGLCanvas": true,
+        "heapStart": 31200000,
+        "canvasCount": 1,
+        "rAF": {
+          "count": 2018,
+          "p95Ms": 16.799999999999272,
+          "excludedOver1000Ms": 0
+        },
+        "longTasks": [
+          64,
+          170
+        ],
+        "heap": 31200000,
+        "errors": [],
+        "limitations": "Transport is not pixel-complete confirmation. Pixel differences demonstrate sampled visible imagery, not complete viewport coverage. Linux browsers; not physical iPhone."
+      }
+    },
+    {
+      "report": "qa-smooth-v03/browser-report",
+      "test": "real radar pixels, cadence, Pause, manual scrub and stable map",
+      "status": "passed",
+      "attachment": "smooth-playback-measurements",
+      "data": {
+        "phase": "deployed",
+        "browser": "leaflet-reduced",
+        "baseURL": "https://weather-watch-v03-design-c-owner-qa-ton.tonnutkit.chatgpt.site/",
+        "engine": "leaflet-fallback",
+        "firstAdvanceMs": 1610,
+        "firstVisibleSampleMs": 1865,
+        "intervalsMs": [
+          2496,
+          2492,
+          2504,
+          2523,
+          2499
+        ],
+        "advances": [
+          {
+            "at": 1610,
+            "time": "2026-10-12T05:10:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 1803,
+            "visibleSampleAt": 1865
+          },
+          {
+            "at": 4106,
+            "time": "2026-10-12T05:20:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 4904,
+            "visibleSampleAt": 4963
+          },
+          {
+            "at": 6598,
+            "time": "2026-10-12T05:30:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 6901,
+            "visibleSampleAt": 6961
+          },
+          {
+            "at": 9102,
+            "time": "2026-10-12T05:40:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 9294,
+            "visibleSampleAt": 9362
+          },
+          {
+            "at": 11625,
+            "time": "2026-10-12T05:50:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 11820,
+            "visibleSampleAt": 11878
+          },
+          {
+            "at": 14124,
+            "time": "2026-10-12T06:00:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 14314,
+            "visibleSampleAt": 14378
+          }
+        ],
+        "pixelChanges": [
+          {
+            "changedPixels": 36823,
+            "totalPixels": 68000,
+            "fraction": 0.541514705882353
+          },
+          {
+            "changedPixels": 3015,
+            "totalPixels": 68000,
+            "fraction": 0.04433823529411765
+          },
+          {
+            "changedPixels": 4347,
+            "totalPixels": 68000,
+            "fraction": 0.06392647058823529
+          },
+          {
+            "changedPixels": 4716,
+            "totalPixels": 68000,
+            "fraction": 0.06935294117647059
+          },
+          {
+            "changedPixels": 3527,
+            "totalPixels": 68000,
+            "fraction": 0.05186764705882353
+          },
+          {
+            "changedPixels": 5609,
+            "totalPixels": 68000,
+            "fraction": 0.08248529411764706
+          }
+        ],
+        "basemapControl": {
+          "changedPixels": 0,
+          "totalPixels": 68000,
+          "fraction": 0
+        },
+        "requests": 16,
+        "peakRolling60s": 16,
+        "uniqueTileURLs": 14,
+        "sameMapHost": true,
+        "sameGLCanvas": null,
+        "heapStart": 15200000,
+        "canvasCount": 0,
+        "rAF": {
+          "count": 1301,
+          "p95Ms": 16.700000000000728,
+          "excludedOver1000Ms": 0
+        },
+        "longTasks": [
+          58
+        ],
+        "heap": 15200000,
+        "errors": [],
+        "limitations": "Transport is not pixel-complete confirmation. Pixel differences demonstrate sampled visible imagery, not complete viewport coverage. Linux browsers; not physical iPhone."
+      }
+    }
+  ],
+  "tests": [
+    {
+      "report": "playwright-report",
+      "test": "375×667: all sheet states, light/dark, controls and map",
+      "status": "passed",
+      "retry": 0,
+      "errors": []
+    },
+    {
+      "report": "playwright-report",
+      "test": "390×844: all sheet states, light/dark, controls and map",
+      "status": "passed",
+      "retry": 0,
+      "errors": []
+    },
+    {
+      "report": "playwright-report",
+      "test": "430×932: all sheet states, light/dark, controls and map",
+      "status": "failed",
+      "retry": 0,
+      "errors": [
+        "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('temperature')\nExpected pattern: \u001b[32m/\\d+°C/\u001b[39m\nTimeout: 45000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" getByTestId('temperature') with timeout 45000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('temperature')\u001b[22m\n\n\n  64 |       await page.setViewportSize(size);\n  65 |       await page.goto(\"./\");\n> 66 |       await expect(page.getByTestId(\"temperature\")).toHaveText(/\\d+°C/, {\n     |                                                     ^\n  67 |         timeout: 45000,\n  68 |       });\n  69 |       await expect(page.locator('[data-map-status=\"ready\"]')).toBeVisible({\n    at /home/runner/work/Weather-watch/Weather-watch/tests/mobile-layout.spec.ts:66:53"
+      ]
+    },
+    {
+      "report": "playwright-report",
+      "test": "430×932: all sheet states, light/dark, controls and map",
+      "status": "passed",
+      "retry": 1,
+      "errors": []
+    },
+    {
+      "report": "playwright-report",
+      "test": "tablet layout retains map, forecast, geography and both themes",
+      "status": "passed",
+      "retry": 0,
+      "errors": []
+    },
+    {
+      "report": "playwright-report",
+      "test": "live map/weather and appearance/location integrity",
+      "status": "passed",
+      "retry": 0,
+      "errors": []
+    },
+    {
+      "report": "playwright-report",
+      "test": "mobile states and no horizontal overflow",
+      "status": "passed",
+      "retry": 0,
+      "errors": []
+    },
+    {
+      "report": "playwright-report",
+      "test": "subdirectory assets, real radar imagery and playback",
+      "status": "passed",
+      "retry": 0,
+      "errors": []
+    },
+    {
+      "report": "playwright-report",
+      "test": "provider connection failure preserves independent map",
+      "status": "passed",
+      "retry": 0,
+      "errors": []
+    },
+    {
+      "report": "playwright-report",
+      "test": "offline error is meaningful",
+      "status": "passed",
+      "retry": 0,
+      "errors": []
+    },
+    {
+      "report": "qa-playback-v03/browser-report",
+      "test": "real automatic Play/Pause, scrub, sheet, theme and budget on mobile",
+      "status": "passed",
+      "retry": 0,
+      "errors": []
+    },
+    {
+      "report": "qa-visual-v03/browser-report",
+      "test": "live integrated desktop/tablet light and dark screenshots",
+      "status": "passed",
+      "retry": 0,
+      "errors": []
+    },
+    {
+      "report": "qa-smooth-v03/browser-report",
+      "test": "real radar pixels, cadence, Pause, manual scrub and stable map",
+      "status": "passed",
+      "retry": 0,
+      "errors": []
+    },
+    {
+      "report": "qa-smooth-v03/browser-report",
+      "test": "real radar pixels, cadence, Pause, manual scrub and stable map",
+      "status": "failed",
+      "retry": 0,
+      "errors": [
+        "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('temperature')\nExpected pattern: \u001b[32m/\\d+°C/\u001b[39m\nTimeout: 45000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" getByTestId('temperature') with timeout 45000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('temperature')\u001b[22m\n\n\n  23 |   },{fallback:info.project.name==='leaflet-reduced'});\n  24 |   await page.goto('./');\n> 25 |   await expect(page.getByTestId('temperature')).toHaveText(/\\d+°C/,{timeout:45000});\n     |                                                 ^\n  26 |   const map=page.locator('.map-canvas');\n  27 |   await expect(map).toHaveAttribute('data-map-status','ready',{timeout:30000});\n  28 |   const engine=await map.getAttribute('data-map-engine');\n    at /home/runner/work/Weather-watch/Weather-watch/qa-smooth-v03/playback.spec.ts:25:49"
+      ]
+    },
+    {
+      "report": "qa-smooth-v03/browser-report",
+      "test": "real radar pixels, cadence, Pause, manual scrub and stable map",
+      "status": "failed",
+      "retry": 1,
+      "errors": [
+        "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('temperature')\nExpected pattern: \u001b[32m/\\d+°C/\u001b[39m\nTimeout: 45000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" getByTestId('temperature') with timeout 45000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('temperature')\u001b[22m\n\n\n  23 |   },{fallback:info.project.name==='leaflet-reduced'});\n  24 |   await page.goto('./');\n> 25 |   await expect(page.getByTestId('temperature')).toHaveText(/\\d+°C/,{timeout:45000});\n     |                                                 ^\n  26 |   const map=page.locator('.map-canvas');\n  27 |   await expect(map).toHaveAttribute('data-map-status','ready',{timeout:30000});\n  28 |   const engine=await map.getAttribute('data-map-engine');\n    at /home/runner/work/Weather-watch/Weather-watch/qa-smooth-v03/playback.spec.ts:25:49"
+      ]
+    },
+    {
+      "report": "qa-smooth-v03/browser-report",
+      "test": "real radar pixels, cadence, Pause, manual scrub and stable map",
+      "status": "passed",
+      "retry": 0,
+      "errors": []
+    }
+  ]
+}

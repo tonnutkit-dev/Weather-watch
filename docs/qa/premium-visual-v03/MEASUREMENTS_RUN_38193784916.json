@@ -1,0 +1,2137 @@
+{
+  "run": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38193784916",
+  "candidate": "a695711dab58caca660657ab83564b3a59f9fccb",
+  "note": "Run failed on short-screen gesture; live weather failures retained in artifact. These completed subtests are measured evidence, not a whole-run PASS.",
+  "records": [
+    {
+      "report": "playwright-report",
+      "test": "375×667: all sheet states, light/dark, controls and map",
+      "status": "failed",
+      "attachment": "mobile-375-geometry",
+      "data": [
+        {
+          "mode": "light",
+          "state": "collapsed",
+          "viewport": {
+            "width": 375,
+            "height": 667
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 240,
+            "width": 355,
+            "height": 427,
+            "top": 240,
+            "right": 365,
+            "bottom": 667,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 519,
+            "width": 375,
+            "height": 148,
+            "top": 519,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 258,
+            "y": 249,
+            "width": 98,
+            "height": 52,
+            "top": 249,
+            "right": 356,
+            "bottom": 301,
+            "left": 258
+          },
+          "radar": {
+            "x": 19,
+            "y": 402,
+            "width": 337,
+            "height": 76,
+            "top": 402,
+            "right": 356,
+            "bottom": 478,
+            "left": 19
+          },
+          "attribution": {
+            "x": 11,
+            "y": 482,
+            "width": 353,
+            "height": 32,
+            "top": 482,
+            "right": 364,
+            "bottom": 514,
+            "left": 11
+          },
+          "temperature": {
+            "x": 22,
+            "y": 128,
+            "width": 149,
+            "height": 70,
+            "top": 128,
+            "right": 171,
+            "bottom": 198,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 201,
+            "width": 149,
+            "height": 19.59375,
+            "top": 201,
+            "right": 171,
+            "bottom": 220.59375,
+            "left": 22
+          },
+          "summary": {
+            "x": 21,
+            "y": 598,
+            "width": 333,
+            "height": 20.796875,
+            "top": 598,
+            "right": 354,
+            "bottom": 618.796875,
+            "left": 21
+          },
+          "slider": {
+            "x": 88,
+            "y": 427,
+            "width": 199,
+            "height": 44,
+            "top": 427,
+            "right": 287,
+            "bottom": 471,
+            "left": 88
+          },
+          "scrollLeft": 0
+        },
+        {
+          "mode": "light",
+          "state": "half",
+          "viewport": {
+            "width": 375,
+            "height": 667
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 240,
+            "width": 355,
+            "height": 427,
+            "top": 240,
+            "right": 365,
+            "bottom": 667,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 390,
+            "width": 375,
+            "height": 277,
+            "top": 390,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 258,
+            "y": 249,
+            "width": 98,
+            "height": 52,
+            "top": 249,
+            "right": 356,
+            "bottom": 301,
+            "left": 258
+          },
+          "radar": null,
+          "attribution": {
+            "x": 11,
+            "y": 353,
+            "width": 353,
+            "height": 32,
+            "top": 353,
+            "right": 364,
+            "bottom": 385,
+            "left": 11
+          },
+          "temperature": {
+            "x": 22,
+            "y": 128,
+            "width": 149,
+            "height": 70,
+            "top": 128,
+            "right": 171,
+            "bottom": 198,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 201,
+            "width": 149,
+            "height": 19.59375,
+            "top": 201,
+            "right": 171,
+            "bottom": 220.59375,
+            "left": 22
+          },
+          "summary": null,
+          "slider": null,
+          "scrollLeft": 0
+        },
+        {
+          "mode": "light",
+          "state": "expanded",
+          "viewport": {
+            "width": 375,
+            "height": 667
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 240,
+            "width": 355,
+            "height": 427,
+            "top": 240,
+            "right": 365,
+            "bottom": 667,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 370,
+            "width": 375,
+            "height": 297,
+            "top": 370,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 258,
+            "y": 249,
+            "width": 98,
+            "height": 52,
+            "top": 249,
+            "right": 356,
+            "bottom": 301,
+            "left": 258
+          },
+          "radar": null,
+          "attribution": {
+            "x": 11,
+            "y": 333,
+            "width": 353,
+            "height": 32,
+            "top": 333,
+            "right": 364,
+            "bottom": 365,
+            "left": 11
+          },
+          "temperature": {
+            "x": 22,
+            "y": 128,
+            "width": 149,
+            "height": 70,
+            "top": 128,
+            "right": 171,
+            "bottom": 198,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 201,
+            "width": 149,
+            "height": 19.59375,
+            "top": 201,
+            "right": 171,
+            "bottom": 220.59375,
+            "left": 22
+          },
+          "summary": null,
+          "slider": null,
+          "scrollLeft": 0
+        },
+        {
+          "mode": "dark",
+          "state": "collapsed",
+          "viewport": {
+            "width": 375,
+            "height": 667
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 240,
+            "width": 355,
+            "height": 427,
+            "top": 240,
+            "right": 365,
+            "bottom": 667,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 519,
+            "width": 375,
+            "height": 148,
+            "top": 519,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 258,
+            "y": 249,
+            "width": 98,
+            "height": 52,
+            "top": 249,
+            "right": 356,
+            "bottom": 301,
+            "left": 258
+          },
+          "radar": {
+            "x": 19,
+            "y": 402,
+            "width": 337,
+            "height": 76,
+            "top": 402,
+            "right": 356,
+            "bottom": 478,
+            "left": 19
+          },
+          "attribution": {
+            "x": 11,
+            "y": 482,
+            "width": 353,
+            "height": 32,
+            "top": 482,
+            "right": 364,
+            "bottom": 514,
+            "left": 11
+          },
+          "temperature": {
+            "x": 22,
+            "y": 128,
+            "width": 149,
+            "height": 70,
+            "top": 128,
+            "right": 171,
+            "bottom": 198,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 201,
+            "width": 149,
+            "height": 19.59375,
+            "top": 201,
+            "right": 171,
+            "bottom": 220.59375,
+            "left": 22
+          },
+          "summary": {
+            "x": 21,
+            "y": 598,
+            "width": 333,
+            "height": 20.796875,
+            "top": 598,
+            "right": 354,
+            "bottom": 618.796875,
+            "left": 21
+          },
+          "slider": {
+            "x": 88,
+            "y": 427,
+            "width": 199,
+            "height": 44,
+            "top": 427,
+            "right": 287,
+            "bottom": 471,
+            "left": 88
+          },
+          "scrollLeft": 0
+        },
+        {
+          "mode": "dark",
+          "state": "half",
+          "viewport": {
+            "width": 375,
+            "height": 667
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 240,
+            "width": 355,
+            "height": 427,
+            "top": 240,
+            "right": 365,
+            "bottom": 667,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 390,
+            "width": 375,
+            "height": 277,
+            "top": 390,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 258,
+            "y": 249,
+            "width": 98,
+            "height": 52,
+            "top": 249,
+            "right": 356,
+            "bottom": 301,
+            "left": 258
+          },
+          "radar": null,
+          "attribution": {
+            "x": 11,
+            "y": 353,
+            "width": 353,
+            "height": 32,
+            "top": 353,
+            "right": 364,
+            "bottom": 385,
+            "left": 11
+          },
+          "temperature": {
+            "x": 22,
+            "y": 128,
+            "width": 149,
+            "height": 70,
+            "top": 128,
+            "right": 171,
+            "bottom": 198,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 201,
+            "width": 149,
+            "height": 19.59375,
+            "top": 201,
+            "right": 171,
+            "bottom": 220.59375,
+            "left": 22
+          },
+          "summary": null,
+          "slider": null,
+          "scrollLeft": 0
+        },
+        {
+          "mode": "dark",
+          "state": "expanded",
+          "viewport": {
+            "width": 375,
+            "height": 667
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 240,
+            "width": 355,
+            "height": 427,
+            "top": 240,
+            "right": 365,
+            "bottom": 667,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 370,
+            "width": 375,
+            "height": 297,
+            "top": 370,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 258,
+            "y": 249,
+            "width": 98,
+            "height": 52,
+            "top": 249,
+            "right": 356,
+            "bottom": 301,
+            "left": 258
+          },
+          "radar": null,
+          "attribution": {
+            "x": 11,
+            "y": 333,
+            "width": 353,
+            "height": 32,
+            "top": 333,
+            "right": 364,
+            "bottom": 365,
+            "left": 11
+          },
+          "temperature": {
+            "x": 22,
+            "y": 128,
+            "width": 149,
+            "height": 70,
+            "top": 128,
+            "right": 171,
+            "bottom": 198,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 201,
+            "width": 149,
+            "height": 19.59375,
+            "top": 201,
+            "right": 171,
+            "bottom": 220.59375,
+            "left": 22
+          },
+          "summary": null,
+          "slider": null,
+          "scrollLeft": 0
+        }
+      ]
+    },
+    {
+      "report": "playwright-report",
+      "test": "390×844: all sheet states, light/dark, controls and map",
+      "status": "passed",
+      "attachment": "mobile-390-geometry",
+      "data": [
+        {
+          "mode": "light",
+          "state": "collapsed",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 266,
+            "width": 370,
+            "height": 578,
+            "top": 266,
+            "right": 380,
+            "bottom": 844,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 696,
+            "width": 390,
+            "height": 148,
+            "top": 696,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 269,
+            "y": 279,
+            "width": 98,
+            "height": 52,
+            "top": 279,
+            "right": 367,
+            "bottom": 331,
+            "left": 269
+          },
+          "radar": {
+            "x": 23,
+            "y": 579,
+            "width": 344,
+            "height": 76,
+            "top": 579,
+            "right": 367,
+            "bottom": 655,
+            "left": 23
+          },
+          "attribution": {
+            "x": 11,
+            "y": 659,
+            "width": 368,
+            "height": 32,
+            "top": 659,
+            "right": 379,
+            "bottom": 691,
+            "left": 11
+          },
+          "temperature": {
+            "x": 22,
+            "y": 133.6875,
+            "width": 149,
+            "height": 83,
+            "top": 133.6875,
+            "right": 171,
+            "bottom": 216.6875,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 219.6875,
+            "width": 149,
+            "height": 19.59375,
+            "top": 219.6875,
+            "right": 171,
+            "bottom": 239.28125,
+            "left": 22
+          },
+          "summary": {
+            "x": 21,
+            "y": 775,
+            "width": 348,
+            "height": 20.796875,
+            "top": 775,
+            "right": 369,
+            "bottom": 795.796875,
+            "left": 21
+          },
+          "slider": {
+            "x": 92,
+            "y": 604,
+            "width": 206,
+            "height": 44,
+            "top": 604,
+            "right": 298,
+            "bottom": 648,
+            "left": 92
+          },
+          "scrollLeft": 0
+        },
+        {
+          "mode": "light",
+          "state": "half",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 266,
+            "width": 370,
+            "height": 578,
+            "top": 266,
+            "right": 380,
+            "bottom": 844,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 481.09375,
+            "width": 390,
+            "height": 362.90625,
+            "top": 481.09375,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 269,
+            "y": 279,
+            "width": 98,
+            "height": 52,
+            "top": 279,
+            "right": 367,
+            "bottom": 331,
+            "left": 269
+          },
+          "radar": null,
+          "attribution": {
+            "x": 11,
+            "y": 444.09375,
+            "width": 368,
+            "height": 32,
+            "top": 444.09375,
+            "right": 379,
+            "bottom": 476.09375,
+            "left": 11
+          },
+          "temperature": {
+            "x": 22,
+            "y": 133.6875,
+            "width": 149,
+            "height": 83,
+            "top": 133.6875,
+            "right": 171,
+            "bottom": 216.6875,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 219.6875,
+            "width": 149,
+            "height": 19.59375,
+            "top": 219.6875,
+            "right": 171,
+            "bottom": 239.28125,
+            "left": 22
+          },
+          "summary": null,
+          "slider": null,
+          "scrollLeft": 0
+        },
+        {
+          "mode": "light",
+          "state": "expanded",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 266,
+            "width": 370,
+            "height": 578,
+            "top": 266,
+            "right": 380,
+            "bottom": 844,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 396,
+            "width": 390,
+            "height": 448,
+            "top": 396,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 269,
+            "y": 279,
+            "width": 98,
+            "height": 52,
+            "top": 279,
+            "right": 367,
+            "bottom": 331,
+            "left": 269
+          },
+          "radar": null,
+          "attribution": {
+            "x": 11,
+            "y": 359,
+            "width": 368,
+            "height": 32,
+            "top": 359,
+            "right": 379,
+            "bottom": 391,
+            "left": 11
+          },
+          "temperature": {
+            "x": 22,
+            "y": 133.6875,
+            "width": 149,
+            "height": 83,
+            "top": 133.6875,
+            "right": 171,
+            "bottom": 216.6875,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 219.6875,
+            "width": 149,
+            "height": 19.59375,
+            "top": 219.6875,
+            "right": 171,
+            "bottom": 239.28125,
+            "left": 22
+          },
+          "summary": null,
+          "slider": null,
+          "scrollLeft": 0
+        },
+        {
+          "mode": "dark",
+          "state": "collapsed",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 266,
+            "width": 370,
+            "height": 578,
+            "top": 266,
+            "right": 380,
+            "bottom": 844,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 696,
+            "width": 390,
+            "height": 148,
+            "top": 696,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 269,
+            "y": 279,
+            "width": 98,
+            "height": 52,
+            "top": 279,
+            "right": 367,
+            "bottom": 331,
+            "left": 269
+          },
+          "radar": {
+            "x": 23,
+            "y": 579,
+            "width": 344,
+            "height": 76,
+            "top": 579,
+            "right": 367,
+            "bottom": 655,
+            "left": 23
+          },
+          "attribution": {
+            "x": 11,
+            "y": 659,
+            "width": 368,
+            "height": 32,
+            "top": 659,
+            "right": 379,
+            "bottom": 691,
+            "left": 11
+          },
+          "temperature": {
+            "x": 22,
+            "y": 133.6875,
+            "width": 149,
+            "height": 83,
+            "top": 133.6875,
+            "right": 171,
+            "bottom": 216.6875,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 219.6875,
+            "width": 149,
+            "height": 19.59375,
+            "top": 219.6875,
+            "right": 171,
+            "bottom": 239.28125,
+            "left": 22
+          },
+          "summary": {
+            "x": 21,
+            "y": 775,
+            "width": 348,
+            "height": 20.796875,
+            "top": 775,
+            "right": 369,
+            "bottom": 795.796875,
+            "left": 21
+          },
+          "slider": {
+            "x": 92,
+            "y": 604,
+            "width": 206,
+            "height": 44,
+            "top": 604,
+            "right": 298,
+            "bottom": 648,
+            "left": 92
+          },
+          "scrollLeft": 0
+        },
+        {
+          "mode": "dark",
+          "state": "half",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 266,
+            "width": 370,
+            "height": 578,
+            "top": 266,
+            "right": 380,
+            "bottom": 844,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 481.09375,
+            "width": 390,
+            "height": 362.90625,
+            "top": 481.09375,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 269,
+            "y": 279,
+            "width": 98,
+            "height": 52,
+            "top": 279,
+            "right": 367,
+            "bottom": 331,
+            "left": 269
+          },
+          "radar": null,
+          "attribution": {
+            "x": 11,
+            "y": 444.09375,
+            "width": 368,
+            "height": 32,
+            "top": 444.09375,
+            "right": 379,
+            "bottom": 476.09375,
+            "left": 11
+          },
+          "temperature": {
+            "x": 22,
+            "y": 133.6875,
+            "width": 149,
+            "height": 83,
+            "top": 133.6875,
+            "right": 171,
+            "bottom": 216.6875,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 219.6875,
+            "width": 149,
+            "height": 19.59375,
+            "top": 219.6875,
+            "right": 171,
+            "bottom": 239.28125,
+            "left": 22
+          },
+          "summary": null,
+          "slider": null,
+          "scrollLeft": 0
+        },
+        {
+          "mode": "dark",
+          "state": "expanded",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 266,
+            "width": 370,
+            "height": 578,
+            "top": 266,
+            "right": 380,
+            "bottom": 844,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 396,
+            "width": 390,
+            "height": 448,
+            "top": 396,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 269,
+            "y": 279,
+            "width": 98,
+            "height": 52,
+            "top": 279,
+            "right": 367,
+            "bottom": 331,
+            "left": 269
+          },
+          "radar": null,
+          "attribution": {
+            "x": 11,
+            "y": 359,
+            "width": 368,
+            "height": 32,
+            "top": 359,
+            "right": 379,
+            "bottom": 391,
+            "left": 11
+          },
+          "temperature": {
+            "x": 22,
+            "y": 133.6875,
+            "width": 149,
+            "height": 83,
+            "top": 133.6875,
+            "right": 171,
+            "bottom": 216.6875,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 219.6875,
+            "width": 149,
+            "height": 19.59375,
+            "top": 219.6875,
+            "right": 171,
+            "bottom": 239.28125,
+            "left": 22
+          },
+          "summary": null,
+          "slider": null,
+          "scrollLeft": 0
+        }
+      ]
+    },
+    {
+      "report": "playwright-report",
+      "test": "430×932: all sheet states, light/dark, controls and map",
+      "status": "passed",
+      "attachment": "mobile-430-geometry",
+      "data": [
+        {
+          "mode": "light",
+          "state": "collapsed",
+          "viewport": {
+            "width": 430,
+            "height": 932
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 266,
+            "width": 410,
+            "height": 666,
+            "top": 266,
+            "right": 420,
+            "bottom": 932,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 784,
+            "width": 430,
+            "height": 148,
+            "top": 784,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 309,
+            "y": 279,
+            "width": 98,
+            "height": 52,
+            "top": 279,
+            "right": 407,
+            "bottom": 331,
+            "left": 309
+          },
+          "radar": {
+            "x": 23,
+            "y": 667,
+            "width": 384,
+            "height": 76,
+            "top": 667,
+            "right": 407,
+            "bottom": 743,
+            "left": 23
+          },
+          "attribution": {
+            "x": 11.75,
+            "y": 763,
+            "width": 407.25,
+            "height": 16,
+            "top": 763,
+            "right": 419,
+            "bottom": 779,
+            "left": 11.75
+          },
+          "temperature": {
+            "x": 22,
+            "y": 133.6875,
+            "width": 149,
+            "height": 83,
+            "top": 133.6875,
+            "right": 171,
+            "bottom": 216.6875,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 219.6875,
+            "width": 149,
+            "height": 19.59375,
+            "top": 219.6875,
+            "right": 171,
+            "bottom": 239.28125,
+            "left": 22
+          },
+          "summary": {
+            "x": 21,
+            "y": 863,
+            "width": 388,
+            "height": 20.796875,
+            "top": 863,
+            "right": 409,
+            "bottom": 883.796875,
+            "left": 21
+          },
+          "slider": {
+            "x": 92,
+            "y": 692,
+            "width": 246,
+            "height": 44,
+            "top": 692,
+            "right": 338,
+            "bottom": 736,
+            "left": 92
+          },
+          "scrollLeft": 0
+        },
+        {
+          "mode": "light",
+          "state": "half",
+          "viewport": {
+            "width": 430,
+            "height": 932
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 266,
+            "width": 410,
+            "height": 666,
+            "top": 266,
+            "right": 420,
+            "bottom": 932,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 531.25,
+            "width": 430,
+            "height": 400.75,
+            "top": 531.25,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 309,
+            "y": 279,
+            "width": 98,
+            "height": 52,
+            "top": 279,
+            "right": 407,
+            "bottom": 331,
+            "left": 309
+          },
+          "radar": null,
+          "attribution": {
+            "x": 11.75,
+            "y": 510.25,
+            "width": 407.25,
+            "height": 16,
+            "top": 510.25,
+            "right": 419,
+            "bottom": 526.25,
+            "left": 11.75
+          },
+          "temperature": {
+            "x": 22,
+            "y": 133.6875,
+            "width": 149,
+            "height": 83,
+            "top": 133.6875,
+            "right": 171,
+            "bottom": 216.6875,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 219.6875,
+            "width": 149,
+            "height": 19.59375,
+            "top": 219.6875,
+            "right": 171,
+            "bottom": 239.28125,
+            "left": 22
+          },
+          "summary": null,
+          "slider": null,
+          "scrollLeft": 0
+        },
+        {
+          "mode": "light",
+          "state": "expanded",
+          "viewport": {
+            "width": 430,
+            "height": 932
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 266,
+            "width": 410,
+            "height": 666,
+            "top": 266,
+            "right": 420,
+            "bottom": 932,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 396,
+            "width": 430,
+            "height": 536,
+            "top": 396,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 309,
+            "y": 279,
+            "width": 98,
+            "height": 52,
+            "top": 279,
+            "right": 407,
+            "bottom": 331,
+            "left": 309
+          },
+          "radar": null,
+          "attribution": {
+            "x": 11.75,
+            "y": 375,
+            "width": 407.25,
+            "height": 16,
+            "top": 375,
+            "right": 419,
+            "bottom": 391,
+            "left": 11.75
+          },
+          "temperature": {
+            "x": 22,
+            "y": 133.6875,
+            "width": 149,
+            "height": 83,
+            "top": 133.6875,
+            "right": 171,
+            "bottom": 216.6875,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 219.6875,
+            "width": 149,
+            "height": 19.59375,
+            "top": 219.6875,
+            "right": 171,
+            "bottom": 239.28125,
+            "left": 22
+          },
+          "summary": null,
+          "slider": null,
+          "scrollLeft": 0
+        },
+        {
+          "mode": "dark",
+          "state": "collapsed",
+          "viewport": {
+            "width": 430,
+            "height": 932
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 266,
+            "width": 410,
+            "height": 666,
+            "top": 266,
+            "right": 420,
+            "bottom": 932,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 784,
+            "width": 430,
+            "height": 148,
+            "top": 784,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 309,
+            "y": 279,
+            "width": 98,
+            "height": 52,
+            "top": 279,
+            "right": 407,
+            "bottom": 331,
+            "left": 309
+          },
+          "radar": {
+            "x": 23,
+            "y": 667,
+            "width": 384,
+            "height": 76,
+            "top": 667,
+            "right": 407,
+            "bottom": 743,
+            "left": 23
+          },
+          "attribution": {
+            "x": 11.75,
+            "y": 763,
+            "width": 407.25,
+            "height": 16,
+            "top": 763,
+            "right": 419,
+            "bottom": 779,
+            "left": 11.75
+          },
+          "temperature": {
+            "x": 22,
+            "y": 133.6875,
+            "width": 149,
+            "height": 83,
+            "top": 133.6875,
+            "right": 171,
+            "bottom": 216.6875,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 219.6875,
+            "width": 149,
+            "height": 19.59375,
+            "top": 219.6875,
+            "right": 171,
+            "bottom": 239.28125,
+            "left": 22
+          },
+          "summary": {
+            "x": 21,
+            "y": 863,
+            "width": 388,
+            "height": 20.796875,
+            "top": 863,
+            "right": 409,
+            "bottom": 883.796875,
+            "left": 21
+          },
+          "slider": {
+            "x": 92,
+            "y": 692,
+            "width": 246,
+            "height": 44,
+            "top": 692,
+            "right": 338,
+            "bottom": 736,
+            "left": 92
+          },
+          "scrollLeft": 0
+        },
+        {
+          "mode": "dark",
+          "state": "half",
+          "viewport": {
+            "width": 430,
+            "height": 932
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 266,
+            "width": 410,
+            "height": 666,
+            "top": 266,
+            "right": 420,
+            "bottom": 932,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 531.25,
+            "width": 430,
+            "height": 400.75,
+            "top": 531.25,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 309,
+            "y": 279,
+            "width": 98,
+            "height": 52,
+            "top": 279,
+            "right": 407,
+            "bottom": 331,
+            "left": 309
+          },
+          "radar": null,
+          "attribution": {
+            "x": 11.75,
+            "y": 510.25,
+            "width": 407.25,
+            "height": 16,
+            "top": 510.25,
+            "right": 419,
+            "bottom": 526.25,
+            "left": 11.75
+          },
+          "temperature": {
+            "x": 22,
+            "y": 133.6875,
+            "width": 149,
+            "height": 83,
+            "top": 133.6875,
+            "right": 171,
+            "bottom": 216.6875,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 219.6875,
+            "width": 149,
+            "height": 19.59375,
+            "top": 219.6875,
+            "right": 171,
+            "bottom": 239.28125,
+            "left": 22
+          },
+          "summary": null,
+          "slider": null,
+          "scrollLeft": 0
+        },
+        {
+          "mode": "dark",
+          "state": "expanded",
+          "viewport": {
+            "width": 430,
+            "height": 932
+          },
+          "overflow": false,
+          "map": {
+            "x": 10,
+            "y": 266,
+            "width": 410,
+            "height": 666,
+            "top": 266,
+            "right": 420,
+            "bottom": 932,
+            "left": 10
+          },
+          "sheet": {
+            "x": 0,
+            "y": 396,
+            "width": 430,
+            "height": 536,
+            "top": 396,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "toolbar": {
+            "x": 309,
+            "y": 279,
+            "width": 98,
+            "height": 52,
+            "top": 279,
+            "right": 407,
+            "bottom": 331,
+            "left": 309
+          },
+          "radar": null,
+          "attribution": {
+            "x": 11.75,
+            "y": 375,
+            "width": 407.25,
+            "height": 16,
+            "top": 375,
+            "right": 419,
+            "bottom": 391,
+            "left": 11.75
+          },
+          "temperature": {
+            "x": 22,
+            "y": 133.6875,
+            "width": 149,
+            "height": 83,
+            "top": 133.6875,
+            "right": 171,
+            "bottom": 216.6875,
+            "left": 22
+          },
+          "condition": {
+            "x": 22,
+            "y": 219.6875,
+            "width": 149,
+            "height": 19.59375,
+            "top": 219.6875,
+            "right": 171,
+            "bottom": 239.28125,
+            "left": 22
+          },
+          "summary": null,
+          "slider": null,
+          "scrollLeft": 0
+        }
+      ]
+    },
+    {
+      "report": "baseline-visual-report",
+      "test": "matched UI benchmark 1",
+      "status": "passed",
+      "attachment": "matched-ui-metrics",
+      "data": {
+        "results": [
+          {
+            "phase": "baseline",
+            "cache": "fresh-session",
+            "run": 0,
+            "fcp": 100,
+            "lcp": 148,
+            "cls": 0.0007390276746201303,
+            "long": [],
+            "active": false,
+            "rafP95": 16.799999999999955,
+            "heap": 18200000,
+            "nodes": 827,
+            "rafSampleCount": 126,
+            "resourceEntryCount": 21
+          },
+          {
+            "phase": "baseline",
+            "cache": "returning-session",
+            "run": 0,
+            "fcp": 60,
+            "lcp": 100,
+            "cls": 0.0010601368424739347,
+            "long": [],
+            "active": false,
+            "rafP95": 16.700000000000273,
+            "heap": 18200000,
+            "nodes": 827,
+            "rafSampleCount": 134,
+            "resourceEntryCount": 20
+          }
+        ],
+        "errors": [],
+        "scope": "Linux Chromium UI-only benchmark, recorded weather/AQ, no radar, fixed LAB basemap. Routing disables HTTP cache: returning-session is not an HTTP warm-cache claim. No iPhone/GPU claim."
+      }
+    },
+    {
+      "report": "baseline-visual-report",
+      "test": "matched UI benchmark 2",
+      "status": "passed",
+      "attachment": "matched-ui-metrics",
+      "data": {
+        "results": [
+          {
+            "phase": "baseline",
+            "cache": "fresh-session",
+            "run": 1,
+            "fcp": 100,
+            "lcp": 184,
+            "cls": 0.0010601368424739347,
+            "long": [],
+            "active": false,
+            "rafP95": 16.700000000000273,
+            "heap": 20500000,
+            "nodes": 827,
+            "rafSampleCount": 124,
+            "resourceEntryCount": 21
+          },
+          {
+            "phase": "baseline",
+            "cache": "returning-session",
+            "run": 1,
+            "fcp": 68,
+            "lcp": 124,
+            "cls": 0.0010601368424739347,
+            "long": [],
+            "active": false,
+            "rafP95": 16.700000000000273,
+            "heap": 20500000,
+            "nodes": 827,
+            "rafSampleCount": 124,
+            "resourceEntryCount": 20
+          }
+        ],
+        "errors": [],
+        "scope": "Linux Chromium UI-only benchmark, recorded weather/AQ, no radar, fixed LAB basemap. Routing disables HTTP cache: returning-session is not an HTTP warm-cache claim. No iPhone/GPU claim."
+      }
+    },
+    {
+      "report": "baseline-visual-report",
+      "test": "matched UI benchmark 3",
+      "status": "passed",
+      "attachment": "matched-ui-metrics",
+      "data": {
+        "results": [
+          {
+            "phase": "baseline",
+            "cache": "fresh-session",
+            "run": 2,
+            "fcp": 84,
+            "lcp": 132,
+            "cls": 0.0001777282681062639,
+            "long": [],
+            "active": false,
+            "rafP95": 16.700000000000273,
+            "heap": 15200000,
+            "nodes": 827,
+            "rafSampleCount": 126,
+            "resourceEntryCount": 21
+          },
+          {
+            "phase": "baseline",
+            "cache": "returning-session",
+            "run": 2,
+            "fcp": 64,
+            "lcp": 108,
+            "cls": 0.0010601368424739347,
+            "long": [],
+            "active": false,
+            "rafP95": 16.700000000000273,
+            "heap": 15200000,
+            "nodes": 827,
+            "rafSampleCount": 124,
+            "resourceEntryCount": 20
+          }
+        ],
+        "errors": [],
+        "scope": "Linux Chromium UI-only benchmark, recorded weather/AQ, no radar, fixed LAB basemap. Routing disables HTTP cache: returning-session is not an HTTP warm-cache claim. No iPhone/GPU claim."
+      }
+    },
+    {
+      "report": "qa-playback-v03/browser-report",
+      "test": "real automatic Play/Pause, scrub, sheet, theme and budget on mobile",
+      "status": "passed",
+      "attachment": "playback-live-measurements",
+      "data": {
+        "baseURL": "http://127.0.0.1:4173/Weather-watch/",
+        "firstSelectedFrameMs": 1557,
+        "requestCount": 14,
+        "peakRolling60s": 14,
+        "frameIntervals": {
+          "count": 1599,
+          "p95Ms": 16.799999999999272,
+          "excludedOver1000ms": 0
+        },
+        "sameCanvas": true,
+        "errors": [],
+        "note": "Transport readiness is qualified only; selected time is not confirmed pixels. Linux Chromium emulation, not physical iPhone."
+      }
+    },
+    {
+      "report": "qa-smooth-v03/browser-report",
+      "test": "real radar pixels, cadence, Pause, manual scrub and stable map",
+      "status": "passed",
+      "attachment": "smooth-playback-measurements",
+      "data": {
+        "phase": "candidate",
+        "browser": "chromium",
+        "baseURL": "http://127.0.0.1:4173/Weather-watch/",
+        "engine": "maplibre",
+        "firstAdvanceMs": 1604,
+        "firstVisibleSampleMs": 1932,
+        "intervalsMs": [
+          2503,
+          2517,
+          2509,
+          2491,
+          2499
+        ],
+        "advances": [
+          {
+            "at": 1604,
+            "time": "2026-10-12T00:00:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 1893,
+            "visibleSampleAt": 1932
+          },
+          {
+            "at": 4107,
+            "time": "2026-10-12T00:10:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 4894,
+            "visibleSampleAt": 4932
+          },
+          {
+            "at": 6624,
+            "time": "2026-10-12T00:20:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 6910,
+            "visibleSampleAt": 6949
+          },
+          {
+            "at": 9133,
+            "time": "2026-10-12T00:30:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 9330,
+            "visibleSampleAt": 9365
+          },
+          {
+            "at": 11624,
+            "time": "2026-10-12T00:40:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 11812,
+            "visibleSampleAt": 11848
+          },
+          {
+            "at": 14123,
+            "time": "2026-10-12T00:50:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 14305,
+            "visibleSampleAt": 14349
+          }
+        ],
+        "pixelChanges": [
+          {
+            "changedPixels": 8244,
+            "totalPixels": 68000,
+            "fraction": 0.12123529411764705
+          },
+          {
+            "changedPixels": 5189,
+            "totalPixels": 68000,
+            "fraction": 0.07630882352941176
+          },
+          {
+            "changedPixels": 3111,
+            "totalPixels": 68000,
+            "fraction": 0.04575
+          },
+          {
+            "changedPixels": 5197,
+            "totalPixels": 68000,
+            "fraction": 0.07642647058823529
+          },
+          {
+            "changedPixels": 5213,
+            "totalPixels": 68000,
+            "fraction": 0.07666176470588236
+          },
+          {
+            "changedPixels": 2293,
+            "totalPixels": 68000,
+            "fraction": 0.03372058823529412
+          }
+        ],
+        "basemapControl": {
+          "changedPixels": 0,
+          "totalPixels": 68000,
+          "fraction": 0
+        },
+        "requests": 28,
+        "peakRolling60s": 28,
+        "uniqueTileURLs": 28,
+        "sameMapHost": true,
+        "sameGLCanvas": true,
+        "heapStart": 29400000,
+        "canvasCount": 1,
+        "rAF": {
+          "count": 1279,
+          "p95Ms": 16.700000000000728,
+          "excludedOver1000Ms": 0
+        },
+        "longTasks": [
+          101,
+          159
+        ],
+        "heap": 29400000,
+        "errors": [],
+        "limitations": "Transport is not pixel-complete confirmation. Pixel differences demonstrate sampled visible imagery, not complete viewport coverage. Linux browsers; not physical iPhone."
+      }
+    },
+    {
+      "report": "qa-smooth-v03/browser-report",
+      "test": "real radar pixels, cadence, Pause, manual scrub and stable map",
+      "status": "passed",
+      "attachment": "smooth-playback-measurements",
+      "data": {
+        "phase": "candidate",
+        "browser": "webkit",
+        "baseURL": "http://127.0.0.1:4173/Weather-watch/",
+        "engine": "maplibre",
+        "firstAdvanceMs": 1592,
+        "firstVisibleSampleMs": 1910,
+        "intervalsMs": [
+          2503,
+          2503,
+          2529,
+          2518,
+          2509
+        ],
+        "advances": [
+          {
+            "at": 1592,
+            "time": "2026-10-12T00:00:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 1889,
+            "visibleSampleAt": 1910
+          },
+          {
+            "at": 4095,
+            "time": "2026-10-12T00:10:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 4280,
+            "visibleSampleAt": 4306
+          },
+          {
+            "at": 6598,
+            "time": "2026-10-12T00:20:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 6781,
+            "visibleSampleAt": 6803
+          },
+          {
+            "at": 9127,
+            "time": "2026-10-12T00:30:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 9311,
+            "visibleSampleAt": 9331
+          },
+          {
+            "at": 11645,
+            "time": "2026-10-12T00:40:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 11827,
+            "visibleSampleAt": 11850
+          },
+          {
+            "at": 14154,
+            "time": "2026-10-12T00:50:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 14341,
+            "visibleSampleAt": 14367
+          }
+        ],
+        "pixelChanges": [
+          {
+            "changedPixels": 7134,
+            "totalPixels": 68000,
+            "fraction": 0.10491176470588236
+          },
+          {
+            "changedPixels": 4054,
+            "totalPixels": 68000,
+            "fraction": 0.05961764705882353
+          },
+          {
+            "changedPixels": 3775,
+            "totalPixels": 68000,
+            "fraction": 0.05551470588235294
+          },
+          {
+            "changedPixels": 1654,
+            "totalPixels": 68000,
+            "fraction": 0.024323529411764706
+          },
+          {
+            "changedPixels": 6327,
+            "totalPixels": 68000,
+            "fraction": 0.09304411764705882
+          },
+          {
+            "changedPixels": 2333,
+            "totalPixels": 68000,
+            "fraction": 0.03430882352941177
+          }
+        ],
+        "basemapControl": {
+          "changedPixels": 0,
+          "totalPixels": 68000,
+          "fraction": 0
+        },
+        "requests": 28,
+        "peakRolling60s": 28,
+        "uniqueTileURLs": 28,
+        "sameMapHost": true,
+        "sameGLCanvas": true,
+        "heapStart": null,
+        "canvasCount": 1,
+        "rAF": {
+          "count": 1326,
+          "p95Ms": 17,
+          "excludedOver1000Ms": 1
+        },
+        "longTasks": [],
+        "heap": null,
+        "errors": [],
+        "limitations": "Transport is not pixel-complete confirmation. Pixel differences demonstrate sampled visible imagery, not complete viewport coverage. Linux browsers; not physical iPhone."
+      }
+    },
+    {
+      "report": "qa-smooth-v03/browser-report",
+      "test": "real radar pixels, cadence, Pause, manual scrub and stable map",
+      "status": "passed",
+      "attachment": "smooth-playback-measurements",
+      "data": {
+        "phase": "candidate",
+        "browser": "leaflet-reduced",
+        "baseURL": "http://127.0.0.1:4173/Weather-watch/",
+        "engine": "leaflet-fallback",
+        "firstAdvanceMs": 1582,
+        "firstVisibleSampleMs": 1817,
+        "intervalsMs": [
+          2496,
+          2516,
+          2482,
+          2516,
+          2500
+        ],
+        "advances": [
+          {
+            "at": 1582,
+            "time": "2026-10-12T00:00:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 1767,
+            "visibleSampleAt": 1817
+          },
+          {
+            "at": 4078,
+            "time": "2026-10-12T00:10:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 4866,
+            "visibleSampleAt": 4916
+          },
+          {
+            "at": 6594,
+            "time": "2026-10-12T00:20:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 6879,
+            "visibleSampleAt": 6932
+          },
+          {
+            "at": 9076,
+            "time": "2026-10-12T00:30:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 9267,
+            "visibleSampleAt": 9315
+          },
+          {
+            "at": 11592,
+            "time": "2026-10-12T00:40:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 11777,
+            "visibleSampleAt": 11832
+          },
+          {
+            "at": 14092,
+            "time": "2026-10-12T00:50:00.000Z",
+            "status": "pending",
+            "qualifiedAt": 14280,
+            "visibleSampleAt": 14331
+          }
+        ],
+        "pixelChanges": [
+          {
+            "changedPixels": 9310,
+            "totalPixels": 68000,
+            "fraction": 0.13691176470588234
+          },
+          {
+            "changedPixels": 6438,
+            "totalPixels": 68000,
+            "fraction": 0.09467647058823529
+          },
+          {
+            "changedPixels": 4072,
+            "totalPixels": 68000,
+            "fraction": 0.05988235294117647
+          },
+          {
+            "changedPixels": 6143,
+            "totalPixels": 68000,
+            "fraction": 0.09033823529411765
+          },
+          {
+            "changedPixels": 6617,
+            "totalPixels": 68000,
+            "fraction": 0.09730882352941177
+          },
+          {
+            "changedPixels": 3772,
+            "totalPixels": 68000,
+            "fraction": 0.05547058823529412
+          }
+        ],
+        "basemapControl": {
+          "changedPixels": 0,
+          "totalPixels": 68000,
+          "fraction": 0
+        },
+        "requests": 16,
+        "peakRolling60s": 16,
+        "uniqueTileURLs": 14,
+        "sameMapHost": true,
+        "sameGLCanvas": null,
+        "heapStart": 10000000,
+        "canvasCount": 0,
+        "rAF": {
+          "count": 2027,
+          "p95Ms": 16.700000000004366,
+          "excludedOver1000Ms": 0
+        },
+        "longTasks": [],
+        "heap": 10000000,
+        "errors": [],
+        "limitations": "Transport is not pixel-complete confirmation. Pixel differences demonstrate sampled visible imagery, not complete viewport coverage. Linux browsers; not physical iPhone."
+      }
+    },
+    {
+      "report": "qa-visual-v03/browser-report",
+      "test": "matched UI benchmark 1",
+      "status": "passed",
+      "attachment": "matched-ui-metrics",
+      "data": {
+        "results": [
+          {
+            "phase": "candidate",
+            "cache": "fresh-session",
+            "run": 0,
+            "fcp": 120,
+            "lcp": 172,
+            "cls": 0.002698834430769922,
+            "long": [],
+            "active": false,
+            "rafP95": 16.799999999999727,
+            "heap": 19300000,
+            "nodes": 929,
+            "rafSampleCount": 126,
+            "resourceEntryCount": 20
+          },
+          {
+            "phase": "candidate",
+            "cache": "returning-session",
+            "run": 0,
+            "fcp": 68,
+            "lcp": 112,
+            "cls": 0.002698834430769922,
+            "long": [],
+            "active": false,
+            "rafP95": 16.799999999999955,
+            "heap": 19300000,
+            "nodes": 929,
+            "rafSampleCount": 123,
+            "resourceEntryCount": 19
+          }
+        ],
+        "errors": [],
+        "scope": "Linux Chromium UI-only benchmark, recorded weather/AQ, no radar, fixed LAB basemap. Routing disables HTTP cache: returning-session is not an HTTP warm-cache claim. No iPhone/GPU claim."
+      }
+    },
+    {
+      "report": "qa-visual-v03/browser-report",
+      "test": "matched UI benchmark 2",
+      "status": "passed",
+      "attachment": "matched-ui-metrics",
+      "data": {
+        "results": [
+          {
+            "phase": "candidate",
+            "cache": "fresh-session",
+            "run": 1,
+            "fcp": 80,
+            "lcp": 144,
+            "cls": 0.002698834430769922,
+            "long": [],
+            "active": false,
+            "rafP95": 16.799999999999727,
+            "heap": 19300000,
+            "nodes": 929,
+            "rafSampleCount": 126,
+            "resourceEntryCount": 20
+          },
+          {
+            "phase": "candidate",
+            "cache": "returning-session",
+            "run": 1,
+            "fcp": 84,
+            "lcp": 120,
+            "cls": 0.0004244323767694761,
+            "long": [],
+            "active": false,
+            "rafP95": 16.700000000000273,
+            "heap": 19300000,
+            "nodes": 929,
+            "rafSampleCount": 122,
+            "resourceEntryCount": 19
+          }
+        ],
+        "errors": [],
+        "scope": "Linux Chromium UI-only benchmark, recorded weather/AQ, no radar, fixed LAB basemap. Routing disables HTTP cache: returning-session is not an HTTP warm-cache claim. No iPhone/GPU claim."
+      }
+    },
+    {
+      "report": "qa-visual-v03/browser-report",
+      "test": "matched UI benchmark 3",
+      "status": "passed",
+      "attachment": "matched-ui-metrics",
+      "data": {
+        "results": [
+          {
+            "phase": "candidate",
+            "cache": "fresh-session",
+            "run": 2,
+            "fcp": 80,
+            "lcp": 144,
+            "cls": 0.0018263637039046396,
+            "long": [],
+            "active": false,
+            "rafP95": 16.700000000000273,
+            "heap": 19300000,
+            "nodes": 929,
+            "rafSampleCount": 125,
+            "resourceEntryCount": 20
+          },
+          {
+            "phase": "candidate",
+            "cache": "returning-session",
+            "run": 2,
+            "fcp": 68,
+            "lcp": 108,
+            "cls": 0.003776642569712132,
+            "long": [],
+            "active": false,
+            "rafP95": 16.700000000000273,
+            "heap": 19300000,
+            "nodes": 929,
+            "rafSampleCount": 122,
+            "resourceEntryCount": 19
+          }
+        ],
+        "errors": [],
+        "scope": "Linux Chromium UI-only benchmark, recorded weather/AQ, no radar, fixed LAB basemap. Routing disables HTTP cache: returning-session is not an HTTP warm-cache claim. No iPhone/GPU claim."
+      }
+    }
+  ],
+  "rawEvidence": "Full frame intervals and resource entries remain in the linked Actions artifact; this source report retains summary values."
+}

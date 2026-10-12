@@ -1,0 +1,120 @@
+{
+  "run": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38223362351",
+  "result": "PASS first attempt, 34.3s; unchanged real-provider test",
+  "artifactName": "premium-webkit-deployed-v03-38223362351",
+  "artifactId": 11735497022,
+  "measurements": [
+    {
+      "phase": "deployed-targeted-webkit",
+      "browser": "webkit",
+      "baseURL": "https://weather-watch-v03-design-c-owner-qa-ton.tonnutkit.chatgpt.site/",
+      "engine": "maplibre",
+      "firstAdvanceMs": 1650,
+      "firstVisibleSampleMs": 2013,
+      "intervalsMs": [
+        2511,
+        2501,
+        2527,
+        2495,
+        2531
+      ],
+      "advances": [
+        {
+          "at": 1650,
+          "time": "2026-10-12T06:20:00.000Z",
+          "status": "pending",
+          "qualifiedAt": 1959,
+          "visibleSampleAt": 2013
+        },
+        {
+          "at": 4161,
+          "time": "2026-10-12T06:30:00.000Z",
+          "status": "pending",
+          "qualifiedAt": 4363,
+          "visibleSampleAt": 4404
+        },
+        {
+          "at": 6662,
+          "time": "2026-10-12T06:40:00.000Z",
+          "status": "pending",
+          "qualifiedAt": 6865,
+          "visibleSampleAt": 6903
+        },
+        {
+          "at": 9189,
+          "time": "2026-10-12T06:50:00.000Z",
+          "status": "pending",
+          "qualifiedAt": 9392,
+          "visibleSampleAt": 9429
+        },
+        {
+          "at": 11684,
+          "time": "2026-10-12T07:00:00.000Z",
+          "status": "pending",
+          "qualifiedAt": 11887,
+          "visibleSampleAt": 11928
+        },
+        {
+          "at": 14215,
+          "time": "2026-10-12T07:10:00.000Z",
+          "status": "pending",
+          "qualifiedAt": 14420,
+          "visibleSampleAt": 14456
+        }
+      ],
+      "pixelChanges": [
+        {
+          "changedPixels": 10458,
+          "totalPixels": 68000,
+          "fraction": 0.15379411764705883
+        },
+        {
+          "changedPixels": 4943,
+          "totalPixels": 68000,
+          "fraction": 0.07269117647058823
+        },
+        {
+          "changedPixels": 5765,
+          "totalPixels": 68000,
+          "fraction": 0.08477941176470588
+        },
+        {
+          "changedPixels": 4725,
+          "totalPixels": 68000,
+          "fraction": 0.06948529411764706
+        },
+        {
+          "changedPixels": 7829,
+          "totalPixels": 68000,
+          "fraction": 0.11513235294117648
+        },
+        {
+          "changedPixels": 6231,
+          "totalPixels": 68000,
+          "fraction": 0.09163235294117647
+        }
+      ],
+      "basemapControl": {
+        "changedPixels": 0,
+        "totalPixels": 68000,
+        "fraction": 0
+      },
+      "requests": 28,
+      "peakRolling60s": 28,
+      "uniqueTileURLs": 28,
+      "sameMapHost": true,
+      "sameGLCanvas": true,
+      "heapStart": null,
+      "canvasCount": 1,
+      "rAF": {
+        "count": 1381,
+        "p95Ms": 20,
+        "excludedOver1000Ms": 2
+      },
+      "longTasks": [],
+      "heap": null,
+      "errors": [],
+      "limitations": "Transport is not pixel-complete confirmation. Pixel differences demonstrate sampled visible imagery, not complete viewport coverage. Linux browsers; not physical iPhone."
+    }
+  ]
+}

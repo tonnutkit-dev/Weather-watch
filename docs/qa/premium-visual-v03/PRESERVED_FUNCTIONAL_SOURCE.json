@@ -1,134 +1,98 @@
 {
   "baseline": "d7791d88c8de70793d76d5a53565ab46eb245204",
-  "note": "Byte-identical functional source. App/component presentation integration is reviewed separately.",
+  "candidate": "a695711dab58caca660657ab83564b3a59f9fccb",
+  "unchangedFiles": 18,
+  "GLCanvas": "Exact baseline after removing only decorator import and style.load call",
   "files": [
     {
-      "path": "src/air-quality/types.ts",
-      "sha256": "916b85aacccf53d5245cbd7144c91b45f5c117943f6d215863e71d09f9024966"
-    },
-    {
-      "path": "src/alerts/types.ts",
-      "sha256": "7d11d4a9de6a1acd51b8904067e19a4b581d732a539ceac80cfdd16fac9e7c84"
-    },
-    {
-      "path": "src/flood/foundation.ts",
-      "sha256": "ea5830b9dea815dabb58c804b5e715f5a84f8f5587e2f62f334e51b3653a5cc7"
-    },
-    {
-      "path": "src/flood/types.ts",
-      "sha256": "fd07cbd885095b590bf10823486a1f14bb7e2cd7d397a05376994b60e92ae73c"
-    },
-    {
-      "path": "src/locations/provinces.ts",
-      "sha256": "e39c22d7ce2f3ea2cead03c40ecb75af7c7cc1696d1c7c218ee1900f1276c57e"
-    },
-    {
-      "path": "src/locations/region.ts",
-      "sha256": "477447cb7d8dad886b4189251f3ad0f401007e230503029d468ae992a15c79a7"
-    },
-    {
-      "path": "src/locations/thailand.json",
-      "sha256": "8fdafea565b52fb1ed773ee662c8dd2d4cb5ecf55981f1c7b944f2b30fd8b073"
-    },
-    {
-      "path": "src/locations/types.ts",
-      "sha256": "bed92fb7d92a45f9a69e49f6d038f30f9fa32631ae6147cf6fc8ad6360acaaff"
-    },
-    {
       "path": "src/maps/BoundedRadarLayer.ts",
+      "unchanged": true,
       "sha256": "4b00b2edefa40c3cab8bd4ef811c3350d74ec5146e23d7088b55633996827e63"
     },
     {
       "path": "src/maps/MapCanvas.tsx",
+      "unchanged": true,
       "sha256": "b6149f907be2b2816a503b3ec871c5eb0e15a8fd9b95fc6b224fecad143a4289"
     },
     {
       "path": "src/maps/RasterCanvas.tsx",
+      "unchanged": true,
       "sha256": "73a06567c167a2887840e54fa85691514eca06c1fa36f6b6d98dd1b4f6014b87"
     },
     {
       "path": "src/maps/layout.ts",
+      "unchanged": true,
       "sha256": "9b9a6752481b770c6c6d46c9f9062ab261e3ed703c5d45be6f815bd37dfe33d1"
     },
     {
       "path": "src/providers/airQuality.ts",
+      "unchanged": true,
       "sha256": "393827cb66bfc0df349e0bacb4eb5c4e3a76ec16642da9c83840c0214f94262d"
     },
     {
       "path": "src/providers/geocoding.ts",
+      "unchanged": true,
       "sha256": "d0aefcb51a12371f304818ad1c495720eaf1a89c954564645fd1cf80f137b1ea"
     },
     {
       "path": "src/providers/http.ts",
+      "unchanged": true,
       "sha256": "ac7d1a502ef58093c20cc0e075eba7df8faa7b608700579a7eff5b0fc5a13d54"
     },
     {
       "path": "src/providers/radar.ts",
+      "unchanged": true,
       "sha256": "e5946708512e87fb1fec9c2dca20f54667fd2b91a70c1593c1ad530dde587e9b"
     },
     {
       "path": "src/providers/weather.ts",
+      "unchanged": true,
       "sha256": "b09c03bc52db244b45cb7b5e0e63ec969928ab81ef0ba8085c34d7139de489d5"
     },
     {
       "path": "src/radar/budget.ts",
+      "unchanged": true,
       "sha256": "acac1143a245c1db0cd4149e2d56560646808cbf85791546828ff358bee29d9a"
     },
     {
       "path": "src/radar/decode.ts",
+      "unchanged": true,
       "sha256": "32500c3d492676ed0749220f6a58938a3fac1a5748106dcd015baf65739ade20"
     },
     {
       "path": "src/radar/playback.ts",
+      "unchanged": true,
       "sha256": "cf8c68cddf71a6b151a0d329e93165bd03b63735d8fa60079c0e4d78ca1f4133"
     },
     {
       "path": "src/radar/presentation.ts",
+      "unchanged": true,
       "sha256": "e8426923b7a581a4d65eb1eb9d3c11b482baefa1f07681a9dcf853dbf357e147"
     },
     {
       "path": "src/radar/types.ts",
+      "unchanged": true,
       "sha256": "75fb2bf634a7de3c18e97bf46456ccd97d794f3814d5b32b1cd53229522517bf"
     },
     {
       "path": "src/radar/usePlayback.ts",
+      "unchanged": true,
       "sha256": "4d8619a7c3a4b0cf668280674770b2bce6af4914bd1dc4645901622b1042bb23"
     },
     {
       "path": "src/reliability/freshness.ts",
+      "unchanged": true,
       "sha256": "cdda773bd4423e07f9633a03613f5bc431c71dad8f855ae936317fe2354258b6"
     },
     {
       "path": "src/reliability/useFreshness.ts",
+      "unchanged": true,
       "sha256": "a95c36f77c620a2bddc25929c02e4985d0516f11b878ce0705aabceb9861acdd"
     },
     {
       "path": "src/reliability/useRefresh.ts",
+      "unchanged": true,
       "sha256": "cd5d295e030e2fe4416a7e9a1953f5ebf296acdfe2d31b4301ec2431ecbb2135"
-    },
-    {
-      "path": "src/shared/preferences.ts",
-      "sha256": "c56f42df62f8a1747bdc25ba7c3cdc1f31248af5f639ce59d5bd0f4ff6fc2abf"
-    },
-    {
-      "path": "src/shared/provenance.ts",
-      "sha256": "14107ee7b2958b851eb2b89287093497a700290e5d58ec6f2b991b201e73c407"
-    },
-    {
-      "path": "src/shared/situation.ts",
-      "sha256": "1dd0dc7b584508c058314f67e61bf2bab2cb8c7c2a18e3efe7fb3fb9af074e27"
-    },
-    {
-      "path": "src/shared/theme.ts",
-      "sha256": "3b224bae01a5c94447d12a7d8b56f595b27eb7799eebccbd4d95558d31966e4f"
-    },
-    {
-      "path": "src/shared/time.ts",
-      "sha256": "e02058d342483dd4c5d5b3dbf1f7bcd74ec9bf1dc76809cd2049e94bb82b6966"
-    },
-    {
-      "path": "src/weather/types.ts",
-      "sha256": "81a099dd7c9f3791fd05271f9a3da0005c6f43417e026fde0d4554bfa6914c17"
     }
   ]
 }
