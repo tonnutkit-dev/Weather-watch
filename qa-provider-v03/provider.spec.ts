@@ -3,7 +3,7 @@ import {readFileSync,writeFileSync} from 'node:fs';
 const fixture=JSON.parse(readFileSync('diagnostics-p0/provider-fixtures.json','utf8'));
 const publicURL=process.env.WW_DIAG_PUBLIC_URL;
 const control=process.env.WW_DIAG_CONTROL==='1';
-const instrument=process.env.WW_DIAG_SIGNALS==='1';
+const instrument=['1','timeout'].includes(process.env.WW_DIAG_SIGNALS||'');
 const test=base.extend({contextOptions:async({contextOptions},use,info)=>{
  await use({...contextOptions,recordHar:{path:info.outputPath('provider.har'),mode:'full',content:'embed',urlFilter:/open-meteo\.com|127\.0\.0\.1:4174/}});
 }});
@@ -16,11 +16,12 @@ async function observe(page:Page,info:TestInfo){
  page.on('requestfailed',r=>{if(provider(r.url()))network.push({event:'failed',at:Date.now()-origin,url:r.url(),failure:r.failure(),timing:r.timing()});});
  page.on('pageerror',e=>errors.push({event:'pageerror',at:Date.now()-origin,message:e.message}));
  page.on('console',m=>{if(m.type()==='error'||m.type()==='warning')errors.push({event:'console',type:m.type(),at:Date.now()-origin,text:m.text()});});
- if(instrument)await page.addInitScript(()=>{
+ if(instrument)await page.addInitScript(({timeoutOnly})=>{
   const w=window as any;w.__WW_FETCH_EVENTS=[];
   const log=(event:string,detail:any={})=>w.__WW_FETCH_EVENTS.push({event,at:performance.now(),visibility:document.visibilityState,...detail});
   const nativeTimeout=AbortSignal.timeout;const nativeAny=AbortSignal.any;
   AbortSignal.timeout=function(ms:number){const signal=nativeTimeout.call(AbortSignal,ms);log('timeout-created',{ms});signal.addEventListener('abort',()=>log('timeout-aborted',{ms,reason:signal.reason?.name}),{once:true});return signal;};
+  if(timeoutOnly)return; // Minimal contrast: observe only the deadline signal, no fetch/any wrappers.
   AbortSignal.any=function(signals:AbortSignal[]){const signal=nativeAny.call(AbortSignal,signals);log('any-created',{inputs:signals.length});signal.addEventListener('abort',()=>log('any-aborted',{reason:signal.reason?.name}),{once:true});return signal;};
   const nativeFetch=window.fetch;
   window.fetch=function(input:RequestInfo|URL,init?:RequestInit){
@@ -29,7 +30,7 @@ async function observe(page:Page,info:TestInfo){
    return p;
   };
   document.addEventListener('visibilitychange',()=>log('visibility'));
- });
+ },{timeoutOnly:process.env.WW_DIAG_SIGNALS==='timeout'});
  return async()=>{
   const state=await page.evaluate(()=>{const w=window as any;const panel=document.querySelector('.situation-panel');return {wallTime:Date.now(),visibility:document.visibilityState,userAgent:navigator.userAgent,support:{timeout:typeof AbortSignal.timeout,any:typeof AbortSignal.any},fetchEvents:w.__WW_FETCH_EVENTS||[],queryEvents:w.__WW_QUERY_EVENTS||[],queryStates:w.__WW_QUERY_CLIENT?.getQueryCache().getAll().map((q:any)=>({key:q.queryKey,status:q.state.status,fetchStatus:q.state.fetchStatus,failures:q.state.fetchFailureCount,error:q.state.error?.message})),body:document.body.innerText,verdict:panel?.getAttribute('data-verdict'),freshness:panel?.getAttribute('data-weather-freshness'),resources:performance.getEntriesByType('resource').filter((x:any)=>x.name.includes('open-meteo')).map(x=>x.toJSON())};}).catch(e=>({captureError:String(e)}));
   const result={scope:publicURL?'LIVE deployed original':'source: '+(control?'unmodified production build':'TEST-ONLY query-observer build'),instrumentedSignals:instrument,observationEffect:'Signal listeners may affect GC/lifetime; compare uninstrumented controls. Routes disable HTTP cache in LAB.',test:info.title,browser:info.project.name,network,errors,state};
@@ -99,7 +100,7 @@ test('LAB offline and failed refresh preserve cache with Unknown',async({page,co
  test.skip(!!publicURL||control);const save=await observe(page,info);
  try{
   await labData(page,'ok');await page.goto('./');await expect(page.getByTestId('temperature')).toHaveText(/\d+°C/);
-  const original=await page.getByTestId('temperature').innerText();await context.setOffline(true);await expect(page.getByText('ออฟไลน์',{exact:false}).first()).toBeVisible();await context.setOffline(false);
+  const original=await page.getByTestId('temperature').innerText();await context.setOffline(true);await expect(page.locator('.offline-banner')).toBeVisible();await expect(page.locator('.offline-banner')).toContainText('ไม่มีการเชื่อมต่ออินเทอร์เน็ต');await context.setOffline(false);
   await page.unroute('https://api.open-meteo.com/**');await page.route('https://api.open-meteo.com/**',r=>r.abort('failed'));
   // TEST-only direct refetch bypasses admission UI to isolate query/cache settlement; policy is unchanged.
   await page.evaluate(()=>void (window as any).__WW_QUERY_CLIENT.refetchQueries({queryKey:['weather']}));

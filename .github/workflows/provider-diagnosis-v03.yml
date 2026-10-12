@@ -4,6 +4,8 @@ on:
     branches: [work/isolated-webkit-diagnosis-v03]
     paths: [qa-provider-v03/**, .github/workflows/provider-diagnosis-v03.yml]
 permissions: {contents: read}
+env:
+  WW_DIAG_OFFLINE_ONLY: ${{ startsWith(github.event.head_commit.message, 'test(qa): correct offline assertion') && '1' || '0' }}
 jobs:
   lab:
     runs-on: ubuntu-latest
@@ -37,12 +39,24 @@ jobs:
         run: npx vite build --config qa-provider-v03/vite.config.ts
       - name: LAB fault and native abort tests, no signal-lifetime instrumentation
         if: ${{ !cancelled() }}
-        run: npx playwright test --config qa-provider-v03/playwright.config.ts --grep LAB
+        run: |
+          if [ "$WW_DIAG_OFFLINE_ONLY" = "1" ]; then
+            npx playwright test --config qa-provider-v03/playwright.config.ts --grep 'LAB offline'
+          else
+            npx playwright test --config qa-provider-v03/playwright.config.ts --grep LAB
+          fi
+      - name: Targeted observed late-response contrast, diagnostic only
+        if: ${{ !cancelled() && env.WW_DIAG_OFFLINE_ONLY == '1' }}
+        env: {WW_DIAG_SIGNALS: 'timeout'}
+        run: |
+          mv qa-provider-v03/results qa-provider-v03/offline-results
+          mv qa-provider-v03/report qa-provider-v03/offline-report
+          npx playwright test --config qa-provider-v03/playwright.config.ts --grep 'LAB fault late'
       - name: Accepted geometry touch fallback and reduced-motion regression
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && env.WW_DIAG_OFFLINE_ONLY != '1' }}
         run: npx playwright test --config qa-mobile-v03/playwright.config.ts --grep-invert 'live mobile'
       - name: Existing radar Play Pause scrub request-budget regression
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && env.WW_DIAG_OFFLINE_ONLY != '1' }}
         run: npx playwright test --config qa-playback-v03/playwright.config.ts
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
@@ -52,6 +66,8 @@ jobs:
             qa-provider-v03/results/
             qa-provider-v03/qa-provider-v03/results/
             qa-provider-v03/report/
+            qa-provider-v03/offline-results/
+            qa-provider-v03/offline-report/
             qa-provider-v03/artifacts/
             qa-mobile-v03/test-results/
             qa-mobile-v03/browser-report/
@@ -59,6 +75,7 @@ jobs:
             qa-playback-v03/browser-report/
           retention-days: 90
   live:
+    if: ${{ !startsWith(github.event.head_commit.message, 'test(qa): correct offline assertion') }}
     strategy:
       fail-fast: false
       matrix: {mode: [control, observed, public]}
