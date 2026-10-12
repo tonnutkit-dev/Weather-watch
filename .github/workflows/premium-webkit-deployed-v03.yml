@@ -1,0 +1,30 @@
+name: Weather Watch Design C targeted live WebKit verification
+on:
+  push:
+    branches: [work/premium-visual-integration-v03]
+    paths: [.github/workflows/premium-webkit-deployed-v03.yml]
+permissions: {contents: read}
+jobs:
+  webkit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      WW_E2E_BASE_URL: https://weather-watch-v03-design-c-owner-qa-ton.tonnutkit.chatgpt.site/
+      WW_SMOOTH_PHASE: deployed-targeted-webkit
+      WW_EXPECT_INTERVAL: 2500
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps webkit
+      - name: Original live radar test, unchanged thresholds and timeout
+        run: npx playwright test playback.spec.ts --config qa-smooth-v03/playwright.config.ts --project webkit
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: premium-webkit-deployed-v03-${{ github.run_id }}
+          path: |
+            qa-smooth-v03/browser-report/
+            qa-smooth-v03/test-results/
+          retention-days: 90
