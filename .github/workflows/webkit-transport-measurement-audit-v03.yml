@@ -1,0 +1,133 @@
+name: Weather Watch corrected WebKit transport measurement
+on:
+  push:
+    branches: [work/webkit-transport-measurement-audit-v03]
+    paths: [.github/workflows/webkit-transport-measurement-audit-v03.yml, qa-transport-audit-v03/**]
+permissions: {contents: read}
+env:
+  WW_MAIN_SHA: 2036e2ac788cb31d25fd387cb40520ad95c408a6
+  WW_RC_SHA: 972c0e17243646f60dfb23ec40bdf556481c4bfc
+  WW_PRIOR_SHA: 29b97b125f8f42b89c58919695029ab1dde2b120
+jobs:
+  first:
+    name: Corrected measurement fresh Ubuntu 1
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env: {WW_AUDIT_JOB: first}
+    outputs:
+      measurement_ready: ${{ steps.finalize.outputs.measurement_ready }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - name: Guard authorized refs and NEW-files-only scope
+        run: |
+          test "$GITHUB_RUN_ATTEMPT" = 1
+          test "$GITHUB_REF_NAME" = work/webkit-transport-measurement-audit-v03
+          test "$(git rev-parse origin/main)" = "$WW_MAIN_SHA"
+          test "$(git rev-parse origin/work/release-candidate-v03-01)" = "$WW_RC_SHA"
+          test "$(git rev-parse origin/work/webkit-transport-evidence-v03)" = "$WW_PRIOR_SHA"
+          git merge-base --is-ancestor "$WW_PRIOR_SHA" HEAD
+          test "$(git rev-list --count "$WW_PRIOR_SHA"..HEAD)" = 1
+          git diff --exit-code "$WW_PRIOR_SHA" HEAD -- . ':(exclude)qa-transport-audit-v03' ':(exclude).github/workflows/webkit-transport-measurement-audit-v03.yml'
+          test -z "$(git diff --name-status "$WW_PRIOR_SHA" HEAD | grep -Ev '^A[[:space:]]+(qa-transport-audit-v03/|\.github/workflows/webkit-transport-measurement-audit-v03\.yml$)' || true)"
+          mkdir -p qa-transport-audit-v03/artifacts
+          node --version > qa-transport-audit-v03/artifacts/node-version.txt
+      - name: Validate local native HTTPS fixture and absolute deadline
+        run: node qa-transport-audit-v03/fixture-validation.mjs qa-transport-audit-v03/artifacts/fixture-validation.json
+      - name: Build exact locked candidate and same-runner frozen RC
+        run: |
+          npm ci
+          npm run build
+          npm run verify:pages
+          cp dist/release.json qa-transport-audit-v03/artifacts/candidate-release.json
+          git worktree add /tmp/ww-measurement-rc "$WW_RC_SHA"
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/ww-measurement-rc/node_modules
+          cd /tmp/ww-measurement-rc
+          npm run build
+          GITHUB_SHA="$WW_RC_SHA" npm run verify:pages
+          cd "$GITHUB_WORKSPACE"
+          node qa-transport-audit-v03/integrity.mjs dist /tmp/ww-measurement-rc/dist qa-transport-audit-v03/artifacts/runtime-comparison.json
+      - name: Install unchanged strict-gate Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+      - name: Allow bounded measurement after successful prerequisites
+        id: ready
+        run: echo 'measurement_ready=true' >> "$GITHUB_OUTPUT"
+      - name: Original strict LIVE plus redacted absolute-deadline native probe
+        run: node qa-transport-audit-v03/live-collection.mjs qa-transport-audit-v03/artifacts
+      - name: Redacted copies with trace audit and hidden-result integrity
+        id: finalize
+        if: always()
+        run: |
+          python3 qa-transport-audit-v03/finalize.py qa-transport-audit-v03/artifacts qa-transport-audit-v03/delivery
+          if [ '${{ steps.ready.outputs.measurement_ready }}' = true ]; then echo 'measurement_ready=true' >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() && steps.finalize.outcome == 'success' }}
+        with:
+          name: corrected-webkit-measurement-${{ env.WW_AUDIT_JOB }}-${{ github.run_id }}
+          path: qa-transport-audit-v03/delivery/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 90
+  second:
+    name: Corrected measurement fresh Ubuntu 2 sequential
+    needs: first
+    if: ${{ always() && !cancelled() && needs.first.outputs.measurement_ready == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env: {WW_AUDIT_JOB: second}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - name: Guard authorized refs and NEW-files-only scope
+        run: |
+          test "$GITHUB_RUN_ATTEMPT" = 1
+          test "$GITHUB_REF_NAME" = work/webkit-transport-measurement-audit-v03
+          test "$(git rev-parse origin/main)" = "$WW_MAIN_SHA"
+          test "$(git rev-parse origin/work/release-candidate-v03-01)" = "$WW_RC_SHA"
+          test "$(git rev-parse origin/work/webkit-transport-evidence-v03)" = "$WW_PRIOR_SHA"
+          git merge-base --is-ancestor "$WW_PRIOR_SHA" HEAD
+          test "$(git rev-list --count "$WW_PRIOR_SHA"..HEAD)" = 1
+          git diff --exit-code "$WW_PRIOR_SHA" HEAD -- . ':(exclude)qa-transport-audit-v03' ':(exclude).github/workflows/webkit-transport-measurement-audit-v03.yml'
+          test -z "$(git diff --name-status "$WW_PRIOR_SHA" HEAD | grep -Ev '^A[[:space:]]+(qa-transport-audit-v03/|\.github/workflows/webkit-transport-measurement-audit-v03\.yml$)' || true)"
+          mkdir -p qa-transport-audit-v03/artifacts
+          node --version > qa-transport-audit-v03/artifacts/node-version.txt
+      - name: Validate local native HTTPS fixture and absolute deadline
+        run: node qa-transport-audit-v03/fixture-validation.mjs qa-transport-audit-v03/artifacts/fixture-validation.json
+      - name: Build exact locked candidate and same-runner frozen RC
+        run: |
+          npm ci
+          npm run build
+          npm run verify:pages
+          cp dist/release.json qa-transport-audit-v03/artifacts/candidate-release.json
+          git worktree add /tmp/ww-measurement-rc "$WW_RC_SHA"
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/ww-measurement-rc/node_modules
+          cd /tmp/ww-measurement-rc
+          npm run build
+          GITHUB_SHA="$WW_RC_SHA" npm run verify:pages
+          cd "$GITHUB_WORKSPACE"
+          node qa-transport-audit-v03/integrity.mjs dist /tmp/ww-measurement-rc/dist qa-transport-audit-v03/artifacts/runtime-comparison.json
+      - name: Install unchanged strict-gate Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+      - name: Allow bounded measurement after successful prerequisites
+        id: ready
+        run: echo 'measurement_ready=true' >> "$GITHUB_OUTPUT"
+      - name: Original strict LIVE plus redacted absolute-deadline native probe
+        run: node qa-transport-audit-v03/live-collection.mjs qa-transport-audit-v03/artifacts
+      - name: Redacted copies with trace audit and hidden-result integrity
+        id: finalize
+        if: always()
+        run: |
+          python3 qa-transport-audit-v03/finalize.py qa-transport-audit-v03/artifacts qa-transport-audit-v03/delivery
+          if [ '${{ steps.ready.outputs.measurement_ready }}' = true ]; then echo 'measurement_ready=true' >> "$GITHUB_OUTPUT"; fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() && steps.finalize.outcome == 'success' }}
+        with:
+          name: corrected-webkit-measurement-${{ env.WW_AUDIT_JOB }}-${{ github.run_id }}
+          path: qa-transport-audit-v03/delivery/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 90
