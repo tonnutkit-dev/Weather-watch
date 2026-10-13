@@ -30,7 +30,7 @@ jobs:
           test "$(git rev-parse origin/work/release-candidate-v03-01)" = "$WW_RC_SHA"
           test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
           git merge-base --is-ancestor "$WW_RC_SHA" HEAD
-          test "$(git rev-list --count "$WW_RC_SHA"..HEAD)" = 1
+          test "$(git rev-list --count "$WW_RC_SHA"..HEAD)" = 2
           test -z "$(git diff --name-only "$WW_RC_SHA" HEAD | grep -Ev '^(qa-transport-v03/|\.github/workflows/webkit-transport-evidence-v03\.yml$)' || true)"
           git diff --exit-code "$WW_RC_SHA" HEAD -- src public DESIGN.md package.json package-lock.json vite.config.ts tests playwright.config.ts qa-provider-v03 .github/workflows/pages.yml
           mkdir -p "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB"
@@ -49,7 +49,7 @@ jobs:
           ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/ww-transport-baseline/node_modules
           cd /tmp/ww-transport-baseline
           npm run build
-          npm run verify:pages
+          GITHUB_SHA="$WW_RC_SHA" npm run verify:pages
           cd "$GITHUB_WORKSPACE"
           node qa-transport-v03/compare-runtime.mjs "$WW_RC_SHA" "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/candidate-dist" /tmp/ww-transport-baseline/dist "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/runtime-comparison.json"
           mv "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/candidate-dist" dist
