@@ -75,8 +75,6 @@ async function probe(target, sample) {
     const request = https.request(target.url, {
       method: 'GET', agent: false,
       headers: { accept: 'application/json', 'user-agent': 'Weather-Watch-CI-Transport-Evidence/0.3' },
-      lookup: (_hostname, _options, callback) => callback(null, selected.address, selected.family),
-      servername: target.url.hostname,
     }, (response) => {
       const responseAt = performance.now();
       response.resume();
