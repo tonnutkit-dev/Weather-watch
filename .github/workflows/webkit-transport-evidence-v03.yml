@@ -1,0 +1,85 @@
+name: Weather Watch WebKit transport evidence V0.3
+on:
+  push:
+    branches: [work/webkit-transport-evidence-v03]
+    paths:
+      - .github/workflows/webkit-transport-evidence-v03.yml
+      - qa-transport-v03/**
+permissions: {contents: read}
+env:
+  WW_RC_SHA: 972c0e17243646f60dfb23ec40bdf556481c4bfc
+jobs:
+  fresh-ubuntu-transport:
+    name: Fresh Ubuntu transport sample set ${{ matrix.sample_set }}
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix: {sample_set: [1, 2, 3]}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      WW_TRANSPORT_JOB: ${{ matrix.sample_set }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - name: Guard exact RC ancestry and CI-only scope
+        run: |
+          test "$GITHUB_REF_NAME" = work/webkit-transport-evidence-v03
+          test "$(git rev-parse origin/work/release-candidate-v03-01)" = "$WW_RC_SHA"
+          test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
+          git merge-base --is-ancestor "$WW_RC_SHA" HEAD
+          test "$(git rev-list --count "$WW_RC_SHA"..HEAD)" = 1
+          test -z "$(git diff --name-only "$WW_RC_SHA" HEAD | grep -Ev '^(qa-transport-v03/|\.github/workflows/webkit-transport-evidence-v03\.yml$)' || true)"
+          git diff --exit-code "$WW_RC_SHA" HEAD -- src public DESIGN.md package.json package-lock.json vite.config.ts tests playwright.config.ts qa-provider-v03 .github/workflows/pages.yml
+          mkdir -p "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB"
+          git rev-parse HEAD HEAD^{tree} "$WW_RC_SHA" "$WW_RC_SHA^{tree}" > "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/source-identities.txt"
+          uname -a > "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/runner.txt"
+          node --version >> "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/runner.txt"
+      - name: Install exact locked dependencies and build candidate
+        run: |
+          npm ci
+          npm run build
+          npm run verify:pages
+          mv dist "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/candidate-dist"
+      - name: Same-runner exact RC runtime comparison
+        run: |
+          git worktree add /tmp/ww-transport-baseline "$WW_RC_SHA"
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/ww-transport-baseline/node_modules
+          cd /tmp/ww-transport-baseline
+          npm run build
+          npm run verify:pages
+          cd "$GITHUB_WORKSPACE"
+          node qa-transport-v03/compare-runtime.mjs "$WW_RC_SHA" "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/candidate-dist" /tmp/ww-transport-baseline/dist "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/runtime-comparison.json"
+          mv "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/candidate-dist" dist
+      - name: Install Chromium and WebKit used by the unchanged strict gate
+        run: npx playwright install --with-deps chromium webkit
+      - name: Existing strict LIVE gate plus synchronized redacted OS probes
+        run: |
+          set +e
+          node qa-transport-v03/os-transport-probe.mjs \
+            --out "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/os-transport.jsonl" \
+            --interval-ms 5000 --deadline-ms 20000 --max-ms 360000 &
+          probe_pid=$!
+          WW_DIAG_CONTROL=1 npx playwright test --config qa-provider-v03/playwright.config.ts --grep LIVE 2>&1 | tee "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/strict-live.log"
+          test_status=${PIPESTATUS[0]}
+          kill -TERM "$probe_pid" 2>/dev/null
+          wait "$probe_pid"
+          probe_status=$?
+          printf 'strict_live_exit=%s\nos_probe_exit=%s\n' "$test_status" "$probe_status" > "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB/exit-status.txt"
+          if [ "$probe_status" -ne 0 ]; then exit "$probe_status"; fi
+          exit "$test_status"
+      - name: Hash retained evidence and reject credential material
+        id: finalize
+        if: always()
+        run: node qa-transport-v03/finalize-evidence.mjs "qa-transport-v03/evidence/job-$WW_TRANSPORT_JOB"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() && steps.finalize.outcome == 'success' }}
+        with:
+          name: webkit-transport-evidence-set-${{ matrix.sample_set }}-${{ github.run_id }}
+          path: |
+            qa-transport-v03/evidence/job-${{ matrix.sample_set }}/
+            qa-provider-v03/results/
+            qa-provider-v03/report/
+          retention-days: 90
