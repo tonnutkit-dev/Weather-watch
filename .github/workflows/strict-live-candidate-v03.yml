@@ -1,0 +1,45 @@
+name: Weather Watch bounded candidate strict LIVE
+on:
+  push:
+    branches: [work/strict-live-candidate-gate-v03]
+    paths: [.github/workflows/strict-live-candidate-v03.yml, qa-strict-live-v03/**]
+permissions: {contents: read}
+jobs:
+  strict-live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24.21.0, cache: npm}
+      - name: Guard exact refs and QA-only single commit; prepare pinned source
+        run: node qa-strict-live-v03/runner.mjs prepare
+      - name: Build exact candidate with unchanged production commands
+        working-directory: /tmp/ww-strict-live-candidate
+        env:
+          GITHUB_SHA: a19d53ac5587ded31b7e3cad6112f02c7621aeb6
+          WW_RELEASE_CHANNEL: release-candidate
+        run: |
+          npm ci
+          npm run build
+          npm run verify:pages
+      - name: Check runtime inventory against actual LAB artifact before LIVE
+        run: node qa-strict-live-v03/runner.mjs verify
+      - name: Install only the two authorized engines from the candidate lock
+        working-directory: /tmp/ww-strict-live-candidate
+        run: npx --no-install playwright install --with-deps chromium webkit
+      - name: Original strict LIVE, Chromium 3 then WebKit 3, no rerun
+        run: node qa-strict-live-v03/runner.mjs collect
+      - name: Validate and redact complete evidence before any artifact upload
+        id: finalize
+        if: always()
+        run: python3 qa-strict-live-v03/finalize.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() && steps.finalize.outcome == 'success' }}
+        with:
+          name: candidate-strict-live-${{ github.run_id }}
+          path: qa-strict-live-v03/delivery/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 90
