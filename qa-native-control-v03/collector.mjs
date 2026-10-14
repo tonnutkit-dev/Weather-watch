@@ -1,4 +1,4 @@
-import {readFile,writeFile,mkdir,readdir,lstat,access,appendFile} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,readdir,lstat,access,appendFile,rename} from 'node:fs/promises';
 import {execFileSync,spawn} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
@@ -12,6 +12,7 @@ export const PIN={parent:'001c796e8758746833c1353e088530238b23cbba',parentTree:'
   rc:'972c0e17243646f60dfb23ec40bdf556481c4bfc',main:'2036e2ac788cb31d25fd387cb40520ad95c408a6',
   runtime:'204577877fa644fbbf0cd145ce12aecaa5c9e4b543d5bf20c2066a8ffc06c147',
   branch:'work/unprivileged-native-control-v03',image:'20261004.327.1'};
+export const BASIS={sha:'31fa9d179c7e8d3536321539120f6e85607245c4',tree:'2b9f47f8daf132014b63948a29af9f3436f522ce',run:38567190220};
 export const FILES=['.github/workflows/native-control-v03.yml','qa-native-control-v03/collector.mjs','qa-native-control-v03/native-control.mjs'];
 export const CELLS=['chromium-app','webkit-app','chromium-native','webkit-native'];
 export const ORIGINAL={
@@ -21,6 +22,7 @@ export const ORIGINAL={
   'src/providers/http.ts':'545e21a62ebfa71451b04a9dcf52dd612711aeed35198373ae2d8cd04d942e03'};
 export const hash=b=>createHash('sha256').update(b).digest('hex');
 export function stopCode(error){
+  if(STOPS.includes(error?.message))return error.message;
   if(['NODE_OS','RUNNER_IMAGE','LIBRARY_DRIFT','PLAYWRIGHT','REGISTRY_SOURCE','PLAYWRIGHT_SOURCE','REVISION','EXECUTABLE_REVISION','OS','PROXY','ENV_OVERRIDE'].includes(error?.message))return 'STOP_ENVIRONMENT';
   if(['PRIVACY','PATH','RAW_PATH','DELIVERY_PATH'].includes(error?.message))return 'STOP_PRIVACY';
   if(['EVENT_FILES','SUMMARY','ATTEMPTS','MISSING_PROVIDER'].includes(error?.message))return 'STOP_INCOMPLETE';
@@ -37,7 +39,7 @@ export function validateJobs(run,jobs,history,identity){
   ok(Array.isArray(jobs)&&jobs.length===4,'JOBS');
   ok(new Set(jobs.map(x=>x.id)).size===4 && new Set(jobs.map(x=>x.name)).size===4,'JOBS');
   ok(jobs.every(x=>CELLS.some(c=>x.name===`native-evidence (${c})`) && x.run_attempt===1 && x.run_id===identity.run),'JOBS');
-  ok(history.length===1 && history[0].id===identity.run && history[0].run_attempt===1 && history[0].head_sha===identity.qaSha,'RUN_HISTORY');
+  ok(history.length===2 && new Set(history.map(x=>x.id)).size===2 && history.some(x=>x.id===BASIS.run&&x.head_sha===BASIS.sha&&x.run_attempt===1) && history.some(x=>x.id===identity.run&&x.id!==BASIS.run&&x.head_sha===identity.qaSha&&x.run_attempt===1),'RUN_HISTORY');
 }
 export function summaryRows(summary){
   const walk=suites=>suites.flatMap(s=>[...(s.specs||[]).flatMap(sp=>(sp.tests||[]).map(t=>({sp,t}))),...walk(s.suites||[])]);
@@ -119,6 +121,73 @@ export function validateCohort(docs){
   return 'DIAGNOSTIC_ONLY_NOT_RELEASE_GATE';
 }
 
+
+// Separate readiness record: never a case result and never accepted by validateCohort.
+export const PACKAGE_PINS={'libsoup-3.0-0':'3.4.4-5ubuntu0.9','glib-networking':'2.80.0-1build1','libgtk-4-1':'4.14.5+ds-0ubuntu0.10'};
+export const STAGES=['START','READY_SOURCE','READY_BUILD','READY_BROWSER_INSTALL','READY_PACKAGE_PROVISION','READY_RUNTIME','READY_IMAGE','READY_PACKAGE','READY_PLAYWRIGHT','READY_BROWSER_ENTRY','READY_URL_FACTORY','READY_DISCOVERY','LIVE_STARTED','LIVE_COMPLETED','READY_VERIFIED'];
+export const STOPS=['STOP_IDENTITY','STOP_SOURCE','STOP_BUILD','STOP_BROWSER_INSTALL','STOP_PACKAGE_PROVISION','STOP_RUNTIME','STOP_IMAGE','STOP_PACKAGE_QUERY','STOP_PIN_MISMATCH','STOP_PLAYWRIGHT','STOP_BROWSER_ENTRY','STOP_URL_FACTORY','STOP_DISCOVERY','STOP_CASE_EVIDENCE','STOP_PRIVACY','STOP_LEDGER'];
+const frontierCodes={READY_SOURCE:['STOP_SOURCE'],READY_BUILD:['STOP_BUILD'],READY_BROWSER_INSTALL:['STOP_BROWSER_INSTALL'],READY_PACKAGE_PROVISION:['STOP_PACKAGE_PROVISION'],READY_RUNTIME:['STOP_RUNTIME'],READY_IMAGE:['STOP_IMAGE'],READY_PACKAGE:['STOP_PACKAGE_QUERY','STOP_PIN_MISMATCH'],READY_PLAYWRIGHT:['STOP_PLAYWRIGHT','STOP_PIN_MISMATCH'],READY_BROWSER_ENTRY:['STOP_BROWSER_ENTRY'],READY_URL_FACTORY:['STOP_URL_FACTORY'],READY_DISCOVERY:['STOP_DISCOVERY'],LIVE_STARTED:['STOP_CASE_EVIDENCE'],LIVE_COMPLETED:['STOP_CASE_EVIDENCE'],READY_VERIFIED:['STOP_IDENTITY','STOP_SOURCE','STOP_RUNTIME','STOP_CASE_EVIDENCE']};
+export function validateLedger(doc,trusted){
+  keys(doc,['schema','classification','state','identity','sources','readiness']);
+  ok(doc.schema===2&&doc.classification==='DIAGNOSTIC_READINESS'&&['READY','BLOCKED'].includes(doc.state),'STOP_LEDGER');
+  keys(doc.identity,['run','attempt','cell','qaSha','qaTree','parent','candidate','runtime']);
+  const i=doc.identity;ok(Number.isSafeInteger(i.run)&&i.run>0&&i.run!==BASIS.run&&i.attempt===1&&CELLS.includes(i.cell),'STOP_IDENTITY');hex(i.qaSha,40);hex(i.qaTree,40);
+  ok(i.qaSha!==BASIS.sha&&i.parent===PIN.parent&&i.candidate===PIN.candidate&&i.runtime===PIN.runtime,'STOP_IDENTITY');
+  keys(doc.sources,[...FILES,...Object.keys(ORIGINAL)]);for(const [p,v] of Object.entries(doc.sources)){hex(v);if(ORIGINAL[p])ok(v===ORIGINAL[p],'STOP_SOURCE');}
+  ok(trusted&&JSON.stringify(i)===JSON.stringify(trusted.identity),'STOP_IDENTITY');
+  ok(JSON.stringify(doc.sources)===JSON.stringify({...trusted.sources,...ORIGINAL}),'STOP_SOURCE');
+  const r=doc.readiness;keys(r,['lastCompleted','failedAt','stop','liveStartRequested','caseResultIncluded','exitCode']);
+  ok(STAGES.includes(r.lastCompleted)&&typeof r.liveStartRequested==='boolean'&&r.caseResultIncluded===false,'STOP_LEDGER');
+  ok(r.liveStartRequested===(STAGES.indexOf(r.lastCompleted)>=STAGES.indexOf('LIVE_STARTED')),'STOP_LEDGER');
+  if(doc.state==='READY')ok(r.failedAt===null&&r.stop===null&&r.exitCode===null,'STOP_LEDGER');
+  else {
+    ok(Object.hasOwn(frontierCodes,r.failedAt)&&STAGES.indexOf(r.failedAt)>=STAGES.indexOf(r.lastCompleted)&&STOPS.includes(r.stop)&&r.exitCode===1,'STOP_LEDGER');
+    ok(r.stop==='STOP_PRIVACY'||frontierCodes[r.failedAt].includes(r.stop),'STOP_LEDGER');
+  }
+  noCredentials(JSON.stringify(doc));return doc;
+}
+export class Readiness {
+  constructor(trusted,persist=async()=>{},doc){
+    this.trusted=trusted;this.persist=persist;
+    this.doc=doc||{schema:2,classification:'DIAGNOSTIC_READINESS',state:'READY',identity:trusted.identity,sources:{...trusted.sources,...ORIGINAL},readiness:{lastCompleted:'START',failedAt:null,stop:null,liveStartRequested:false,caseResultIncluded:false,exitCode:null}};
+    validateLedger(this.doc,trusted);
+  }
+  async mark(stage){
+    ok(this.doc.state==='READY'&&STAGES.includes(stage)&&STAGES.indexOf(stage)>STAGES.indexOf(this.doc.readiness.lastCompleted),'STOP_LEDGER');
+    if(stage==='LIVE_STARTED'&&this.doc.identity.cell.endsWith('-app'))ok(this.doc.readiness.lastCompleted==='READY_DISCOVERY','STOP_LEDGER');
+    this.doc.readiness.lastCompleted=stage;
+    this.doc.readiness.liveStartRequested=STAGES.indexOf(stage)>=STAGES.indexOf('LIVE_STARTED');
+    validateLedger(this.doc,this.trusted);await this.persist(this.doc);
+  }
+  async at(stage,code,operation){
+    ok(this.doc.state==='READY'&&Object.hasOwn(frontierCodes,stage)&&frontierCodes[stage].includes(code)&&STAGES.indexOf(stage)>STAGES.indexOf(this.doc.readiness.lastCompleted),'STOP_LEDGER');
+    try{const value=await operation();await this.mark(stage);return value;}
+    catch(error){
+      // An inner discovery/environment frontier already captured the precise failure.
+      if(this.doc.state==='BLOCKED'){validateLedger(this.doc,this.trusted);throw new Error(this.doc.readiness.stop);}
+      const controlled=stopCode(error);
+      const stop=controlled==='STOP_PRIVACY'?'STOP_PRIVACY':frontierCodes[stage].includes(controlled)?controlled:code;
+      this.doc.state='BLOCKED';Object.assign(this.doc.readiness,{failedAt:stage,stop,exitCode:1});
+      validateLedger(this.doc,this.trusted);await this.persist(this.doc);throw new Error(stop);
+    }
+  }
+}
+async function ledgerSave(doc){
+  const file=privatePath('readiness.json'),temp=privatePath('readiness-next.json');
+  try{ok(!(await lstat(file)).isSymbolicLink(),'STOP_PRIVACY');}catch(error){if(error.code!=='ENOENT')throw error;}
+  await writeFile(temp,JSON.stringify(doc,null,2)+'\n',{mode:0o600,flag:'wx'});await rename(temp,file);
+}
+async function resumeReadiness(current){return new Readiness(current,ledgerSave,await readJSON(privatePath('readiness.json')));}
+async function trustedPublication(){try{return await publication();}catch(error){throw new Error(stopCode(error)==='STOP_PRIVACY'?'STOP_PRIVACY':'STOP_IDENTITY');}}
+export async function deliverReadiness(doc,trusted,dir){
+  validateLedger(doc,trusted);ok(doc.state==='BLOCKED','STOP_LEDGER');
+  const name=safeFile('readiness.json'),bytes=Buffer.from(JSON.stringify(doc,null,2)+'\n');
+  await mkdir(dir,{recursive:false,mode:0o700});await writeFile(resolve(dir,name),bytes,{mode:0o600,flag:'wx'});
+  await save(resolve(dir,'manifest.json'),{schema:2,classification:'DIAGNOSTIC_READINESS',state:'BLOCKED',run:doc.identity.run,attempt:1,cell:doc.identity.cell,files:[{file:name,bytes:bytes.length,sha256:hash(bytes)}]});
+  ok((await readdir(dir)).sort().join(',')==='manifest.json,readiness.json','DELIVERY_PATH');
+  return 1; // Delivery is safe; execution remains FAILED.
+}
+
 const root=process.cwd(),product='/tmp/ww-native-product',priv='/tmp/ww-native-private';
 const privatePath=name=>resolve(priv,name);
 const git=(cwd,...args)=>execFileSync('git',args,{cwd,encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim();
@@ -135,13 +204,14 @@ async function publication(){
   ok(CELLS.includes(e.WW_CELL)&&e.WW_CELL===e.WW_ENGINE+'-'+e.WW_SURFACE,'CELL');
   for(const k of Object.keys(e))if(/^(VITE_|PLAYWRIGHT_|WW_DIAG_)/.test(k)||['NODE_OPTIONS','PWDEBUG','DEBUG','WW_RC_ROOT','WW_RELEASE_BASE','WW_RELEASE_URL','WW_RELEASE_DIRECTORY'].includes(k))ok(!e[k],'ENV_OVERRIDE');
   for(const k of Object.keys(e))if(/^(?:http|https|all|no)_proxy$/i.test(k)||k==='NODE_USE_ENV_PROXY')ok(!e[k],'PROXY');
-  const head=git(root,'rev-parse','HEAD');ok(head===e.GITHUB_SHA&&git(root,'rev-parse','HEAD^')===PIN.parent,'QA_IDENTITY');
-  ok(git(root,'rev-parse',PIN.parent+'^{tree}')===PIN.parentTree&&git(root,'status','--porcelain=v1','--untracked-files=no')==='','QA_TREE');
-  ok(git(root,'diff','--name-status',PIN.parent,'HEAD').split('\n').sort().join('|')===FILES.map(p=>'A\t'+p).sort().join('|'),'EXACT_PATHS');
+  const head=git(root,'rev-parse','HEAD');ok(head===e.GITHUB_SHA&&git(root,'rev-parse','HEAD^')===BASIS.sha,'QA_IDENTITY');
+  ok(git(root,'rev-list','--parents','-n','1','HEAD').split(/\s+/).length===2,'QA_IDENTITY');
+  ok(git(root,'rev-parse',BASIS.sha+'^{tree}')===BASIS.tree&&git(root,'status','--porcelain=v1','--untracked-files=no')==='','QA_TREE');
+  ok(git(root,'diff','--name-status',BASIS.sha,'HEAD').split('\n').sort().join('|')===FILES.slice(0,2).map(p=>'M\t'+p).sort().join('|'),'EXACT_PATHS');
   const sources={};for(const p of FILES){const b=await readFile(resolve(root,p));ok(hash(b)===hash(execFileSync('git',['show','HEAD:'+p],{cwd:root})),'QA_SOURCE');sources[p]=hash(b);}
   const identity={run:Number(e.GITHUB_RUN_ID),attempt:1,cell:e.WW_CELL,qaSha:head,qaTree:git(root,'rev-parse','HEAD^{tree}'),parent:PIN.parent,candidate:PIN.candidate,runtime:PIN.runtime};
   const [run,jobs,history]=await Promise.all([api('actions/runs/'+identity.run),api('actions/runs/'+identity.run+'/jobs?filter=all&per_page=100'),api('actions/runs?branch='+encodeURIComponent(PIN.branch)+'&per_page=100')]);
-  ok(jobs.total_count===4&&history.total_count===1,'JOB_RUN_COUNT');validateJobs(run,jobs.jobs,history.workflow_runs,identity);
+  ok(jobs.total_count===4&&history.total_count===2,'JOB_RUN_COUNT');validateJobs(run,jobs.jobs,history.workflow_runs,identity);
   for(const [b,s] of [['main',PIN.main],['work/release-candidate-v03-01',PIN.rc],['work/chromium-targeted-lab-v03',PIN.candidate],['work/strict-live-candidate-gate-v03',PIN.parent],[PIN.branch,head]]){
     const r=await api('git/ref/heads/'+b);ok(r.object.sha===s,'REF_DRIFT');
   }
@@ -160,20 +230,34 @@ export async function runtimeGuard(source=product){
   const r=await readJSON(resolve(source,'dist/release.json'));
   ok(r.commit===PIN.candidate&&r.base==='/Weather-watch/'&&r.channel==='release-candidate'&&r.diagnosticFixturesIncluded===false,'RELEASE');
 }
-async function environmentGuard(require){
-  ok(process.env.ImageOS==='ubuntu24'&&process.env.ImageVersion===PIN.image&&os.release()==='6.17.0-1022-azure','RUNNER_IMAGE');
-  const osReleaseText=await readFile('/etc/os-release','utf8');ok(/^ID=ubuntu$/m.test(osReleaseText)&&/^VERSION_ID="24\.04"$/m.test(osReleaseText),'OS');
-  const libs={};for(const p of ['libsoup-3.0-0','glib-networking','libgtk-4-1'])libs[p]=execFileSync('dpkg-query',['-W','-f=${Version}',p],{encoding:'utf8',stdio:['ignore','pipe','pipe']});
-  ok(libs['libsoup-3.0-0']==='3.4.4-5ubuntu0.9'&&libs['glib-networking']==='2.80.0-1build1'&&libs['libgtk-4-1']==='4.14.5+ds-0ubuntu0.10','LIBRARY_DRIFT');
-  ok(require('playwright/package.json').version==='1.64.0','PLAYWRIGHT');
-  ok(hash(await readFile(resolve(product,'node_modules/playwright-core/browsers.json')))==='2cfd419f71ac6475d81e1301fa86c34cf2a2a6bae2a0da4b5a2b18310216b6bf','REGISTRY_SOURCE');
-  ok(hash(await readFile(resolve(product,'node_modules/playwright-core/lib/coreBundle.js')))==='2325ca4c1c83070e89dc49fb82525508f0a68e0cf12e2a624277968da216b7e0','PLAYWRIGHT_SOURCE');
-  const registry=await readJSON(resolve(product,'node_modules/playwright-core/browsers.json'));
-  for(const [n,r] of [['chromium','1248'],['chromium-headless-shell','1248'],['webkit','2370']])ok(registry.browsers.find(x=>x.name===n)?.revision===r,'REVISION');
-  const pw=require('playwright'),engine=process.env.WW_ENGINE;let entry=pw[engine].executablePath();
-  if(engine==='chromium')entry=resolve(dirname(dirname(dirname(entry))),'chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell');
-  ok(entry.includes(engine==='chromium'?'chromium_headless_shell-1248':'webkit-2370'),'EXECUTABLE_REVISION');await access(entry);
-  return {image:PIN.image,kernel:os.release(),node:process.version,playwright:'1.64.0',browserRevision:engine==='chromium'?'1248':'2370',entrySha256:hash(await readFile(entry)),libs};
+export async function environmentGuard(require,ledger,io={}){
+  const read=io.readFile||readFile,exec=io.execFileSync||execFileSync,canAccess=io.access||access;
+  const e=io.env||process.env,release=io.release||(()=>os.release()),version=io.version||process.version;
+  const digest=io.hash||hash,json=io.readJSON||readJSON;
+  await ledger.at('READY_IMAGE','STOP_IMAGE',async()=>{
+    ok(e.ImageOS==='ubuntu24'&&e.ImageVersion===PIN.image&&release()==='6.17.0-1022-azure'&&version==='v24.21.0','STOP_IMAGE');
+    const osReleaseText=await read('/etc/os-release','utf8');ok(/^ID=ubuntu$/m.test(osReleaseText)&&/^VERSION_ID="24\.04"$/m.test(osReleaseText),'STOP_IMAGE');
+  });
+  const libs=await ledger.at('READY_PACKAGE','STOP_PACKAGE_QUERY',async()=>{
+    const found={};for(const [p,v] of Object.entries(PACKAGE_PINS)){
+      found[p]=exec('dpkg-query',['-W','-f=${Version}',p],{encoding:'utf8',stdio:['ignore','pipe','pipe']});
+      ok(found[p]===v,'STOP_PIN_MISMATCH');
+    }return found;
+  });
+  await ledger.at('READY_PLAYWRIGHT','STOP_PLAYWRIGHT',async()=>{
+    ok(require('playwright/package.json').version==='1.64.0','STOP_PIN_MISMATCH');
+    ok(digest(await read(resolve(product,'node_modules/playwright-core/browsers.json')))==='2cfd419f71ac6475d81e1301fa86c34cf2a2a6bae2a0da4b5a2b18310216b6bf','STOP_PIN_MISMATCH');
+    ok(digest(await read(resolve(product,'node_modules/playwright-core/lib/coreBundle.js')))==='2325ca4c1c83070e89dc49fb82525508f0a68e0cf12e2a624277968da216b7e0','STOP_PIN_MISMATCH');
+    const registry=await json(resolve(product,'node_modules/playwright-core/browsers.json'));
+    for(const [n,r] of [['chromium','1248'],['chromium-headless-shell','1248'],['webkit','2370']])ok(registry.browsers.find(x=>x.name===n)?.revision===r,'STOP_PIN_MISMATCH');
+  });
+  const engine=e.WW_ENGINE;
+  const entrySha256=await ledger.at('READY_BROWSER_ENTRY','STOP_BROWSER_ENTRY',async()=>{
+    ok(['chromium','webkit'].includes(engine),'STOP_BROWSER_ENTRY');let entry=require('playwright')[engine].executablePath();
+    if(engine==='chromium')entry=resolve(dirname(dirname(dirname(entry))),'chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell');
+    ok(entry.includes(engine==='chromium'?'chromium_headless_shell-1248':'webkit-2370'),'STOP_BROWSER_ENTRY');await canAccess(entry);return digest(await read(entry));
+  });
+  return {image:PIN.image,kernel:release(),node:version,playwright:'1.64.0',browserRevision:engine==='chromium'?'1248':'2370',entrySha256,libs};
 }
 export async function originalEndpoints(require,source=product){
   const esbuild=require('esbuild');
@@ -192,25 +276,26 @@ async function onlyEventFile(dir){
   const found=[];async function walk(d){for(const e of await readdir(d)){const p=resolve(d,e),s=await lstat(p);ok(!s.isSymbolicLink(),'RAW_PATH');if(s.isDirectory())await walk(p);else if(basename(p)==='provider-events.json')found.push(p);}}
   await walk(dir);ok(found.length===1,'EVENT_FILES');return found[0];
 }
-async function appCase(require,endpoints){
+async function appCase(require,endpoints,ledger){
   const out=privatePath('browser');const summary=privatePath('summary.json'),engine=process.env.WW_ENGINE;
   const env={...process.env,GITHUB_SHA:PIN.candidate,WW_DIAG_CONTROL:'1',WW_DIAG_SIGNALS:'',WW_DIAG_PUBLIC_URL:'',PLAYWRIGHT_JSON_OUTPUT_FILE:summary};delete env.GH_TOKEN;
   const args=['test','--config','qa-provider-v03/playwright.config.ts','--project',engine,'--grep','LIVE zero-retry original 45s temperature sample 1$','--workers','1','--retries','0','--repeat-each','1','--max-failures','0','--output',out,'--reporter','list,json'];
   const cli=resolve(product,'node_modules/playwright/cli.js');
-  let exit=await child(process.execPath,[cli,...args,'--list'],env,privatePath('discovery.log'),60000);ok(exit.code===0&&!exit.signal,'DISCOVERY');validateSelection(await readJSON(summary),engine,true);
-  exit=await child(process.execPath,[cli,...args],env,privatePath('test.log'));ok(!exit.signal&&[0,1].includes(exit.code),'APP_PROCESS');
+  await ledger.at('READY_DISCOVERY','STOP_DISCOVERY',async()=>{const exit=await child(process.execPath,[cli,...args,'--list'],env,privatePath('discovery.log'),60000);ok(exit.code===0&&!exit.signal,'DISCOVERY');validateSelection(await readJSON(summary),engine,true);});
+  await ledger.mark('LIVE_STARTED');
+  const exit=await child(process.execPath,[cli,...args],env,privatePath('test.log'));ok(!exit.signal&&[0,1].includes(exit.code),'APP_PROCESS');
   const selected=validateSelection(await readJSON(summary),engine,false),r=selected.t.results[0];ok((exit.code===0)===(r.status==='passed'),'APP_EXIT');
   const raw=await readJSON(await onlyEventFile(out));
   ok(raw.instrumentedSignals===false&&raw.scope==='source: unmodified production build'&&raw.browser===engine&&raw.test===selected.sp.title,'APP_INSTRUMENTATION');
   const observation={status:r.status==='passed'?'PASSED':'FAILED',testDurationMs:r.duration,providers:deriveEvents(raw,endpoints,2),native:null};
   return observation;
 }
-async function nativeCase(require,endpoints){
+async function nativeCase(require,endpoints,ledger){
   const pw=require('playwright'),engine=process.env.WW_ENGINE;
   const server=createServer((req,res)=>{if(req.url!=='/Weather-watch/'){res.writeHead(404);res.end();return;}res.setHeader('Content-Type','text/html; charset=utf-8');res.end('<!doctype html><html lang="th"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Native diagnostic</title><body></body></html>');});
   await new Promise((yes,no)=>{server.once('error',no);server.listen(4173,'127.0.0.1',yes);});let browser;
   try{
-    browser=await pw[engine].launch();const context=await browser.newContext({viewport:{width:375,height:667},isMobile:true,hasTouch:true});const page=await context.newPage();
+    await ledger.mark('LIVE_STARTED');browser=await pw[engine].launch();const context=await browser.newContext({viewport:{width:375,height:667},isMobile:true,hasTouch:true});const page=await context.newPage();
     const events=[];let violation=false;const started=Date.now();
     page.on('request',r=>{if(new URL(r.url()).origin==='http://127.0.0.1:4173')return;
       if(!endpoints.some(x=>x.url===r.url())||r.method()!=='GET')violation=true;
@@ -227,9 +312,12 @@ async function nativeCase(require,endpoints){
   }finally{if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
 }
 async function prepare(){
-  await mkdir(priv,{recursive:false,mode:0o700});const record=await publication();
-  git(root,'clone','--no-hardlinks','--no-checkout',root,product);git(product,'checkout','--detach',PIN.candidate);
-  record.sources={...record.sources,...await sourceGuard()};await save(privatePath('prepared.json'),record);
+  await mkdir(priv,{recursive:false,mode:0o700});const record=await trustedPublication(),ledger=new Readiness(record,ledgerSave);
+  await ledgerSave(ledger.doc);
+  await ledger.at('READY_SOURCE','STOP_SOURCE',async()=>{
+    git(root,'clone','--no-hardlinks','--no-checkout',root,product);git(product,'checkout','--detach',PIN.candidate);
+    record.sources={...record.sources,...await sourceGuard()};await save(privatePath('prepared.json'),record);
+  });
 }
 export async function buildAndVerify(source,directory,eventSha){
   const parentSha=process.env.GITHUB_SHA;
@@ -253,27 +341,56 @@ export async function buildAndVerify(source,directory,eventSha){
   await save(resolve(directory,'build-identity-proof.json'),proof);return proof;
 }
 async function build(){
-  const current=await publication(),prepared=await readJSON(privatePath('prepared.json'));
-  ok(JSON.stringify(current.identity)===JSON.stringify(prepared.identity),'IDENTITY');await sourceGuard();
+  const current=await trustedPublication(),ledger=await resumeReadiness(current);
+  await ledger.at('READY_BUILD','STOP_BUILD',async()=>{
+    const prepared=await readJSON(privatePath('prepared.json'));
+    ok(JSON.stringify(current.identity)===JSON.stringify(prepared.identity),'IDENTITY');await sourceGuard();
+    const env={...process.env};delete env.GH_TOKEN;
+    const installed=await child('npm',['ci'],env,privatePath('npm.log'));
+    ok(installed.code===0&&!installed.signal,'DEPENDENCIES');
+    await buildAndVerify(product,priv,process.env.GITHUB_SHA);await sourceGuard();
+  });
+}
+async function install(){
+  const current=await trustedPublication(),ledger=await resumeReadiness(current);
   const env={...process.env};delete env.GH_TOKEN;
-  const installed=await child('npm',['ci'],env,privatePath('npm.log'));
-  ok(installed.code===0&&!installed.signal,'DEPENDENCIES');
-  await buildAndVerify(product,priv,process.env.GITHUB_SHA);await sourceGuard();
+  await ledger.at('READY_BROWSER_INSTALL','STOP_BROWSER_INSTALL',async()=>{
+    const r=await child('npx',['--no-install','playwright','install','--with-deps',process.env.WW_ENGINE],env,privatePath('install.log'),0);
+    ok(r.code===0&&!r.signal,'STOP_BROWSER_INSTALL');
+  });
+  await ledger.at('READY_PACKAGE_PROVISION','STOP_PACKAGE_PROVISION',async()=>{
+    // Proposed future CI only: exact historical pins, no downgrade/force flags.
+    const r=await child('sudo',['apt-get','install','--yes','--no-install-recommends',...Object.entries(PACKAGE_PINS).map(([p,v])=>p+'='+v)],env,privatePath('pinned-packages.log'),0);
+    ok(r.code===0&&!r.signal,'STOP_PACKAGE_PROVISION');
+  });
 }
 async function collect(){
-  const before=await publication(),prepared=await readJSON(privatePath('prepared.json'));
-  ok(JSON.stringify(before.identity)===JSON.stringify(prepared.identity),'IDENTITY');
-  const original=await sourceGuard();ok(JSON.stringify({...before.sources,...original})===JSON.stringify(prepared.sources),'SOURCE');
-  await runtimeGuard();const require=createRequire(resolve(product,'package.json'));const environment=await environmentGuard(require);
-  const endpoints=await originalEndpoints(require);
-  const observation=process.env.WW_SURFACE==='app'?await appCase(require,endpoints):await nativeCase(require,endpoints);
-  await runtimeGuard();await sourceGuard();const after=await publication();ok(JSON.stringify(after)===JSON.stringify(before),'POST_IDENTITY');
-  const doc={schema:1,identity:before.identity,environment,sources:prepared.sources,observation,classification:'DIAGNOSTIC_ONLY'};
-  validateDocument(doc);await save(privatePath('derived.json'),doc);
+  const before=await trustedPublication(),ledger=await resumeReadiness(before);
+  await ledger.at('READY_RUNTIME','STOP_RUNTIME',async()=>{
+    const prepared=await readJSON(privatePath('prepared.json'));const original=await sourceGuard();
+    ok(JSON.stringify(before.identity)===JSON.stringify(prepared.identity)&&JSON.stringify({...before.sources,...original})===JSON.stringify(prepared.sources),'SOURCE');
+    await runtimeGuard();
+  });
+  const require=createRequire(resolve(product,'package.json')),environment=await environmentGuard(require,ledger);
+  const endpoints=await ledger.at('READY_URL_FACTORY','STOP_URL_FACTORY',()=>originalEndpoints(require));
+  const observation=await ledger.at('LIVE_COMPLETED','STOP_CASE_EVIDENCE',()=>process.env.WW_SURFACE==='app'?appCase(require,endpoints,ledger):nativeCase(require,endpoints,ledger));
+  await ledger.at('READY_VERIFIED','STOP_CASE_EVIDENCE',async()=>{
+    await runtimeGuard();await sourceGuard();const after=await trustedPublication();ok(JSON.stringify(after)===JSON.stringify(before),'STOP_IDENTITY');
+    const doc={schema:1,identity:before.identity,environment,sources:{...before.sources,...ORIGINAL},observation,classification:'DIAGNOSTIC_ONLY'};
+    validateDocument(doc);await save(privatePath('derived.json'),doc);
+  });
   if(observation.status!=='PASSED')process.exitCode=1;
 }
 async function finalize(){
-  const current=await publication(),doc=validateDocument(await readJSON(privatePath('derived.json')));
+  const current=await trustedPublication();
+  const ledger=validateLedger(await readJSON(privatePath('readiness.json')),current);
+  if(ledger.state==='BLOCKED'){
+    process.exitCode=await deliverReadiness(ledger,current,resolve(root,'qa-native-control-v03/delivery'));
+    if(process.env.GITHUB_OUTPUT)await appendFile(process.env.GITHUB_OUTPUT,'safe_delivery=true\n');
+    console.log('SAFE_BLOCKED_READINESS_READY');return;
+  }
+  ok(ledger.readiness.lastCompleted==='READY_VERIFIED','STOP_LEDGER');
+  const doc=validateDocument(await readJSON(privatePath('derived.json')));
   ok(JSON.stringify(current.identity)===JSON.stringify(doc.identity),'FINAL_IDENTITY');
   for(const p of FILES)ok(current.sources[p]===doc.sources[p],'FINAL_SOURCE');await runtimeGuard();await sourceGuard();
   const dir=resolve(root,'qa-native-control-v03/delivery');await mkdir(dir,{recursive:false,mode:0o700});
@@ -286,7 +403,7 @@ async function finalize(){
   console.log('SAFE_DIAGNOSTIC_EVIDENCE_READY');
 }
 if(process.argv[1] && import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
-  const commands={prepare,build,collect,finalize};
+  const commands={prepare,build,install,collect,finalize};
   try{ok(Object.hasOwn(commands,process.argv[2]),'COMMAND');await commands[process.argv[2]]();}
   catch(error){console.error(stopCode(error));process.exitCode=1;}
 }

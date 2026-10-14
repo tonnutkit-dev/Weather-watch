@@ -37,9 +37,8 @@ jobs:
         run: node qa-native-control-v03/collector.mjs prepare
       - name: Original locked product build (private output)
         run: node qa-native-control-v03/collector.mjs build
-      - name: Install conventional browser dependencies (private output)
-        working-directory: /tmp/ww-native-product
-        run: npx --no-install playwright install --with-deps ${{ matrix.engine }} > /tmp/ww-native-private/install.log 2>&1
+      - name: Install browser and exact historical library pins (private output)
+        run: node qa-native-control-v03/collector.mjs install
       - name: Guard environment and collect exactly one first observation
         run: node qa-native-control-v03/collector.mjs collect
       - name: Validate derived evidence and prepare safe delivery
