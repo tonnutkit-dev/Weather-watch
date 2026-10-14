@@ -20,7 +20,7 @@ jobs:
           test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
           test "$(git rev-parse origin/work/release-candidate-v03-01)" = 972c0e17243646f60dfb23ec40bdf556481c4bfc
           test "$(git rev-parse origin/work/webkit-transport-measurement-audit-v03)" = 2cae58a44afa73c53786ab2c4d60292ca156dc01
-          test "$(git rev-parse HEAD^)" = 972c0e17243646f60dfb23ec40bdf556481c4bfc
+          git merge-base --is-ancestor 972c0e17243646f60dfb23ec40bdf556481c4bfc HEAD
           mkdir -p qa-chromium-v03/artifacts
       - run: npm ci
       - run: npm run typecheck

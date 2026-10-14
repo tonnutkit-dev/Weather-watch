@@ -6,8 +6,8 @@ import { fileURLToPath } from 'node:url';
 export default defineConfig({
   testDir: '.', testMatch: 'failure-handling.spec.ts', workers: 1, retries: 0,
   timeout: 60000, expect: { timeout: 10000 },
-  reporter: [['list'], ['json', { outputFile: 'qa-chromium-v03/results/summary.json' }]],
-  outputDir: 'qa-chromium-v03/results/browser',
+  reporter: [['list'], ['json', { outputFile: fileURLToPath(new URL('results/summary.json', import.meta.url)) }]],
+  outputDir: fileURLToPath(new URL('results/browser', import.meta.url)),
   use: {
     baseURL: 'http://127.0.0.1:4173/Weather-watch/', viewport: { width: 375, height: 667 },
     isMobile: true, hasTouch: true, serviceWorkers: 'block',

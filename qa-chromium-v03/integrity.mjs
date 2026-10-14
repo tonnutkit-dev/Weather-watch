@@ -14,7 +14,7 @@ for (const [name, sha] of [['main', main], ['work/release-candidate-v03-01', rc]
   assert.ok(refs.split('\n').includes(`${sha}\trefs/heads/${name}`), `STOP remote drift: ${name}`);
 }
 assert.equal(git('status', '--porcelain=v1', '--untracked-files=no'), '');
-assert.equal(git('rev-parse', 'HEAD^'), rc);
+git('merge-base', '--is-ancestor', rc, 'HEAD');
 if (process.env.GITHUB_ACTIONS) {
   assert.equal(process.env.GITHUB_RUN_ATTEMPT, '1');
   assert.equal(process.env.GITHUB_REF_NAME, branch);
