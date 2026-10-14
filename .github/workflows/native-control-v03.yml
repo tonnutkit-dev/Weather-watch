@@ -1,0 +1,56 @@
+name: Weather Watch bounded native-browser comparison
+on:
+  push:
+    branches: [work/unprivileged-native-control-v03]
+    paths: [.github/workflows/native-control-v03.yml, qa-native-control-v03/**]
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: ww-native-control-once-v03
+  cancel-in-progress: false
+jobs:
+  native-evidence:
+    name: native-evidence (${{ matrix.cell }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - {cell: chromium-app, engine: chromium, surface: app}
+          - {cell: webkit-app, engine: webkit, surface: app}
+          - {cell: chromium-native, engine: chromium, surface: native}
+          - {cell: webkit-native, engine: webkit, surface: native}
+    env:
+      WW_CELL: ${{ matrix.cell }}
+      WW_ENGINE: ${{ matrix.engine }}
+      WW_SURFACE: ${{ matrix.surface }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24.21.0}
+      - name: Verify bounded publication and prepare pinned product
+        run: node qa-native-control-v03/collector.mjs prepare
+      - name: Original locked product build (private output)
+        run: node qa-native-control-v03/collector.mjs build
+      - name: Install conventional browser dependencies (private output)
+        working-directory: /tmp/ww-native-product
+        run: npx --no-install playwright install --with-deps ${{ matrix.engine }} > /tmp/ww-native-private/install.log 2>&1
+      - name: Guard environment and collect exactly one first observation
+        run: node qa-native-control-v03/collector.mjs collect
+      - name: Validate derived evidence and prepare safe delivery
+        id: safe
+        if: always()
+        run: node qa-native-control-v03/collector.mjs finalize
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() && steps.safe.outputs.safe_delivery == 'true' }}
+        with:
+          name: native-control-${{ matrix.cell }}-${{ github.run_id }}
+          path: qa-native-control-v03/delivery/
+          include-hidden-files: false
+          if-no-files-found: error
+          retention-days: 30
