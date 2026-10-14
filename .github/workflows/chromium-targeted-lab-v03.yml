@@ -1,0 +1,70 @@
+name: Weather Watch isolated Chromium deterministic LAB
+on:
+  push:
+    branches: [work/chromium-targeted-lab-v03]
+    paths: [qa-chromium-v03/**, src/components/WeatherOverview.tsx, src/tests/weather-overview-retry.test.tsx, .github/workflows/chromium-targeted-lab-v03.yml]
+permissions: {contents: read}
+jobs:
+  deterministic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - name: Verify pinned refs before any test
+        run: |
+          test "$GITHUB_RUN_ATTEMPT" = 1
+          test "$GITHUB_REF_NAME" = work/chromium-targeted-lab-v03
+          test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
+          test "$(git rev-parse origin/work/release-candidate-v03-01)" = 972c0e17243646f60dfb23ec40bdf556481c4bfc
+          test "$(git rev-parse origin/work/webkit-transport-measurement-audit-v03)" = 2cae58a44afa73c53786ab2c4d60292ca156dc01
+          test "$(git rev-parse HEAD^)" = 972c0e17243646f60dfb23ec40bdf556481c4bfc
+          mkdir -p qa-chromium-v03/artifacts
+      - run: npm ci
+      - run: npm run typecheck
+      - name: All unit tests with unmasked exit status
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee qa-chromium-v03/artifacts/unit.log
+      - name: Build candidate and same-runner exact RC inventories
+        run: |
+          npm run build
+          npm run verify:pages
+          cp dist/release.json qa-chromium-v03/artifacts/release.json
+          git worktree add /tmp/ww-chromium-rc 972c0e17243646f60dfb23ec40bdf556481c4bfc
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/ww-chromium-rc/node_modules
+          cd /tmp/ww-chromium-rc
+          npm run build
+          GITHUB_SHA=972c0e17243646f60dfb23ec40bdf556481c4bfc npm run verify:pages
+          cd "$GITHUB_WORKSPACE"
+          node qa-chromium-v03/integrity.mjs dist /tmp/ww-chromium-rc/dist qa-chromium-v03/artifacts/integrity.json
+      - name: Prove final regression fails on exact frozen RC component
+        run: |
+          cp src/tests/weather-overview-retry.test.tsx /tmp/ww-chromium-rc/src/tests/weather-overview-retry.test.tsx
+          cd /tmp/ww-chromium-rc
+          set +e
+          npx vitest run src/tests/weather-overview-retry.test.tsx > "$GITHUB_WORKSPACE/qa-chromium-v03/artifacts/unit-before.log" 2>&1
+          before_status=$?
+          set -e
+          test "$before_status" = 1
+          grep -F 'Unable to find an accessible element with the role' "$GITHUB_WORKSPACE/qa-chromium-v03/artifacts/unit-before.log"
+          grep -F 'cached refresh failure retains labeled data and an actionable weather retry' "$GITHUB_WORKSPACE/qa-chromium-v03/artifacts/unit-before.log"
+      - run: npx playwright install --with-deps chromium
+      - name: Five deterministic Chromium LAB cases only, no remote request continued
+        run: |
+          set -o pipefail
+          npx playwright test --config qa-chromium-v03/playwright.config.ts 2>&1 | tee qa-chromium-v03/artifacts/lab.log
+      - name: Retain redacted synthetic evidence and hidden results
+        if: always()
+        id: evidence
+        run: node qa-chromium-v03/finalize.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() && steps.evidence.outcome == 'success' }}
+        with:
+          name: chromium-deterministic-lab-${{ github.run_id }}
+          path: qa-chromium-v03/delivery/
+          include-hidden-files: true
+          retention-days: 90
+          if-no-files-found: error
