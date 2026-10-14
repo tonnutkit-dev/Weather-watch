@@ -9,7 +9,7 @@ import os from 'node:os';
 
 const root = process.cwd(), source = '/tmp/ww-strict-live-candidate';
 const output = resolve(root, 'qa-strict-live-v03/private');
-const qaBase = '75d1d3cee6517a8b9954d4cc2370d9e63de14841';
+const qaBase = 'daec9eecdb39f8c0892d0c305c2a0cae2d3c608b';
 const candidate = 'a19d53ac5587ded31b7e3cad6112f02c7621aeb6';
 const rc = '972c0e17243646f60dfb23ec40bdf556481c4bfc';
 const main = '2036e2ac788cb31d25fd387cb40520ad95c408a6';
@@ -38,7 +38,7 @@ async function guard() {
   assert.equal(head, process.env.GITHUB_SHA);
   assert.equal(git(root, 'rev-parse', 'HEAD^'), qaBase);
   assert.equal(git(root, 'rev-list', '--count', `${qaBase}..HEAD`), '1');
-  assert.equal(git(root, 'rev-list', '--count', `${candidate}..HEAD`), '3');
+  assert.equal(git(root, 'rev-list', '--count', `${candidate}..HEAD`), '4');
   assert.equal(git(root, 'status', '--porcelain=v1', '--untracked-files=no'), '');
   assert.deepEqual(git(root, 'diff', '--name-status', candidate, 'HEAD').split('\n').sort(), files.map(p => `A\t${p}`).sort());
   assert.deepEqual(git(root, 'diff', '--name-status', qaBase, 'HEAD').split('\n').sort(), correctionFiles.map(p => `M\t${p}`).sort());
