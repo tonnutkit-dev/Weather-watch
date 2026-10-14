@@ -13,30 +13,48 @@ jobs:
         with: {fetch-depth: 0, persist-credentials: false}
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: {node-version: 24.21.0, cache: npm}
-      - name: Guard exact refs and QA-only single commit; prepare pinned source
-        run: node qa-strict-live-v03/runner.mjs prepare
-      - name: Build exact candidate with unchanged production commands
-        working-directory: /tmp/ww-strict-live-candidate
-        env:
-          GITHUB_SHA: a19d53ac5587ded31b7e3cad6112f02c7621aeb6
-          WW_RELEASE_CHANNEL: release-candidate
+      - name: Guard one QA correction and prepare exact candidate
+        id: prepare
         run: |
-          npm ci
-          npm run build
-          npm run verify:pages
-      - name: Check runtime inventory against actual LAB artifact before LIVE
-        run: node qa-strict-live-v03/runner.mjs verify
-      - name: Install only the two authorized engines from the candidate lock
+          set -o pipefail
+          mkdir -p qa-strict-live-v03/private
+          node qa-strict-live-v03/runner.mjs prepare 2>&1 | tee qa-strict-live-v03/private/prepare.log
+      - name: Build exact candidate with unchanged production commands
+        id: build
         working-directory: /tmp/ww-strict-live-candidate
-        run: npx --no-install playwright install --with-deps chromium webkit
+        run: |
+          set -o pipefail
+          npm ci 2>&1 | tee "$GITHUB_WORKSPACE/qa-strict-live-v03/private/npm-ci.log"
+          npm run build 2>&1 | tee "$GITHUB_WORKSPACE/qa-strict-live-v03/private/build.log"
+      - name: Offline packaging proof, original identity proof and inventory
+        id: verify
+        run: |
+          set -o pipefail
+          python3 qa-strict-live-v03/finalize.py --self-check 2>&1 | tee qa-strict-live-v03/private/packaging-proof.log
+          node qa-strict-live-v03/runner.mjs verify 2>&1 | tee qa-strict-live-v03/private/verify.log
+      - name: Install only the two authorized engines from the candidate lock
+        id: install
+        working-directory: /tmp/ww-strict-live-candidate
+        run: |
+          set -o pipefail
+          npx --no-install playwright install --with-deps chromium webkit 2>&1 | tee "$GITHUB_WORKSPACE/qa-strict-live-v03/private/install.log"
       - name: Original strict LIVE, Chromium 3 then WebKit 3, no rerun
-        run: node qa-strict-live-v03/runner.mjs collect
-      - name: Validate and redact complete evidence before any artifact upload
+        id: collect
+        run: |
+          set -o pipefail
+          node qa-strict-live-v03/runner.mjs collect 2>&1 | tee qa-strict-live-v03/private/collection-driver.log
+      - name: Retain safe diagnostics without changing the gate outcome
         id: finalize
         if: always()
+        env:
+          WW_QA_PREPARE: ${{ steps.prepare.outcome }}
+          WW_QA_BUILD: ${{ steps.build.outcome }}
+          WW_QA_VERIFY: ${{ steps.verify.outcome }}
+          WW_QA_INSTALL: ${{ steps.install.outcome }}
+          WW_QA_COLLECT: ${{ steps.collect.outcome }}
         run: python3 qa-strict-live-v03/finalize.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: ${{ always() && steps.finalize.outcome == 'success' }}
+        if: ${{ always() && steps.finalize.outputs.safe_delivery == 'true' }}
         with:
           name: candidate-strict-live-${{ github.run_id }}
           path: qa-strict-live-v03/delivery/

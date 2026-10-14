@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { execFileSync, spawn } from 'node:child_process';
+import { execFileSync, spawn, spawnSync } from 'node:child_process';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { createServer } from 'node:net';
@@ -9,6 +9,7 @@ import os from 'node:os';
 
 const root = process.cwd(), source = '/tmp/ww-strict-live-candidate';
 const output = resolve(root, 'qa-strict-live-v03/private');
+const qaBase = '1f8cecbbfdbbd7c01b8def91620232e54c6fb48c';
 const candidate = 'a19d53ac5587ded31b7e3cad6112f02c7621aeb6';
 const rc = '972c0e17243646f60dfb23ec40bdf556481c4bfc';
 const main = '2036e2ac788cb31d25fd387cb40520ad95c408a6';
@@ -33,15 +34,17 @@ async function guard() {
   assert.equal(process.env.GITHUB_EVENT_NAME, 'push');
   const head = git(root, 'rev-parse', 'HEAD');
   assert.equal(head, process.env.GITHUB_SHA);
-  assert.equal(git(root, 'rev-parse', 'HEAD^'), candidate);
-  assert.equal(git(root, 'rev-list', '--count', `${candidate}..HEAD`), '1');
+  assert.equal(git(root, 'rev-parse', 'HEAD^'), qaBase);
+  assert.equal(git(root, 'rev-list', '--count', `${qaBase}..HEAD`), '1');
+  assert.equal(git(root, 'rev-list', '--count', `${candidate}..HEAD`), '2');
   assert.equal(git(root, 'status', '--porcelain=v1', '--untracked-files=no'), '');
   assert.deepEqual(git(root, 'diff', '--name-status', candidate, 'HEAD').split('\n').sort(), files.map(p => `A\t${p}`).sort());
+  assert.deepEqual(git(root, 'diff', '--name-status', qaBase, 'HEAD').split('\n').sort(), files.map(p => `M\t${p}`).sort());
   git(root, 'merge-base', '--is-ancestor', rc, candidate);
   const refs = git(root, 'ls-remote', '--heads', 'origin', 'main', 'work/release-candidate-v03-01', 'work/chromium-targeted-lab-v03', branch).split('\n');
   for (const [name, sha] of [['main', main], ['work/release-candidate-v03-01', rc], ['work/chromium-targeted-lab-v03', candidate], [branch, head]])
     assert.ok(refs.includes(`${sha}\trefs/heads/${name}`), `STOP SHA drift: ${name}`);
-  return { head, tree: git(root, 'rev-parse', 'HEAD^{tree}'), candidate, rc, main, branch };
+  return { head, tree: git(root, 'rev-parse', 'HEAD^{tree}'), qaBase, candidate, rc, main, branch };
 }
 async function buildIdentity(label) {
   assert.equal(git(source, 'rev-parse', 'HEAD'), candidate);
@@ -58,6 +61,41 @@ async function buildIdentity(label) {
   assert.equal(release.diagnosticFixturesIncluded, false);
   await save(`build-${label}.json`, { source: candidate, tree: git(source, 'rev-parse', 'HEAD^{tree}'), runtimeSha256: digest, release, files: all });
 }
+async function verifyReleaseIdentity() {
+  const eventSha = process.env.GITHUB_SHA;
+  assert.equal(eventSha, git(root, 'rev-parse', 'HEAD'));
+  assert.equal(git(source, 'rev-parse', 'HEAD'), candidate);
+  assert.equal(git(source, 'status', '--porcelain=v1', '--untracked-files=no'), '');
+  const proof = { status: 'checking', eventSha, candidate, runs: [] };
+  const childEnv = { ...process.env, GITHUB_SHA: candidate, WW_RELEASE_CHANNEL: 'release-candidate' };
+  const probe = "import {sourceIdentity} from './qa-rc-v03/release-contract.mjs'; console.log(JSON.stringify(sourceIdentity()));";
+  async function invoke(label, command, args, env) {
+    const result = spawnSync(command, args, { cwd: source, env, encoding: 'utf8', timeout: 60000, maxBuffer: 4 * 1024 * 1024 });
+    await writeFile(resolve(output, `${label}.stdout.log`), result.stdout || '');
+    await writeFile(resolve(output, `${label}.stderr.log`), result.stderr || '');
+    proof.runs.push({ label, status: result.status, signal: result.signal, errorCode: result.error?.code || null });
+    assert.ok(!result.error && !result.signal, 'STOP identity proof process failed');
+    return result;
+  }
+  try {
+    const negative = await invoke('identity-negative', process.execPath, ['--input-type=module', '-e', probe], { ...process.env });
+    assert.equal(negative.status, 1);
+    assert.ok(negative.stderr.includes('CI SHA must match actual checkout'), 'STOP original identity assertion did not reject mismatch');
+    const positive = await invoke('identity-positive', process.execPath, ['--input-type=module', '-e', probe], childEnv);
+    assert.equal(positive.status, 0);
+    assert.deepEqual(JSON.parse(positive.stdout), { commit: candidate, tree: git(source, 'rev-parse', 'HEAD^{tree}') });
+    const verified = await invoke('release-verifier', 'npm', ['run', 'verify:pages'], childEnv);
+    assert.equal(verified.status, 0, 'STOP unchanged release verifier failed');
+    assert.equal(process.env.GITHUB_SHA, eventSha, 'STOP parent event identity mutated');
+    proof.status = 'passed';
+  } catch (error) {
+    proof.status = 'failed';
+    throw error;
+  } finally {
+    proof.parentEventShaAfter = process.env.GITHUB_SHA;
+    await save('identity-proof.json', proof);
+  }
+}
 async function freePort(port) {
   await new Promise((ok, fail) => { const server = createServer(); server.once('error', fail); server.listen(port, '127.0.0.1', () => server.close(ok)); });
 }
@@ -73,7 +111,7 @@ if (mode === 'prepare') {
     runnerImage: process.env.ImageOS || null, runnerImageVersion: process.env.ImageVersion || null,
     proxyPresence: Object.fromEntries(['HTTP_PROXY', 'HTTPS_PROXY', 'ALL_PROXY', 'NO_PROXY'].map(k => [k, Boolean(process.env[k])])) });
 } else if (mode === 'verify') {
-  await guard(); await buildIdentity('before');
+  await guard(); await verifyReleaseIdentity(); await buildIdentity('before');
 } else if (mode === 'collect') {
   await guard(); await buildIdentity('collection-start');
   await save('browser-revisions.json', JSON.parse(await readFile(resolve(source, 'node_modules/playwright-core/browsers.json'), 'utf8')));
