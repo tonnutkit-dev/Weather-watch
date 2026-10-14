@@ -1,4 +1,5 @@
 name: Weather Watch isolated Chromium deterministic LAB
+# Activation request: bounded Chromium LAB artifact verification (2026-10-14).
 on:
   push:
     branches: [work/chromium-targeted-lab-v03]
