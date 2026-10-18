@@ -18,6 +18,13 @@ export function WeatherOverview(p: Pick<SituationProps, "location" | "weather" |
                 {timeLabel(w?.current.time, p.location.timezone)}
               </span>
             </div>
+            {p.weather.isError && w && (
+              <button className="icon-button" aria-label="ลองใหม่"
+                title="ลองอัปเดตข้อมูลอากาศอีกครั้ง" disabled={p.weather.isFetching}
+                onClick={p.onRefresh}>
+                <RefreshCw size={19} />
+              </button>
+            )}
             <button
               className={`icon-button favorite-button ${p.favorite ? "saved" : ""}`}
               aria-label={p.favorite ? "ลบตำแหน่งโปรด" : "บันทึกตำแหน่งโปรด"}
