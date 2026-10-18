@@ -80,12 +80,12 @@ test('LAB native timeout and any abort real local transport',async({page},info)=
  }finally{await save();}
 });
 for(const mode of ['reject','hang','delayed','late','empty','absent','expired'])test(`LAB fault ${mode} retains truthful map and state`,async({page},info)=>{
- test.skip(!!publicURL||control);const save=await observe(page,info);
+ test.skip(!!publicURL||control);if(mode==='hang'||mode==='late')test.setTimeout(120000);const save=await observe(page,info);
  try{
   await labData(page,mode);await page.goto('./');
   const panel=page.locator('.situation-panel');
   if(mode==='reject'||mode==='hang'||mode==='late'||mode==='empty'){
-   await expect(page.getByText('โหลดข้อมูลอากาศไม่ได้',{exact:true})).toBeVisible({timeout:30000});
+   await expect(page.getByText('โหลดข้อมูลอากาศไม่ได้',{exact:true})).toBeVisible({timeout:mode==='hang'||mode==='late'?50000:30000});
    await expect(panel).toHaveAttribute('data-verdict','Unknown');
    await expect(page.getByRole('button',{name:'ลองใหม่',exact:true}).first()).toBeVisible();
   }else{

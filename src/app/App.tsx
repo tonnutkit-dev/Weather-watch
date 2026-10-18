@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useEffect, useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Search,
   Settings2,
@@ -40,6 +40,7 @@ import { MapBoundary } from "../components/MapBoundary";
 import { freshness } from "../reliability/freshness";
 import { useSourceClock } from "../reliability/useFreshness";
 import { recordRefresh, useBoundedRefresh, automaticRefreshAllowed } from "../reliability/useRefresh";
+import { weatherLoadRetry } from "../reliability/weatherRetry";
 import { radarRequestKey, RadarPresentationStore } from "../radar/presentation";
 import { useRadarPlayback } from "../radar/usePlayback";
 import { value } from "../shared/time";
@@ -80,6 +81,7 @@ export default function App() {
     [geoLoading, setGeoLoading] = useState(false),
     [mapAction, setMapAction] = useState(0),
     [online, setOnline] = useState(navigator.onLine);
+  const client = useQueryClient();
   const weatherKey = ["weather", location.country, location.latitude, location.longitude, location.timezone];
   const airKey = ["air", location.country, location.latitude, location.longitude, location.timezone];
   const weather = useQuery({
@@ -87,6 +89,11 @@ export default function App() {
     queryFn: ({ signal }) => { recordRefresh(weatherKey); return getWeather(location, signal); },
     staleTime: 600000, refetchOnReconnect: false, refetchOnWindowFocus: false,
     retryOnMount: false, refetchOnMount: (query) => automaticRefreshAllowed(query.queryKey),
+    retry: (failureCount, error) => {
+      const configured = client.getDefaultOptions().queries?.retry;
+      if (configured === false || configured === 0) return false;
+      return weatherLoadRetry(failureCount, error, client.getQueryData(weatherKey) != null);
+    },
   });
   const air = useQuery({
     queryKey: airKey,
