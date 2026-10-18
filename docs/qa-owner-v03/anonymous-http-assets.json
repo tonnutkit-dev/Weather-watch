@@ -1,0 +1,247 @@
+{
+  "url": "https://weather-watch-v03-p0-owner-qa-ton.tonnutkit.chatgpt.site/",
+  "approved": "4b3548fa49abd9475547fc6e8336a1b854ad6952",
+  "anonymous": true,
+  "assets": [
+    {
+      "path": "assets/GLCanvas-D3M6295P.js",
+      "http": 200,
+      "mime": "text/javascript",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/RasterCanvas-CUg9oWNh.js",
+      "http": 200,
+      "mime": "text/javascript",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/index-BqqJ5UR8.js",
+      "http": 200,
+      "mime": "text/javascript",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/index-ZsJjQEyd.css",
+      "http": 200,
+      "mime": "text/css",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/layout-CyjMylSm.js",
+      "http": 200,
+      "mime": "text/javascript",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/maplibre-gl-worker-VaXr2Fck.mjs",
+      "http": 200,
+      "mime": "text/javascript",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-400-normal-BaWBrqFP.woff2",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/MapCanvas-CwEy1WKZ.js",
+      "http": 200,
+      "mime": "text/javascript",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/GLCanvas-RZO-t2LB.css",
+      "http": 200,
+      "mime": "text/css",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/RasterCanvas-CIGW-MKW.css",
+      "http": 200,
+      "mime": "text/css",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-400-normal-Dh_FJjOB.woff",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-500-normal-fyBKClF1.woff2",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-600-normal-CemcjnVR.woff2",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-500-normal-BC04jsmm.woff",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-600-normal-Dbc-dNO6.woff",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-700-normal-_dn-40wb.woff2",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-700-normal-C4AMFKt5.woff",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-ext-400-normal-nBP59pVw.woff2",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-ext-400-normal-B-1H0YkH.woff",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-ext-500-normal-B-ZWb8SZ.woff2",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-ext-500-normal-CrEHO7C8.woff",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-ext-600-normal-PkMZo0xa.woff",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-ext-600-normal-maHHBsez.woff2",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-thai-400-normal-BEOmKAI1.woff2",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-thai-400-normal-Dxb_unuU.woff",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-ext-700-normal-xdwl2Xg6.woff",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-latin-ext-700-normal-uJk63onE.woff2",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-thai-500-normal-CU_X86GQ.woff2",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-thai-600-normal-CmgB8_JK.woff",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-thai-500-normal-BOGXO2tw.woff",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-thai-600-normal-Cs73sVjl.woff2",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "favicon.svg",
+      "http": 200,
+      "mime": "image/svg+xml",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-thai-700-normal-C9ISMlQq.woff",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "assets/noto-sans-thai-thai-700-normal-Cm52XUnT.woff2",
+      "http": 200,
+      "mime": "application/octet-stream",
+      "sha256Matched": true
+    },
+    {
+      "path": "index.html",
+      "http": 200,
+      "mime": "text/html",
+      "sha256Matched": true
+    },
+    {
+      "path": "release.json",
+      "http": 200,
+      "mime": "application/json",
+      "sha256Matched": true
+    }
+  ],
+  "checkedAt": "2026-10-11T12:31:33.286Z",
+  "release": {
+    "project": "Weather Watch",
+    "version": "0.3-p0-owner-qa",
+    "channel": "isolated-owner-qa",
+    "commit": "4b3548fa49abd9475547fc6e8336a1b854ad6952",
+    "testedSource": "6e0fc36f5554c3fa49578c79e35ef017a7c47e3e",
+    "base": "/",
+    "projectId": "appgprj_6acb7faa5b3c8191b7a76763de6a5ce2",
+    "site": "https://weather-watch-v03-p0-owner-qa-ton.tonnutkit.chatgpt.site",
+    "builtAt": "2026-10-11T12:24:36.889Z",
+    "applicationSourceUnchanged": true,
+    "diagnosticFixturesIncluded": false
+  },
+  "originalGitHubPages": {
+    "project": "Weather Watch",
+    "version": "0.2.0",
+    "commit": "2036e2ac788cb31d25fd387cb40520ad95c408a6",
+    "base": "/Weather-watch/",
+    "site": "https://tonnutkit-dev.github.io/Weather-watch/",
+    "builtAt": "2026-10-11T05:12:05.577Z",
+    "channel": "public-qa"
+  },
+  "status": "passed"
+}

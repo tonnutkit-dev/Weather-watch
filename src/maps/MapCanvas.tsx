@@ -7,7 +7,9 @@ export interface MapLayers {
   air: boolean;
   coverage: boolean;
 }
+import type { RadarPresentation } from "../radar/presentation";
 export interface MapProps {
+  onRadarPresentation?: (state: RadarPresentation) => void;
   location: Location;
   theme: "light" | "dark";
   layers: MapLayers;

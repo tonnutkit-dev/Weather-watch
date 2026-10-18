@@ -15,8 +15,8 @@ export function situation(
     air.aqi === null ||
     weather.current.time === null ||
     air.time === null ||
-    now - weather.current.time > 7200 ||
-    now - air.time > 10800
+    now - weather.current.time >= 7200 ||
+    now - air.time >= 10800
   )
     return {
       verdict: "Unknown",

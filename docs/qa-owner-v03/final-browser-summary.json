@@ -1,0 +1,233 @@
+{
+  "runId": 38140590946,
+  "qaCommit": "c66647b9e70a861a6ef370e0d2dc7ad98c697925",
+  "deployedCandidate": "4b3548fa49abd9475547fc6e8336a1b854ad6952",
+  "status": "success",
+  "suiteStats": {
+    "playwright-report": {
+      "total": 9,
+      "expected": 8,
+      "unexpected": 0,
+      "flaky": 1,
+      "skipped": 0,
+      "ok": false
+    },
+    "qa-owner-v03/browser-report": {
+      "total": 3,
+      "expected": 3,
+      "unexpected": 0,
+      "flaky": 0,
+      "skipped": 0,
+      "ok": true
+    }
+  },
+  "artifactId": 11703515333,
+  "artifactName": "weather-watch-v03-p0-owner-qa-38140590946",
+  "artifactSha256": "b5a2de8dd3c992a9ca0257ad882c2b160b205afe271fa5bccbad9a73d9bbce24",
+  "attachments": [
+    {
+      "suite": "playwright-report",
+      "test": "live map/weather and appearance/location integrity",
+      "label": "desktop-light",
+      "path": "playwright-report/data/ac64ca6ba308f537ce533d62d0d8ebfa85948e90.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "live map/weather and appearance/location integrity",
+      "label": "desktop-dark",
+      "path": "playwright-report/data/8d5f4222cd4e94c8cfd6d2cdc7fc6670d64291d2.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "mobile states and no horizontal overflow",
+      "label": "screenshot",
+      "path": "playwright-report/data/c4e7f0ee450274475bf8dc1d944a38b1fb70f866.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "mobile states and no horizontal overflow",
+      "label": "error-context",
+      "path": "playwright-report/data/6f727757bdded0ecdcc16eea2a2a6ebf410b47bc.md"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "mobile states and no horizontal overflow",
+      "label": "trace",
+      "path": "playwright-report/data/edb39e8a6496c12df128ff40bd5cd737e39dd65d.zip"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "mobile states and no horizontal overflow",
+      "label": "mobile-light",
+      "path": "playwright-report/data/d4be619d85ac1810d60b08fae4697cc01c3f9e71.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "mobile states and no horizontal overflow",
+      "label": "mobile-dark",
+      "path": "playwright-report/data/3b56a5d277e0987a4614c981bbbb3223977dced6.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "subdirectory assets, real radar imagery and playback",
+      "label": "radar-map",
+      "path": "playwright-report/data/ac79ebfc2dd167c4898f181ecbf5c2d0b1436133.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "375×667: all sheet states, light/dark, controls and map",
+      "label": "mobile-375-light-collapsed",
+      "path": "playwright-report/data/dfc4ed3437e92a3ed386dc04c8799c8688abeb06.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "375×667: all sheet states, light/dark, controls and map",
+      "label": "mobile-375-light-half",
+      "path": "playwright-report/data/c2a5986aeb54a6b77a88a8e7c8597ff0e9ab9288.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "375×667: all sheet states, light/dark, controls and map",
+      "label": "mobile-375-light-expanded",
+      "path": "playwright-report/data/588eddfffe003f86a5acca8f3e23a556924e290d.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "375×667: all sheet states, light/dark, controls and map",
+      "label": "mobile-375-dark-collapsed",
+      "path": "playwright-report/data/68f9517cac127f154bc06eb4ac82dab7d1218a4d.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "375×667: all sheet states, light/dark, controls and map",
+      "label": "mobile-375-dark-half",
+      "path": "playwright-report/data/13729117889af1a6ba67ddfac2da9a9841011a3b.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "375×667: all sheet states, light/dark, controls and map",
+      "label": "mobile-375-dark-expanded",
+      "path": "playwright-report/data/b71276ce2b8ed69763a909e6146a655d015460bb.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "390×844: all sheet states, light/dark, controls and map",
+      "label": "mobile-390-light-collapsed",
+      "path": "playwright-report/data/453a2c12737881ccd9a2725d8c610c982ac8dfe7.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "390×844: all sheet states, light/dark, controls and map",
+      "label": "mobile-390-light-half",
+      "path": "playwright-report/data/a087c3fb20abfa0163a40c4f15522ef7d51f0b99.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "390×844: all sheet states, light/dark, controls and map",
+      "label": "mobile-390-light-expanded",
+      "path": "playwright-report/data/a1d29408a8081cfa77be40007819e0e4c8f0defd.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "390×844: all sheet states, light/dark, controls and map",
+      "label": "mobile-390-dark-collapsed",
+      "path": "playwright-report/data/aa25a079a20f086eb52b45beb0682e7fab3b7171.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "390×844: all sheet states, light/dark, controls and map",
+      "label": "mobile-390-dark-half",
+      "path": "playwright-report/data/dae6384320b919fd187ea3c49c58a5347ce068ff.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "390×844: all sheet states, light/dark, controls and map",
+      "label": "mobile-390-dark-expanded",
+      "path": "playwright-report/data/9c4567a50219b2ed948cd91e7f4bccd7a2a3b7e8.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "430×932: all sheet states, light/dark, controls and map",
+      "label": "mobile-430-light-collapsed",
+      "path": "playwright-report/data/0646e77e492454e061013ec0416c598631885b54.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "430×932: all sheet states, light/dark, controls and map",
+      "label": "mobile-430-light-half",
+      "path": "playwright-report/data/b5ca9ae3e9b71f336f49eaf2b3930dc424d95921.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "430×932: all sheet states, light/dark, controls and map",
+      "label": "mobile-430-light-expanded",
+      "path": "playwright-report/data/15cb43c538e7e821aabc156a73ebb5a42aa72798.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "430×932: all sheet states, light/dark, controls and map",
+      "label": "mobile-430-dark-collapsed",
+      "path": "playwright-report/data/2a7d28c9d8a26814a568481577cfe828e6566cce.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "430×932: all sheet states, light/dark, controls and map",
+      "label": "mobile-430-dark-half",
+      "path": "playwright-report/data/1b6c596ae205245617fc321d1301594c8fabce10.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "430×932: all sheet states, light/dark, controls and map",
+      "label": "mobile-430-dark-expanded",
+      "path": "playwright-report/data/14f83572e7346eb0b3513a825a96479a1a48c902.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "tablet layout retains map, forecast, geography and both themes",
+      "label": "tablet-light",
+      "path": "playwright-report/data/58d16f88a7c81db19bda51d68b9135b1e352726e.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "tablet layout retains map, forecast, geography and both themes",
+      "label": "tablet-dark",
+      "path": "playwright-report/data/9c6fc5510d98813e205d3b87b7c1c3758048cc35.png"
+    },
+    {
+      "suite": "playwright-report",
+      "test": "tablet layout retains map, forecast, geography and both themes",
+      "label": "tablet-forecast",
+      "path": "playwright-report/data/04f3f76b6e5c543092135ad33f3876305f679cdf.png"
+    },
+    {
+      "suite": "qa-owner-v03/browser-report",
+      "test": "live providers, qualified radar, sheet, theme and location",
+      "label": "390-light",
+      "path": "qa-owner-v03/browser-report/data/4a46576f89331527e0fdbe342c8aa8ac0129ec45.png"
+    },
+    {
+      "suite": "qa-owner-v03/browser-report",
+      "test": "live providers, qualified radar, sheet, theme and location",
+      "label": "390-dark",
+      "path": "qa-owner-v03/browser-report/data/ccbdf0bc59ec5b3647fd2d5a26e594ed66bce88b.png"
+    },
+    {
+      "suite": "qa-owner-v03/browser-report",
+      "test": "live providers, qualified radar, sheet, theme and location",
+      "label": "1440-light",
+      "path": "qa-owner-v03/browser-report/data/3280f8854710b6ab522a7ceca632ba9a5ef4764a.png"
+    },
+    {
+      "suite": "qa-owner-v03/browser-report",
+      "test": "live providers, qualified radar, sheet, theme and location",
+      "label": "1440-dark",
+      "path": "qa-owner-v03/browser-report/data/d4021bd86602c1d26292b2cdd6ae1863b8946b0d.png"
+    },
+    {
+      "suite": "qa-owner-v03/browser-report",
+      "test": "source expiry and Unknown using real loaded readings and simulated offline elapsed time",
+      "label": "expired-offline-mobile",
+      "path": "qa-owner-v03/browser-report/data/b58aa0c02f8108985118e1cae0f634da239e101a.png"
+    }
+  ]
+}

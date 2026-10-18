@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Play, Pause, RefreshCw, EyeOff, ChevronUp } from "lucide-react";
 import type { Radar } from "../radar/types";
 import { timeLabel } from "../shared/time";
 import { isRadarStale } from "../providers/radar";
 import { Modal } from "./Modal";
+import type { RadarPlayback } from "../radar/playback";
+import type { RadarPresentationStore } from "../radar/presentation";
 interface Props {
+  playback?: RadarPlayback;
+  presentationStore?: RadarPresentationStore;
+  requestKey?: string;
   radar?: Radar;
   index: number;
   playing: boolean;
@@ -17,7 +22,19 @@ interface Props {
   error: boolean;
   country: "TH" | "CN";
 }
+const noSubscribe = () => () => {};
+const noSnapshot = () => undefined;
 export function RadarControls(p: Props) {
+  const snapshot = useSyncExternalStore(p.presentationStore?.subscribe ?? noSubscribe,
+    p.presentationStore?.getSnapshot ?? noSnapshot);
+  const playback = useSyncExternalStore(p.playback?.subscribe ?? noSubscribe, p.playback?.getSnapshot ?? noSnapshot);
+  const playbackText = playback?.phase === "budget" ? "รอโควตา · " :
+    playback?.phase === "suspended" ? "พักในพื้นหลัง · " :
+    playback?.phase === "failed" ? "เล่นไม่สำเร็จ · " :
+    playback?.playing && playback.reason === "starting" ? "เริ่มเล่น · " :
+    playback?.playing && playback.phase === "buffering" ? "รอภาพ · " :
+    playback?.playing ? "เล่น · " : playback ? "หยุดไว้ · " : "";
+  const presentation = snapshot?.key === p.requestKey ? snapshot : undefined;
   const [details, setDetails] = useState(false);
   const [now, setNow] = useState(() => Date.now() / 1000);
   useEffect(() => {
@@ -47,7 +64,11 @@ export function RadarControls(p: Props) {
     <>
       <div className="radar-controls" aria-label="ควบคุมเรดาร์ย้อนหลัง">
         <div className="radar-caption">
-          <span>เรดาร์ย้อนหลัง</span>
+          <span data-testid="radar-presentation" data-status={presentation?.status ?? 'pending'}>
+            <span data-testid="radar-playback" data-phase={playback?.phase ?? 'paused'} role="status">{playbackText}</span>
+            {presentation?.status === 'failed' ? 'ภาพโหลดไม่สำเร็จ' :
+              presentation?.status === 'unverified' ? 'ภาพยังไม่ยืนยัน' :
+                presentation?.status === 'cancelled' ? 'พักการโหลดภาพ' : 'รอภาพเรดาร์'}</span>
           <span
             className={
               stale || p.error ? "radar-freshness stale" : "radar-freshness"
@@ -65,19 +86,20 @@ export function RadarControls(p: Props) {
                     : ""}
           </span>
           <time
-            data-testid="radar-time"
+            data-testid="radar-time" aria-label="เวลาเฟรมที่เลือก ไม่ใช่การยืนยันภาพบนแผนที่"
             dateTime={
               frame ? new Date(frame.time * 1000).toISOString() : undefined
             }
           >
-            {timeLabel(frame?.time, p.timezone)}
+            เลือก {timeLabel(frame?.time, p.timezone)}
           </time>
         </div>
         <div className="radar-playline">
           <button
             className="play-button"
             aria-label={p.playing ? "หยุดเรดาร์" : "เล่นเรดาร์ย้อนหลัง"}
-            disabled={!frames.length || p.error}
+            aria-pressed={p.playing}
+            disabled={frames.length < 2 || p.error}
             onClick={p.onPlay}
           >
             {p.playing ? (
@@ -113,10 +135,19 @@ export function RadarControls(p: Props) {
           onClose={() => setDetails(false)}
         >
           <div className="radar-details">
+            <p role="status">{presentation?.status === 'failed' ? 'ไทล์ของเฟรมนี้โหลดไม่สำเร็จ ภาพที่เหลืออาจเป็นเฟรมก่อนหน้า' :
+              presentation?.status === 'pending' || !presentation ? 'กำลังรอไทล์ของเฟรมที่เลือก ภาพบนแผนที่อาจยังเป็นเฟรมก่อนหน้า' :
+                'ยังยืนยันภาพครบทั้งมุมมองไม่ได้ ไทล์ที่โหลดแล้วไม่ยืนยันความครอบคลุมหรือว่าไม่มีฝน'}</p>
+            <p className="micro">หลักฐาน renderer: {presentation?.evidence ?? 'request-selected'} · ไม่ใช้ source idle เป็นหลักฐานยืนยันภาพทุกพิกเซล</p>
+            {playback && <p className="micro" role="status">{playback.phase === 'budget' ? 'รอเพดานคำขอไทล์คืนโควตา ไม่ข้ามไปแสดงเวลาเฟรมใหม่' :
+              playback.phase === 'buffering' ? 'กำลังรอไทล์ของเฟรมที่เลือก ยังไม่เลื่อนไปเฟรมถัดไป' :
+              playback.phase === 'failed' ? 'หยุดเล่นเพราะโหลดไม่สำเร็จ ลองรีเฟรชหรือเลือกเฟรมใหม่' :
+              playback.phase === 'suspended' ? 'พักอัตโนมัติเมื่อแอปอยู่เบื้องหลัง จะตรวจความพร้อมเมื่อกลับมา' :
+              'ภาพย้อนหลังทีละเฟรม เป้าหมายประมาณ 2–3 วินาทีต่อเฟรม อาจช้าลงเมื่อเครือข่ายหรือโควตาไม่พร้อม'}</p>}
             <dl>
               <div>
                 <dt>ภาพที่เลือก</dt>
-                <dd>{fullTime(frame?.time)}</dd>
+                <dd>{fullTime(frame?.time)} · เฟรมที่ร้องขอ ยังไม่ยืนยันภาพบนแผนที่</dd>
               </div>
               <div>
                 <dt>ภาพล่าสุด</dt>

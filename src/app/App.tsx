@@ -1,11 +1,9 @@
 import { lazy, Suspense, useState, useEffect, useCallback } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  CloudSun,
   Search,
   Settings2,
   ChevronDown,
-  MapPin,
   Layers,
   CloudRain,
   Leaf,
@@ -26,17 +24,24 @@ import {
   isSupportedLocation,
 } from "../locations/region";
 import type { MapLayers } from "../maps/MapCanvas";
-import { getWeather } from "../providers/weather";
 import { getAirQuality } from "../providers/airQuality";
-import { getRadar, nextFrame } from "../providers/radar";
+import { getRadar } from "../providers/radar";
 import { useTheme } from "../shared/theme";
 import { readFavorites, saveFavorites } from "../shared/preferences";
 import { LocationSearch } from "../components/LocationSearch";
+import { WeatherOverview } from "../components/WeatherOverview";
+import { BrandMark } from "../components/BrandMark";
 import { SituationPanel } from "../components/SituationPanel";
 import type { SheetState } from "../components/SituationPanel";
 import { RadarControls } from "../components/RadarControls";
 import { Modal } from "../components/Modal";
 import { MapBoundary } from "../components/MapBoundary";
+import { freshness } from "../reliability/freshness";
+import { useSourceClock } from "../reliability/useFreshness";
+import { recordRefresh, useBoundedRefresh, automaticRefreshAllowed } from "../reliability/useRefresh";
+import { weatherQueryOptions } from "../reliability/weatherLoad";
+import { radarRequestKey, RadarPresentationStore } from "../radar/presentation";
+import { useRadarPlayback } from "../radar/usePlayback";
 import { value } from "../shared/time";
 const MapCanvas = lazy(() => import("../maps/MapCanvas"));
 function initialLocation() {
@@ -50,8 +55,10 @@ function initialLocation() {
   }
 }
 export default function App() {
-  const theme = useTheme(),
-    client = useQueryClient();
+  const queryClient = useQueryClient();
+  const theme = useTheme();
+  const [radarPresentationStore] = useState(() => new RadarPresentationStore());
+  const reportRadar = radarPresentationStore.report;
   const [location, setLocation] = useState<Location>(initialLocation),
     [favorites, setFavorites] = useState(() =>
       readFavorites().filter(isSupportedLocation),
@@ -70,66 +77,33 @@ export default function App() {
       coverage: false,
     });
   const [opacity, setOpacity] = useState(0.65),
-    [index, setIndex] = useState(0),
-    [playing, setPlaying] = useState(false),
     [message, setMessage] = useState(""),
     [geoLoading, setGeoLoading] = useState(false),
     [mapAction, setMapAction] = useState(0),
     [online, setOnline] = useState(navigator.onLine);
-  useEffect(() => {
-    if (
-      sheet !== "collapsed" &&
-      window.matchMedia("(max-width: 759px)").matches
-    )
-      setPlaying(false);
-  }, [sheet]);
-  const weather = useQuery({
-    queryKey: [
-      "weather",
-      location.country,
-      location.latitude,
-      location.longitude,
-      location.timezone,
-    ],
-    queryFn: ({ signal }) => getWeather(location, signal),
-    staleTime: 600000,
-  });
+  const weatherKey = ["weather", location.country, location.latitude, location.longitude, location.timezone];
+  const airKey = ["air", location.country, location.latitude, location.longitude, location.timezone];
+  const weather = useQuery(weatherQueryOptions(queryClient, location, weatherKey));
   const air = useQuery({
-    queryKey: [
-      "air",
-      location.country,
-      location.latitude,
-      location.longitude,
-      location.timezone,
-    ],
-    queryFn: ({ signal }) => getAirQuality(location, signal),
-    staleTime: 600000,
+    queryKey: airKey,
+    queryFn: ({ signal }) => { recordRefresh(airKey); return getAirQuality(location, signal); },
+    staleTime: 600000, refetchOnReconnect: false, refetchOnWindowFocus: false,
+    retryOnMount: false, refetchOnMount: (query) => automaticRefreshAllowed(query.queryKey),
   });
+  const refresh = useBoundedRefresh(weatherKey, airKey);
+  const now = useSourceClock(weather.data?.current.time, air.data?.time, weather.data?.currentMeta.fetchedAt, air.data?.meta.fetchedAt);
+  const weatherFreshness = freshness(weather.data?.current.time, weather.data?.currentMeta.fetchedAt,
+    'weather', weather.isFetching, weather.isError, now);
+  const airFreshness = freshness(air.data?.time, air.data?.meta.fetchedAt,
+    'air', air.isFetching, air.isError, now);
   const radar = useQuery({
     queryKey: ["radar"],
     queryFn: ({ signal }) => getRadar(signal),
     staleTime: 300000,
     enabled: layers.radar || layers.coverage,
   });
-  useEffect(() => {
-    setIndex(Math.max(0, (radar.data?.frames.length || 1) - 1));
-    setPlaying(false);
-  }, [radar.dataUpdatedAt, radar.data?.frames.length]);
-  useEffect(() => {
-    if (!playing || !layers.radar || !radar.data?.frames.length) return;
-    const id = setInterval(() => {
-      if (!document.hidden)
-        setIndex((i) => nextFrame(i, radar.data!.frames.length));
-    }, 15000);
-    const hidden = () => {
-      if (document.hidden) setPlaying(false);
-    };
-    document.addEventListener("visibilitychange", hidden);
-    return () => {
-      clearInterval(id);
-      document.removeEventListener("visibilitychange", hidden);
-    };
-  }, [playing, layers.radar, radar.data]);
+  const { index, playing, controller: playback } = useRadarPlayback(radar.data, layers.radar,
+    radar.isFetching, radar.isError, i => radarRequestKey({ frame: radar.data?.frames[i], location, theme: theme.theme, layers }), radarPresentationStore);
   useEffect(() => {
     const yes = () => setOnline(true),
       no = () => setOnline(false);
@@ -151,7 +125,7 @@ export default function App() {
       return;
     }
     setLocation(l);
-    setPlaying(false);
+    playback.stop("location-changed");
     try {
       if (l.kind === "province" || l.kind === "city")
         localStorage.setItem("ww-last-preset", l.id);
@@ -159,7 +133,7 @@ export default function App() {
     } catch {
       /*optional preference*/
     }
-  }, []);
+  }, [playback]);
   const locate = useCallback(() => {
     if (!navigator.geolocation) {
       setMessage(
@@ -197,7 +171,7 @@ export default function App() {
   }, [select]);
   const toggle = (key: keyof MapLayers) => {
     setLayers((v) => ({ ...v, [key]: !v[key] }));
-    if (key === "radar") setPlaying(false);
+    if (key === "radar") playback.stop("layer-changed");
   };
   const favorite = favorites.some((f) => f.id === location.id);
   const save = () => {
@@ -210,16 +184,13 @@ export default function App() {
       favorite ? "ลบตำแหน่งโปรดแล้ว" : "บันทึกตำแหน่งนี้ไว้ในอุปกรณ์แล้ว",
     );
   };
-  const refresh = () => {
-    void client.invalidateQueries({ queryKey: ["weather"] });
-    void client.invalidateQueries({ queryKey: ["air"] });
-  };
   const onView = (v: typeof view) => {
     setView(v);
     if (window.innerWidth < 760) setSheet("expanded");
   };
-  const w = weather.isError ? undefined : weather.data,
-    a = air.isError ? undefined : air.data;
+  const w = weatherFreshness.assessmentAllowed ? weather.data : undefined,
+    a = airFreshness.assessmentAllowed ? air.data : undefined;
+  const presentationKey = radarRequestKey({ frame: radar.data?.frames[index], location, theme: theme.theme, layers });
   return (
     <div className={`app sheet-state-${sheet}`}>
       <header className="app-header">
@@ -233,11 +204,11 @@ export default function App() {
           aria-label="Weather Watch หน้าแรก"
         >
           <span className="brand-icon">
-            <CloudSun size={27} strokeWidth={1.7} />
+            <BrandMark />
           </span>
           <span>
             <strong>Weather Watch</strong>
-            <small>รู้ทันอากาศรอบตัว</small>
+            <small>THE WEATHER, CONSIDERED.</small>
           </span>
         </a>
         <nav className="header-nav" aria-label="มุมมอง">
@@ -320,6 +291,7 @@ export default function App() {
         </span>
       </div>
       <main className="workspace">
+        <WeatherOverview location={location} weather={weather} now={now} favorite={favorite} onFavorite={save} onRefresh={() => refresh()} onSearch={() => setModal("search")} />
         <section className="map-section" aria-label="แผนที่และเรดาร์ฝน">
           <MapBoundary>
             <Suspense
@@ -327,6 +299,7 @@ export default function App() {
             >
               <MapCanvas
                 location={location}
+                onRadarPresentation={reportRadar}
                 theme={theme.theme}
                 layers={layers}
                 radar={radar.data}
@@ -347,18 +320,7 @@ export default function App() {
               />
             </Suspense>
           </MapBoundary>
-          <div className="map-heading">
-            <span className="eyebrow">YOUR WEATHER, IN CONTEXT</span>
-            <button className="map-location" onClick={() => setModal("search")}>
-              <MapPin size={18} />
-              <span>{location.name}</span>
-              <ChevronDown size={16} />
-            </button>
-            <small>
-              {location.country === "TH" ? "ประเทศไทย" : "ประเทศจีน"} ·
-              เลือกจุดบนแผนที่เพื่อดูอากาศ
-            </small>
-          </div>
+          <div className="map-heading"><span className="eyebrow">THE WEATHER AROUND YOU</span><h2>อากาศรอบตัว</h2><small>แผนที่ · เรดาร์ย้อนหลัง</small></div>
           <div className="map-layer-chips" aria-label="ชั้นข้อมูลแผนที่">
             <button
               className={layers.radar ? "selected" : ""}
@@ -406,19 +368,16 @@ export default function App() {
             <>
               <RadarControls
                 radar={radar.data}
+                presentationStore={radarPresentationStore}
+                requestKey={presentationKey}
                 index={index}
                 playing={playing}
-                onIndex={(n) => {
-                  setPlaying(false);
-                  setIndex(n);
-                }}
-                onPlay={() => setPlaying((v) => !v)}
-                onRefresh={() => {
-                  setPlaying(false);
-                  void radar.refetch();
-                }}
+                playback={playback}
+                onIndex={playback.scrub}
+                onPlay={playback.toggle}
+                onRefresh={() => { void radar.refetch(); }}
                 onHide={() => {
-                  setPlaying(false);
+                  playback.stop("layer-hidden");
                   setLayers((v) => ({ ...v, radar: false }));
                 }}
                 timezone={location.timezone}
@@ -442,13 +401,14 @@ export default function App() {
         </section>
         <SituationPanel
           location={location}
+          now={now}
           weather={weather}
           air={air}
           sheet={sheet}
           onSheet={setSheet}
           favorite={favorite}
           onFavorite={save}
-          onRefresh={refresh}
+          onRefresh={() => refresh()}
           view={view}
           onView={onView}
         />
@@ -456,7 +416,7 @@ export default function App() {
       {!online && (
         <div className="offline-banner" role="status">
           ไม่มีการเชื่อมต่ออินเทอร์เน็ต ข้อมูลที่ดึงแล้วอาจไม่เป็นปัจจุบัน{" "}
-          <button onClick={refresh}>ลองใหม่</button>
+          <button onClick={() => refresh()}>ลองใหม่</button>
         </div>
       )}
       {(message || geoLoading) && (
@@ -636,7 +596,7 @@ export default function App() {
               อาจไม่ครบทุกอำเภอ
             </p>
             <p className="micro">
-              Prototype 0.2 · ใช้ส่วนตัว · ไม่มีบัญชีผู้ใช้และไม่มีการบันทึก GPS
+              Owner QA 0.3 · ใช้ส่วนตัว · ไม่มีบัญชีผู้ใช้และไม่มีการบันทึก GPS
               อัตโนมัติ
             </p>
           </div>

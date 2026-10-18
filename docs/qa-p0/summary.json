@@ -1,0 +1,2028 @@
+{
+  "environment": {
+    "baseline": "2036e2ac788cb31d25fd387cb40520ad95c408a6",
+    "correction": "6e0fc36f5554c3fa49578c79e35ef017a7c47e3e",
+    "node": "v24.21.0",
+    "platform": "linux",
+    "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+    "physicalIphone": false,
+    "softwareGPU": true,
+    "fixtureClock": "2026-10-11T07:46:00.000Z",
+    "notes": [
+      "Screenshots with fixture/test tiles are laboratory evidence, not live weather observations. Original live E2E screenshot evidence is retained separately.",
+      "Deterministic recorded provider responses, synthetic test PNG tiles and minimal LAB basemap. Never exposed by production.",
+      "No representative field INP, physical display FPS, GPU memory, battery or thermal measurement.",
+      "Matched lab measurements constrain UI/raster overhead; do not replace real-world basemap performance acceptance."
+    ],
+    "browser": "156.0.8078.4"
+  },
+  "run": {
+    "id": 38136782887,
+    "url": "https://github.com/tonnutkit-dev/Weather-watch/actions/runs/38136782887",
+    "result": "success",
+    "executionSHA": "6e0fc36f5554c3fa49578c79e35ef017a7c47e3e"
+  },
+  "artifact": {
+    "id": 11701846095,
+    "name": "p0-reliability-v03-38136782887",
+    "digest": "sha256:a0b378cc4094cbef5c87000771f9f88704af8765763eb78fdf4e93b1aa4f32af",
+    "expiresAt": "2027-01-09T11:46:20Z",
+    "bytes": 16749560
+  },
+  "tests": {
+    "unitPassed": 69,
+    "deterministicPassed": 23,
+    "deterministicFailed": 0,
+    "liveFirstPass": 8,
+    "liveRetryPass": 1,
+    "liveRemainingFailed": 0,
+    "liveFlakyName": "live map/weather and appearance/location integrity",
+    "flakyEvidence": "Initial weather requests aborted at approximately 12s twice; temperature absent after45s; retry passed4.6s. AQ200 and map remained usable."
+  },
+  "loadSummaries": [
+    {
+      "profile": "desktop",
+      "cacheLabel": "cold",
+      "cacheMeaning": "empty session, routing disables HTTP cache",
+      "after": false,
+      "n": 3,
+      "metrics": {
+        "FCP": {
+          "median": 116,
+          "min": 116,
+          "max": 132
+        },
+        "LCP": {
+          "median": 116,
+          "min": 116,
+          "max": 132
+        },
+        "CLS": {
+          "median": 0.07520635452835649,
+          "min": 0.07520635452835649,
+          "max": 0.07520635452835649
+        },
+        "blockingWindowMs": {
+          "median": 89,
+          "min": 81,
+          "max": 97
+        },
+        "longTasks": {
+          "median": 4,
+          "min": 3,
+          "max": 4
+        },
+        "transferredBytes": {
+          "median": 530996,
+          "min": 530996,
+          "max": 530996
+        }
+      }
+    },
+    {
+      "profile": "desktop",
+      "cacheLabel": "cold",
+      "cacheMeaning": "empty session, routing disables HTTP cache",
+      "after": true,
+      "n": 3,
+      "metrics": {
+        "FCP": {
+          "median": 120,
+          "min": 120,
+          "max": 128
+        },
+        "LCP": {
+          "median": 120,
+          "min": 120,
+          "max": 128
+        },
+        "CLS": {
+          "median": 0.07925890939971547,
+          "min": 0.07925890939971547,
+          "max": 0.07925890939971547
+        },
+        "blockingWindowMs": {
+          "median": 90,
+          "min": 86,
+          "max": 99
+        },
+        "longTasks": {
+          "median": 4,
+          "min": 4,
+          "max": 4
+        },
+        "transferredBytes": {
+          "median": 533905,
+          "min": 533905,
+          "max": 533905
+        }
+      }
+    },
+    {
+      "profile": "desktop",
+      "cacheLabel": "warm",
+      "cacheMeaning": "same-context repeat; NOT verified populated HTTP cache",
+      "after": false,
+      "n": 3,
+      "metrics": {
+        "FCP": {
+          "median": 68,
+          "min": 64,
+          "max": 72
+        },
+        "LCP": {
+          "median": 68,
+          "min": 64,
+          "max": 72
+        },
+        "CLS": {
+          "median": 0.12275093587239586,
+          "min": 0.07520635452835649,
+          "max": 0.12275093587239586
+        },
+        "blockingWindowMs": {
+          "median": 74,
+          "min": 73,
+          "max": 82
+        },
+        "longTasks": {
+          "median": 3,
+          "min": 3,
+          "max": 3
+        },
+        "transferredBytes": {
+          "median": 530996,
+          "min": 530996,
+          "max": 530996
+        }
+      }
+    },
+    {
+      "profile": "desktop",
+      "cacheLabel": "warm",
+      "cacheMeaning": "same-context repeat; NOT verified populated HTTP cache",
+      "after": true,
+      "n": 3,
+      "metrics": {
+        "FCP": {
+          "median": 92,
+          "min": 84,
+          "max": 104
+        },
+        "LCP": {
+          "median": 92,
+          "min": 84,
+          "max": 104
+        },
+        "CLS": {
+          "median": 0.0788236077202691,
+          "min": 0.07523477059823495,
+          "max": 0.07925890939971547
+        },
+        "blockingWindowMs": {
+          "median": 78,
+          "min": 77,
+          "max": 80
+        },
+        "longTasks": {
+          "median": 3,
+          "min": 3,
+          "max": 3
+        },
+        "transferredBytes": {
+          "median": 533905,
+          "min": 533905,
+          "max": 533905
+        }
+      }
+    },
+    {
+      "profile": "mobile",
+      "cacheLabel": "cold",
+      "cacheMeaning": "empty session, routing disables HTTP cache",
+      "after": false,
+      "n": 3,
+      "metrics": {
+        "FCP": {
+          "median": 88,
+          "min": 88,
+          "max": 92
+        },
+        "LCP": {
+          "median": 164,
+          "min": 164,
+          "max": 168
+        },
+        "CLS": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "blockingWindowMs": {
+          "median": 6,
+          "min": 5,
+          "max": 7
+        },
+        "longTasks": {
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "transferredBytes": {
+          "median": 518964,
+          "min": 518964,
+          "max": 518964
+        }
+      }
+    },
+    {
+      "profile": "mobile",
+      "cacheLabel": "cold",
+      "cacheMeaning": "empty session, routing disables HTTP cache",
+      "after": true,
+      "n": 3,
+      "metrics": {
+        "FCP": {
+          "median": 88,
+          "min": 84,
+          "max": 92
+        },
+        "LCP": {
+          "median": 164,
+          "min": 160,
+          "max": 168
+        },
+        "CLS": {
+          "median": 7.857139154729055e-05,
+          "min": 7.857139154729055e-05,
+          "max": 7.857139154729055e-05
+        },
+        "blockingWindowMs": {
+          "median": 7,
+          "min": 6,
+          "max": 8
+        },
+        "longTasks": {
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "transferredBytes": {
+          "median": 521873,
+          "min": 521873,
+          "max": 521873
+        }
+      }
+    },
+    {
+      "profile": "mobile",
+      "cacheLabel": "warm",
+      "cacheMeaning": "same-context repeat; NOT verified populated HTTP cache",
+      "after": false,
+      "n": 3,
+      "metrics": {
+        "FCP": {
+          "median": 68,
+          "min": 56,
+          "max": 68
+        },
+        "LCP": {
+          "median": 100,
+          "min": 100,
+          "max": 104
+        },
+        "CLS": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "blockingWindowMs": {
+          "median": 0,
+          "min": 0,
+          "max": 3
+        },
+        "longTasks": {
+          "median": 1,
+          "min": 1,
+          "max": 1
+        },
+        "transferredBytes": {
+          "median": 518964,
+          "min": 518964,
+          "max": 518964
+        }
+      }
+    },
+    {
+      "profile": "mobile",
+      "cacheLabel": "warm",
+      "cacheMeaning": "same-context repeat; NOT verified populated HTTP cache",
+      "after": true,
+      "n": 3,
+      "metrics": {
+        "FCP": {
+          "median": 72,
+          "min": 68,
+          "max": 76
+        },
+        "LCP": {
+          "median": 116,
+          "min": 108,
+          "max": 116
+        },
+        "CLS": {
+          "median": 7.857139154729055e-05,
+          "min": 7.857139154729055e-05,
+          "max": 7.857139154729055e-05
+        },
+        "blockingWindowMs": {
+          "median": 1,
+          "min": 0,
+          "max": 5
+        },
+        "longTasks": {
+          "median": 1,
+          "min": 0,
+          "max": 1
+        },
+        "transferredBytes": {
+          "median": 521873,
+          "min": 521873,
+          "max": 521873
+        }
+      }
+    },
+    {
+      "profile": "mobile-throttled",
+      "cacheLabel": "cold",
+      "cacheMeaning": "empty session, routing disables HTTP cache",
+      "after": false,
+      "n": 3,
+      "metrics": {
+        "FCP": {
+          "median": 1248,
+          "min": 1244,
+          "max": 1284
+        },
+        "LCP": {
+          "median": 1248,
+          "min": 1244,
+          "max": 1284
+        },
+        "CLS": {
+          "median": 0.000554164667106102,
+          "min": 0.0005265127782538807,
+          "max": 0.0005648337895427049
+        },
+        "blockingWindowMs": {
+          "median": 167,
+          "min": 157,
+          "max": 190
+        },
+        "longTasks": {
+          "median": 6,
+          "min": 6,
+          "max": 7
+        },
+        "transferredBytes": {
+          "median": 518964,
+          "min": 518964,
+          "max": 518964
+        }
+      }
+    },
+    {
+      "profile": "mobile-throttled",
+      "cacheLabel": "cold",
+      "cacheMeaning": "empty session, routing disables HTTP cache",
+      "after": true,
+      "n": 3,
+      "metrics": {
+        "FCP": {
+          "median": 1252,
+          "min": 1252,
+          "max": 1264
+        },
+        "LCP": {
+          "median": 1424,
+          "min": 1420,
+          "max": 1444
+        },
+        "CLS": {
+          "median": 0.0005263992793446942,
+          "min": 0.0005157301569080912,
+          "max": 0.0005263992793446942
+        },
+        "blockingWindowMs": {
+          "median": 160,
+          "min": 153,
+          "max": 182
+        },
+        "longTasks": {
+          "median": 6,
+          "min": 6,
+          "max": 6
+        },
+        "transferredBytes": {
+          "median": 521873,
+          "min": 521873,
+          "max": 521873
+        }
+      }
+    },
+    {
+      "profile": "mobile-throttled",
+      "cacheLabel": "warm",
+      "cacheMeaning": "same-context repeat; NOT verified populated HTTP cache",
+      "after": false,
+      "n": 3,
+      "metrics": {
+        "FCP": {
+          "median": 1104,
+          "min": 1104,
+          "max": 1116
+        },
+        "LCP": {
+          "median": 1104,
+          "min": 1104,
+          "max": 1116
+        },
+        "CLS": {
+          "median": 0.0005648337895427049,
+          "min": 0.0005648337895427049,
+          "max": 0.0005798691891438152
+        },
+        "blockingWindowMs": {
+          "median": 18,
+          "min": 16,
+          "max": 29
+        },
+        "longTasks": {
+          "median": 1,
+          "min": 1,
+          "max": 2
+        },
+        "transferredBytes": {
+          "median": 518964,
+          "min": 518964,
+          "max": 518964
+        }
+      }
+    },
+    {
+      "profile": "mobile-throttled",
+      "cacheLabel": "warm",
+      "cacheMeaning": "same-context repeat; NOT verified populated HTTP cache",
+      "after": true,
+      "n": 3,
+      "metrics": {
+        "FCP": {
+          "median": 1152,
+          "min": 1148,
+          "max": 1156
+        },
+        "LCP": {
+          "median": 1224,
+          "min": 1220,
+          "max": 1228
+        },
+        "CLS": {
+          "median": 0.0005157301569080912,
+          "min": 0.0005157301569080912,
+          "max": 0.0005263992793446942
+        },
+        "blockingWindowMs": {
+          "median": 22,
+          "min": 21,
+          "max": 23
+        },
+        "longTasks": {
+          "median": 1,
+          "min": 1,
+          "max": 2
+        },
+        "transferredBytes": {
+          "median": 521873,
+          "min": 521873,
+          "max": 521873
+        }
+      }
+    }
+  ],
+  "interactionSummaries": [
+    {
+      "after": false,
+      "run": 1,
+      "TaskDurationMs": 5460.317,
+      "ScriptDurationMs": 1105.9950000000001,
+      "LayoutDurationMs": 116.72300000000001,
+      "RecalcStyleDurationMs": 162.912,
+      "frameSamples": 293,
+      "frameMedianMs": 16.699999999999818,
+      "frameP95Ms": 50,
+      "framesOver50ms": 7,
+      "heapStartPostGcMiB": 7.5270233154296875,
+      "heapEndPostGcMiB": 8.867122650146484,
+      "domStart": 1260,
+      "domEnd": 1271,
+      "eventListenersStart": 248,
+      "eventListenersEnd": 248,
+      "globalHandlerCountsStable": true,
+      "mapInstances": 1,
+      "renders": {
+        "App": 22,
+        "SituationPanel": 18,
+        "mapSync": 7
+      },
+      "requests": {
+        "weather": 1,
+        "air": 1,
+        "tiles": 20
+      }
+    },
+    {
+      "after": false,
+      "run": 2,
+      "TaskDurationMs": 5389.574,
+      "ScriptDurationMs": 1109.307,
+      "LayoutDurationMs": 126.139,
+      "RecalcStyleDurationMs": 153.78799999999998,
+      "frameSamples": 295,
+      "frameMedianMs": 16.699999999999818,
+      "frameP95Ms": 50,
+      "framesOver50ms": 6,
+      "heapStartPostGcMiB": 7.527095794677734,
+      "heapEndPostGcMiB": 8.865802764892578,
+      "domStart": 1260,
+      "domEnd": 1271,
+      "eventListenersStart": 248,
+      "eventListenersEnd": 248,
+      "globalHandlerCountsStable": true,
+      "mapInstances": 1,
+      "renders": {
+        "App": 22,
+        "SituationPanel": 18,
+        "mapSync": 7
+      },
+      "requests": {
+        "weather": 1,
+        "air": 1,
+        "tiles": 20
+      }
+    },
+    {
+      "after": false,
+      "run": 3,
+      "TaskDurationMs": 5361.6900000000005,
+      "ScriptDurationMs": 1103.125,
+      "LayoutDurationMs": 119.53200000000001,
+      "RecalcStyleDurationMs": 152.266,
+      "frameSamples": 287,
+      "frameMedianMs": 16.699999999999818,
+      "frameP95Ms": 49.900000000000546,
+      "framesOver50ms": 9,
+      "heapStartPostGcMiB": 7.5311279296875,
+      "heapEndPostGcMiB": 8.857479095458984,
+      "domStart": 1260,
+      "domEnd": 1271,
+      "eventListenersStart": 248,
+      "eventListenersEnd": 248,
+      "globalHandlerCountsStable": true,
+      "mapInstances": 1,
+      "renders": {
+        "App": 22,
+        "SituationPanel": 18,
+        "mapSync": 7
+      },
+      "requests": {
+        "weather": 1,
+        "air": 1,
+        "tiles": 20
+      }
+    },
+    {
+      "after": true,
+      "run": 1,
+      "TaskDurationMs": 5644.182,
+      "ScriptDurationMs": 1210.701,
+      "LayoutDurationMs": 130.32500000000002,
+      "RecalcStyleDurationMs": 160.077,
+      "frameSamples": 293,
+      "frameMedianMs": 16.700000000000728,
+      "frameP95Ms": 50,
+      "framesOver50ms": 7,
+      "heapStartPostGcMiB": 7.588718414306641,
+      "heapEndPostGcMiB": 8.955024719238281,
+      "domStart": 1268,
+      "domEnd": 1279,
+      "eventListenersStart": 255,
+      "eventListenersEnd": 255,
+      "globalHandlerCountsStable": true,
+      "mapInstances": 1,
+      "renders": {
+        "App": 22,
+        "SituationPanel": 18,
+        "mapSync": 7
+      },
+      "requests": {
+        "weather": 1,
+        "air": 1,
+        "tiles": 20
+      }
+    },
+    {
+      "after": true,
+      "run": 2,
+      "TaskDurationMs": 5291.232,
+      "ScriptDurationMs": 1165.5040000000001,
+      "LayoutDurationMs": 122.91,
+      "RecalcStyleDurationMs": 149.171,
+      "frameSamples": 288,
+      "frameMedianMs": 16.699999999999818,
+      "frameP95Ms": 49.900000000000546,
+      "framesOver50ms": 9,
+      "heapStartPostGcMiB": 7.5886993408203125,
+      "heapEndPostGcMiB": 8.947338104248047,
+      "domStart": 1268,
+      "domEnd": 1279,
+      "eventListenersStart": 255,
+      "eventListenersEnd": 255,
+      "globalHandlerCountsStable": true,
+      "mapInstances": 1,
+      "renders": {
+        "App": 22,
+        "SituationPanel": 18,
+        "mapSync": 7
+      },
+      "requests": {
+        "weather": 1,
+        "air": 1,
+        "tiles": 20
+      }
+    },
+    {
+      "after": true,
+      "run": 3,
+      "TaskDurationMs": 5432.627,
+      "ScriptDurationMs": 1175.906,
+      "LayoutDurationMs": 119.71900000000001,
+      "RecalcStyleDurationMs": 160.517,
+      "frameSamples": 285,
+      "frameMedianMs": 16.700000000000728,
+      "frameP95Ms": 50,
+      "framesOver50ms": 9,
+      "heapStartPostGcMiB": 7.588798522949219,
+      "heapEndPostGcMiB": 8.952194213867188,
+      "domStart": 1268,
+      "domEnd": 1279,
+      "eventListenersStart": 255,
+      "eventListenersEnd": 255,
+      "globalHandlerCountsStable": true,
+      "mapInstances": 1,
+      "renders": {
+        "App": 22,
+        "SituationPanel": 18,
+        "mapSync": 7
+      },
+      "requests": {
+        "weather": 1,
+        "air": 1,
+        "tiles": 20
+      }
+    }
+  ],
+  "radarRequestCounts": [
+    {
+      "scenario": "before-radar-maplibre",
+      "count": 54,
+      "uniqueURLs": 53,
+      "maxRollingMinute": 54
+    },
+    {
+      "scenario": "before-radar-leaflet",
+      "count": 48,
+      "uniqueURLs": 48,
+      "maxRollingMinute": 48
+    },
+    {
+      "scenario": "after-radar-maplibre",
+      "count": 51,
+      "uniqueURLs": 48,
+      "maxRollingMinute": 51
+    },
+    {
+      "scenario": "after-radar-leaflet",
+      "count": 60,
+      "uniqueURLs": 48,
+      "maxRollingMinute": 60
+    }
+  ],
+  "payload": [
+    {
+      "after": false,
+      "file": "GLCanvas-GMhY2Psx.js",
+      "rawBytes": 1042633,
+      "gzipBytes": 284484
+    },
+    {
+      "after": false,
+      "file": "MapCanvas-DJUobxhc.js",
+      "rawBytes": 918,
+      "gzipBytes": 561
+    },
+    {
+      "after": false,
+      "file": "RasterCanvas-CeRqmUVd.js",
+      "rawBytes": 156734,
+      "gzipBytes": 46092
+    },
+    {
+      "after": false,
+      "file": "index-P3Ip_teU.js",
+      "rawBytes": 407447,
+      "gzipBytes": 130333
+    },
+    {
+      "after": false,
+      "file": "layout-CyjMylSm.js",
+      "rawBytes": 1544,
+      "gzipBytes": 821
+    },
+    {
+      "after": false,
+      "file": "maplibre-gl-worker-VaXr2Fck.mjs",
+      "rawBytes": 508314,
+      "gzipBytes": 144769
+    },
+    {
+      "after": true,
+      "file": "GLCanvas-CjCe-7LF.js",
+      "rawBytes": 1043669,
+      "gzipBytes": 284817
+    },
+    {
+      "after": true,
+      "file": "MapCanvas-DOHKO6jW.js",
+      "rawBytes": 918,
+      "gzipBytes": 562
+    },
+    {
+      "after": true,
+      "file": "RasterCanvas-DegcMdVY.js",
+      "rawBytes": 158131,
+      "gzipBytes": 46525
+    },
+    {
+      "after": true,
+      "file": "index-B4OYODml.js",
+      "rawBytes": 415774,
+      "gzipBytes": 132901
+    },
+    {
+      "after": true,
+      "file": "layout-CyjMylSm.js",
+      "rawBytes": 1544,
+      "gzipBytes": 821
+    },
+    {
+      "after": true,
+      "file": "maplibre-gl-worker-VaXr2Fck.mjs",
+      "rawBytes": 508314,
+      "gzipBytes": 144769
+    }
+  ],
+  "checks": [
+    {
+      "name": "before-radar-maplibre",
+      "status": "passed",
+      "evidence": {
+        "initial": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "14:40",
+          "frame": "1791704400",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "pending": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "12:40",
+          "frame": "1791697200",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "complete": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "12:40",
+          "frame": "1791697200",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "failed": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "12:50",
+          "frame": "1791697800",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "scrubbed": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "13:20",
+          "frame": "1791699600",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "end": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "14:30",
+          "frame": "1791700200",
+          "mapInstances": 1,
+          "canvases": 1
+        }
+      }
+    },
+    {
+      "name": "before-radar-leaflet",
+      "status": "passed",
+      "evidence": {
+        "initial": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "14:40",
+          "frame": "1791704400",
+          "mapInstances": 1,
+          "canvases": 0
+        },
+        "pending": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "12:40",
+          "frame": "1791697200",
+          "mapInstances": 1,
+          "canvases": 0
+        },
+        "complete": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "12:40",
+          "frame": "1791697200",
+          "mapInstances": 1,
+          "canvases": 0
+        },
+        "failed": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "12:50",
+          "frame": "1791697800",
+          "mapInstances": 1,
+          "canvases": 0
+        },
+        "scrubbed": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "13:20",
+          "frame": "1791699600",
+          "mapInstances": 1,
+          "canvases": 0
+        },
+        "end": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "14:30",
+          "frame": "1791700200",
+          "mapInstances": 1,
+          "canvases": 0
+        }
+      }
+    },
+    {
+      "name": "after-radar-maplibre",
+      "status": "passed",
+      "evidence": {
+        "initial": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 14:40",
+          "radarStatus": "unverified",
+          "frame": "1791704400",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "pending": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 12:40",
+          "radarStatus": "pending",
+          "frame": "1791697200",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "complete": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 12:40",
+          "radarStatus": "unverified",
+          "frame": "1791697200",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "failed": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 12:50",
+          "radarStatus": "failed",
+          "frame": "1791697800",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "scrubbed": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 13:20",
+          "radarStatus": "unverified",
+          "frame": "1791699600",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "end": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 14:30",
+          "radarStatus": "unverified",
+          "frame": "1791700200",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        }
+      }
+    },
+    {
+      "name": "after-radar-leaflet",
+      "status": "passed",
+      "evidence": {
+        "initial": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 14:40",
+          "radarStatus": "unverified",
+          "frame": "1791704400",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 0
+        },
+        "pending": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 12:40",
+          "radarStatus": "pending",
+          "frame": "1791697200",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 0
+        },
+        "complete": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 12:40",
+          "radarStatus": "unverified",
+          "frame": "1791697200",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 0
+        },
+        "failed": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 12:50",
+          "radarStatus": "failed",
+          "frame": "1791697800",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 0
+        },
+        "scrubbed": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 13:20",
+          "radarStatus": "unverified",
+          "frame": "1791699600",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 0
+        },
+        "end": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 14:30",
+          "radarStatus": "unverified",
+          "frame": "1791700200",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 0
+        }
+      }
+    },
+    {
+      "name": "before-three-hour-idle",
+      "status": "passed",
+      "evidence": {
+        "initial": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "14:40",
+          "frame": "1791704400",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "aged": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "14:40",
+          "frame": "1791704400",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "end": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "label": "14:40",
+          "frame": "1791704400",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "counts": {
+          "weather": 1,
+          "air": 1
+        },
+        "noBurstCounts": {
+          "weather": 1,
+          "air": 1
+        }
+      }
+    },
+    {
+      "name": "after-three-hour-idle",
+      "status": "passed",
+      "evidence": {
+        "initial": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 14:40",
+          "radarStatus": "unverified",
+          "frame": "1791704400",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "aged": {
+          "summary": "ข้อมูลหมดอายุ · ยังประเมินไม่ได้",
+          "temperature": "30°C",
+          "weatherFreshness": "expired",
+          "airFreshness": "expired",
+          "verdict": "Unknown",
+          "label": "เลือก 14:40",
+          "radarStatus": "unverified",
+          "frame": "1791704400",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "end": {
+          "summary": "ข้อมูลหมดอายุ · ยังประเมินไม่ได้",
+          "temperature": "30°C",
+          "weatherFreshness": "expired",
+          "airFreshness": "expired",
+          "verdict": "Unknown",
+          "label": "เลือก 14:40",
+          "radarStatus": "unverified",
+          "frame": "1791704400",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "counts": {
+          "weather": 2,
+          "air": 2
+        },
+        "noBurstCounts": {
+          "weather": 2,
+          "air": 2
+        }
+      }
+    },
+    {
+      "name": "after-refresh-failure-recovery-and-China-isolation",
+      "status": "passed",
+      "evidence": {
+        "failed": {
+          "summary": "อัปเดตไม่สำเร็จ · ยังประเมินไม่ได้",
+          "temperature": "30°C",
+          "weatherFreshness": "refresh-failed",
+          "airFreshness": "fresh",
+          "verdict": "Unknown",
+          "label": "เลือก 14:40",
+          "radarStatus": "unverified",
+          "frame": "1791704400",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "failedCounts": {
+          "weather": 3,
+          "air": 2
+        },
+        "recovered": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 14:40",
+          "radarStatus": "unverified",
+          "frame": "1791704400",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "final": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 15:40",
+          "radarStatus": "pending",
+          "frame": "1791704400",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "counts": {
+          "weather": 9,
+          "air": 7
+        }
+      }
+    },
+    {
+      "name": "after-offline-online-resume-and-timeout",
+      "status": "passed",
+      "evidence": {
+        "offline": {
+          "summary": "ข้อมูลหมดอายุ · ยังประเมินไม่ได้",
+          "temperature": "30°C",
+          "weatherFreshness": "expired",
+          "airFreshness": "cached",
+          "verdict": "Unknown",
+          "label": "เลือก 14:40",
+          "radarStatus": "unverified",
+          "frame": "1791704400",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "timeout": {
+          "summary": "อัปเดตไม่สำเร็จ · ยังประเมินไม่ได้",
+          "temperature": "30°C",
+          "weatherFreshness": "expired",
+          "airFreshness": "fresh",
+          "verdict": "Unknown",
+          "label": "เลือก 14:40",
+          "radarStatus": "unverified",
+          "frame": "1791704400",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "counts": {
+          "weather": 4,
+          "air": 3
+        }
+      }
+    },
+    {
+      "name": "after-partial-AQ-failure-slow-load-and-missing-tiles",
+      "status": "passed",
+      "evidence": {
+        "initial": {
+          "summary": "แบบจำลอง · มีสภาพอากาศที่ควรติดตาม",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "fresh",
+          "verdict": "Notable",
+          "label": "เลือก 14:40",
+          "radarStatus": "unverified",
+          "frame": "1791704400",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "partial": {
+          "summary": "อัปเดตไม่สำเร็จ · ยังประเมินไม่ได้",
+          "temperature": "30°C",
+          "weatherFreshness": "fresh",
+          "airFreshness": "refresh-failed",
+          "verdict": "Unknown",
+          "label": "เลือก 14:40",
+          "radarStatus": "unverified",
+          "frame": "1791704400",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "expired": {
+          "summary": "อัปเดตไม่สำเร็จ · ยังประเมินไม่ได้",
+          "temperature": "30°C",
+          "weatherFreshness": "expired",
+          "airFreshness": "refresh-failed",
+          "verdict": "Unknown",
+          "label": "เลือก 12:40",
+          "radarStatus": "failed",
+          "frame": "1791697200",
+          "displayedFrame": "",
+          "mapInstances": 1,
+          "canvases": 1
+        },
+        "counts": {
+          "weather": 3,
+          "air": 4
+        }
+      }
+    },
+    {
+      "name": "before-actual-DOM-pinch",
+      "status": "passed",
+      "evidence": {
+        "before": "4.60",
+        "after": "4.02"
+      }
+    },
+    {
+      "name": "after-actual-DOM-pinch",
+      "status": "passed",
+      "evidence": {
+        "before": "4.60",
+        "after": "5.02"
+      }
+    },
+    {
+      "name": "after-geometry-375-light",
+      "status": "passed",
+      "evidence": [
+        {
+          "sheet": {
+            "x": 0,
+            "y": 519,
+            "width": 375,
+            "height": 148,
+            "top": 519,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 77,
+            "y": 593.09375,
+            "width": 59,
+            "height": 41.796875,
+            "top": 593.09375,
+            "right": 136,
+            "bottom": 634.890625,
+            "left": 77
+          },
+          "radar": {
+            "x": 12,
+            "y": 395,
+            "width": 351,
+            "height": 76,
+            "top": 395,
+            "right": 363,
+            "bottom": 471,
+            "left": 12
+          },
+          "attribution": {
+            "x": 238.0625,
+            "y": 499,
+            "width": 136.9375,
+            "height": 16,
+            "top": 499,
+            "right": 375,
+            "bottom": 515,
+            "left": 238.0625
+          }
+        },
+        {
+          "sheet": {
+            "x": 0,
+            "y": 320.171875,
+            "width": 375,
+            "height": 346.828125,
+            "top": 320.171875,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 97,
+            "y": 423.671875,
+            "width": 163,
+            "height": 52.796875,
+            "top": 423.671875,
+            "right": 260,
+            "bottom": 476.46875,
+            "left": 97
+          },
+          "radar": null,
+          "attribution": {
+            "x": 238.0625,
+            "y": 300.171875,
+            "width": 136.9375,
+            "height": 16,
+            "top": 300.171875,
+            "right": 375,
+            "bottom": 316.171875,
+            "left": 238.0625
+          }
+        },
+        {
+          "sheet": {
+            "x": 0,
+            "y": 186,
+            "width": 375,
+            "height": 481,
+            "top": 186,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 97,
+            "y": 289.5,
+            "width": 163,
+            "height": 52.796875,
+            "top": 289.5,
+            "right": 260,
+            "bottom": 342.296875,
+            "left": 97
+          },
+          "radar": null,
+          "attribution": {
+            "x": 238.0625,
+            "y": 166,
+            "width": 136.9375,
+            "height": 16,
+            "top": 166,
+            "right": 375,
+            "bottom": 182,
+            "left": 238.0625
+          }
+        }
+      ]
+    },
+    {
+      "name": "after-geometry-375-dark",
+      "status": "passed",
+      "evidence": [
+        {
+          "sheet": {
+            "x": 0,
+            "y": 519,
+            "width": 375,
+            "height": 148,
+            "top": 519,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 77,
+            "y": 593.09375,
+            "width": 59,
+            "height": 41.796875,
+            "top": 593.09375,
+            "right": 136,
+            "bottom": 634.890625,
+            "left": 77
+          },
+          "radar": {
+            "x": 12,
+            "y": 395,
+            "width": 351,
+            "height": 76,
+            "top": 395,
+            "right": 363,
+            "bottom": 471,
+            "left": 12
+          },
+          "attribution": {
+            "x": 238.0625,
+            "y": 499,
+            "width": 136.9375,
+            "height": 16,
+            "top": 499,
+            "right": 375,
+            "bottom": 515,
+            "left": 238.0625
+          }
+        },
+        {
+          "sheet": {
+            "x": 0,
+            "y": 320.171875,
+            "width": 375,
+            "height": 346.828125,
+            "top": 320.171875,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 97,
+            "y": 423.671875,
+            "width": 163,
+            "height": 52.796875,
+            "top": 423.671875,
+            "right": 260,
+            "bottom": 476.46875,
+            "left": 97
+          },
+          "radar": null,
+          "attribution": {
+            "x": 238.0625,
+            "y": 300.171875,
+            "width": 136.9375,
+            "height": 16,
+            "top": 300.171875,
+            "right": 375,
+            "bottom": 316.171875,
+            "left": 238.0625
+          }
+        },
+        {
+          "sheet": {
+            "x": 0,
+            "y": 186,
+            "width": 375,
+            "height": 481,
+            "top": 186,
+            "right": 375,
+            "bottom": 667,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 97,
+            "y": 289.5,
+            "width": 163,
+            "height": 52.796875,
+            "top": 289.5,
+            "right": 260,
+            "bottom": 342.296875,
+            "left": 97
+          },
+          "radar": null,
+          "attribution": {
+            "x": 238.0625,
+            "y": 166,
+            "width": 136.9375,
+            "height": 16,
+            "top": 166,
+            "right": 375,
+            "bottom": 182,
+            "left": 238.0625
+          }
+        }
+      ]
+    },
+    {
+      "name": "after-geometry-390-light",
+      "status": "passed",
+      "evidence": [
+        {
+          "sheet": {
+            "x": 0,
+            "y": 696,
+            "width": 390,
+            "height": 148,
+            "top": 696,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 77,
+            "y": 770.09375,
+            "width": 59,
+            "height": 41.796875,
+            "top": 770.09375,
+            "right": 136,
+            "bottom": 811.890625,
+            "left": 77
+          },
+          "radar": {
+            "x": 12,
+            "y": 572,
+            "width": 366,
+            "height": 76,
+            "top": 572,
+            "right": 378,
+            "bottom": 648,
+            "left": 12
+          },
+          "attribution": {
+            "x": 253.0625,
+            "y": 676,
+            "width": 136.9375,
+            "height": 16,
+            "top": 676,
+            "right": 390,
+            "bottom": 692,
+            "left": 253.0625
+          }
+        },
+        {
+          "sheet": {
+            "x": 0,
+            "y": 405.125,
+            "width": 390,
+            "height": 438.875,
+            "top": 405.125,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 97,
+            "y": 508.625,
+            "width": 163,
+            "height": 52.796875,
+            "top": 508.625,
+            "right": 260,
+            "bottom": 561.421875,
+            "left": 97
+          },
+          "radar": null,
+          "attribution": {
+            "x": 253.0625,
+            "y": 385.125,
+            "width": 136.9375,
+            "height": 16,
+            "top": 385.125,
+            "right": 390,
+            "bottom": 401.125,
+            "left": 253.0625
+          }
+        },
+        {
+          "sheet": {
+            "x": 0,
+            "y": 186,
+            "width": 390,
+            "height": 658,
+            "top": 186,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 97,
+            "y": 289.5,
+            "width": 163,
+            "height": 52.796875,
+            "top": 289.5,
+            "right": 260,
+            "bottom": 342.296875,
+            "left": 97
+          },
+          "radar": null,
+          "attribution": {
+            "x": 253.0625,
+            "y": 166,
+            "width": 136.9375,
+            "height": 16,
+            "top": 166,
+            "right": 390,
+            "bottom": 182,
+            "left": 253.0625
+          }
+        }
+      ]
+    },
+    {
+      "name": "after-geometry-390-dark",
+      "status": "passed",
+      "evidence": [
+        {
+          "sheet": {
+            "x": 0,
+            "y": 696,
+            "width": 390,
+            "height": 148,
+            "top": 696,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 77,
+            "y": 770.09375,
+            "width": 59,
+            "height": 41.796875,
+            "top": 770.09375,
+            "right": 136,
+            "bottom": 811.890625,
+            "left": 77
+          },
+          "radar": {
+            "x": 12,
+            "y": 572,
+            "width": 366,
+            "height": 76,
+            "top": 572,
+            "right": 378,
+            "bottom": 648,
+            "left": 12
+          },
+          "attribution": {
+            "x": 253.0625,
+            "y": 676,
+            "width": 136.9375,
+            "height": 16,
+            "top": 676,
+            "right": 390,
+            "bottom": 692,
+            "left": 253.0625
+          }
+        },
+        {
+          "sheet": {
+            "x": 0,
+            "y": 405.125,
+            "width": 390,
+            "height": 438.875,
+            "top": 405.125,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 97,
+            "y": 508.625,
+            "width": 163,
+            "height": 52.796875,
+            "top": 508.625,
+            "right": 260,
+            "bottom": 561.421875,
+            "left": 97
+          },
+          "radar": null,
+          "attribution": {
+            "x": 253.0625,
+            "y": 385.125,
+            "width": 136.9375,
+            "height": 16,
+            "top": 385.125,
+            "right": 390,
+            "bottom": 401.125,
+            "left": 253.0625
+          }
+        },
+        {
+          "sheet": {
+            "x": 0,
+            "y": 186,
+            "width": 390,
+            "height": 658,
+            "top": 186,
+            "right": 390,
+            "bottom": 844,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 97,
+            "y": 289.5,
+            "width": 163,
+            "height": 52.796875,
+            "top": 289.5,
+            "right": 260,
+            "bottom": 342.296875,
+            "left": 97
+          },
+          "radar": null,
+          "attribution": {
+            "x": 253.0625,
+            "y": 166,
+            "width": 136.9375,
+            "height": 16,
+            "top": 166,
+            "right": 390,
+            "bottom": 182,
+            "left": 253.0625
+          }
+        }
+      ]
+    },
+    {
+      "name": "after-geometry-430-light",
+      "status": "passed",
+      "evidence": [
+        {
+          "sheet": {
+            "x": 0,
+            "y": 784,
+            "width": 430,
+            "height": 148,
+            "top": 784,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 77,
+            "y": 858.09375,
+            "width": 59,
+            "height": 41.796875,
+            "top": 858.09375,
+            "right": 136,
+            "bottom": 899.890625,
+            "left": 77
+          },
+          "radar": {
+            "x": 12,
+            "y": 660,
+            "width": 406,
+            "height": 76,
+            "top": 660,
+            "right": 418,
+            "bottom": 736,
+            "left": 12
+          },
+          "attribution": {
+            "x": 293.0625,
+            "y": 764,
+            "width": 136.9375,
+            "height": 16,
+            "top": 764,
+            "right": 430,
+            "bottom": 780,
+            "left": 293.0625
+          }
+        },
+        {
+          "sheet": {
+            "x": 0,
+            "y": 447.375,
+            "width": 430,
+            "height": 484.625,
+            "top": 447.375,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 97,
+            "y": 550.875,
+            "width": 163,
+            "height": 52.796875,
+            "top": 550.875,
+            "right": 260,
+            "bottom": 603.671875,
+            "left": 97
+          },
+          "radar": null,
+          "attribution": {
+            "x": 293.0625,
+            "y": 427.375,
+            "width": 136.9375,
+            "height": 16,
+            "top": 427.375,
+            "right": 430,
+            "bottom": 443.375,
+            "left": 293.0625
+          }
+        },
+        {
+          "sheet": {
+            "x": 0,
+            "y": 186,
+            "width": 430,
+            "height": 746,
+            "top": 186,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 97,
+            "y": 289.5,
+            "width": 163,
+            "height": 52.796875,
+            "top": 289.5,
+            "right": 260,
+            "bottom": 342.296875,
+            "left": 97
+          },
+          "radar": null,
+          "attribution": {
+            "x": 293.0625,
+            "y": 166,
+            "width": 136.9375,
+            "height": 16,
+            "top": 166,
+            "right": 430,
+            "bottom": 182,
+            "left": 293.0625
+          }
+        }
+      ]
+    },
+    {
+      "name": "after-geometry-430-dark",
+      "status": "passed",
+      "evidence": [
+        {
+          "sheet": {
+            "x": 0,
+            "y": 784,
+            "width": 430,
+            "height": 148,
+            "top": 784,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 77,
+            "y": 858.09375,
+            "width": 59,
+            "height": 41.796875,
+            "top": 858.09375,
+            "right": 136,
+            "bottom": 899.890625,
+            "left": 77
+          },
+          "radar": {
+            "x": 12,
+            "y": 660,
+            "width": 406,
+            "height": 76,
+            "top": 660,
+            "right": 418,
+            "bottom": 736,
+            "left": 12
+          },
+          "attribution": {
+            "x": 293.0625,
+            "y": 764,
+            "width": 136.9375,
+            "height": 16,
+            "top": 764,
+            "right": 430,
+            "bottom": 780,
+            "left": 293.0625
+          }
+        },
+        {
+          "sheet": {
+            "x": 0,
+            "y": 447.375,
+            "width": 430,
+            "height": 484.625,
+            "top": 447.375,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 97,
+            "y": 550.875,
+            "width": 163,
+            "height": 52.796875,
+            "top": 550.875,
+            "right": 260,
+            "bottom": 603.671875,
+            "left": 97
+          },
+          "radar": null,
+          "attribution": {
+            "x": 293.0625,
+            "y": 427.375,
+            "width": 136.9375,
+            "height": 16,
+            "top": 427.375,
+            "right": 430,
+            "bottom": 443.375,
+            "left": 293.0625
+          }
+        },
+        {
+          "sheet": {
+            "x": 0,
+            "y": 186,
+            "width": 430,
+            "height": 746,
+            "top": 186,
+            "right": 430,
+            "bottom": 932,
+            "left": 0
+          },
+          "overflow": false,
+          "temperature": {
+            "x": 97,
+            "y": 289.5,
+            "width": 163,
+            "height": 52.796875,
+            "top": 289.5,
+            "right": 260,
+            "bottom": 342.296875,
+            "left": 97
+          },
+          "radar": null,
+          "attribution": {
+            "x": 293.0625,
+            "y": 166,
+            "width": 136.9375,
+            "height": 16,
+            "top": 166,
+            "right": 430,
+            "bottom": 182,
+            "left": 293.0625
+          }
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "decision": "P0 CORRECTIONS READY FOR LEAD REVIEW",
+  "limitations": [
+    "R01 displayedTime is deliberately null, never complete viewport pixel confirmation.",
+    "Routing disables HTTP cache; warm label is a repeat, not certified warm-cache measurement.",
+    "Live suite has one flaky retry-pass, not nine first-pass successes.",
+    "No physical iPhone, Safari, GPU memory, battery, thermal, field INP or new10-minute endurance acceptance.",
+    "Current request cap is per app instance; forced Leaflet failure/resume scenario grows48 to60 requests, within80/min."
+  ]
+}
