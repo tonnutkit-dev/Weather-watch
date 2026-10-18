@@ -49,7 +49,8 @@ async function labData(page:Page,mode:string){
  }else await page.route('https://api.open-meteo.com/**',async r=>{
   if(mode==='reject'){await r.abort('failed');return;}
   if(mode==='delayed')await new Promise(resolve=>setTimeout(resolve,1500));
-  if(mode==='late')await new Promise(resolve=>setTimeout(resolve,14000));
+  // First uncached weather attempt waits 18s; 14s is now a slow success. This case stays past that budget.
+  if(mode==='late')await new Promise(resolve=>setTimeout(resolve,20000));
   const b=mode==='empty'?{}:currentBody('weather',mode==='expired');if(mode==='absent'){delete b.current.temperature_2m;delete b.current.apparent_temperature;}
   try{await r.fulfill({json:b});}catch{} // Aborted late route may already be closed; diagnostics records that state.
  });
@@ -85,7 +86,7 @@ for(const mode of ['reject','hang','delayed','late','empty','absent','expired'])
   await labData(page,mode);await page.goto('./');
   const panel=page.locator('.situation-panel');
   if(mode==='reject'||mode==='hang'||mode==='late'||mode==='empty'){
-   await expect(page.getByText('โหลดข้อมูลอากาศไม่ได้',{exact:true})).toBeVisible({timeout:30000});
+   await expect(page.getByText('โหลดข้อมูลอากาศไม่ได้',{exact:true})).toBeVisible({timeout:mode==='hang'||mode==='late'?55000:30000});
    await expect(panel).toHaveAttribute('data-verdict','Unknown');
    await expect(page.getByRole('button',{name:'ลองใหม่',exact:true}).first()).toBeVisible();
   }else{

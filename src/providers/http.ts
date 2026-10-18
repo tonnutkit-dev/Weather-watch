@@ -7,9 +7,17 @@ export class ProviderError extends Error {
     this.name = "ProviderError";
   }
 }
+/** Approved logical deadline for a single provider call. Callers may pass a longer first-attempt budget. */
+export const PROVIDER_DEADLINE_MS = 12_000;
+function deadlineBudget(value: number | undefined) {
+  return typeof value === "number" && Number.isFinite(value) && value > 0
+    ? value
+    : PROVIDER_DEADLINE_MS;
+}
 export async function fetchJson(
   url: string,
   signal?: AbortSignal,
+  deadlineMs?: number,
 ): Promise<unknown> {
   if (signal?.aborted) throw signal.reason;
   const request = new AbortController();
@@ -27,7 +35,7 @@ export async function fetchJson(
   const deadline = setTimeout(() => {
     timedOut = true;
     cancel(new DOMException("Provider deadline exceeded", "TimeoutError"));
-  }, 12000);
+  }, deadlineBudget(deadlineMs));
   try {
     const response = async () => {
       const res = await fetch(url, { signal: request.signal });

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useEffect, useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Search,
   Settings2,
@@ -24,7 +24,6 @@ import {
   isSupportedLocation,
 } from "../locations/region";
 import type { MapLayers } from "../maps/MapCanvas";
-import { getWeather } from "../providers/weather";
 import { getAirQuality } from "../providers/airQuality";
 import { getRadar } from "../providers/radar";
 import { useTheme } from "../shared/theme";
@@ -40,6 +39,7 @@ import { MapBoundary } from "../components/MapBoundary";
 import { freshness } from "../reliability/freshness";
 import { useSourceClock } from "../reliability/useFreshness";
 import { recordRefresh, useBoundedRefresh, automaticRefreshAllowed } from "../reliability/useRefresh";
+import { weatherQueryOptions } from "../reliability/weatherLoad";
 import { radarRequestKey, RadarPresentationStore } from "../radar/presentation";
 import { useRadarPlayback } from "../radar/usePlayback";
 import { value } from "../shared/time";
@@ -55,6 +55,7 @@ function initialLocation() {
   }
 }
 export default function App() {
+  const queryClient = useQueryClient();
   const theme = useTheme();
   const [radarPresentationStore] = useState(() => new RadarPresentationStore());
   const reportRadar = radarPresentationStore.report;
@@ -82,12 +83,7 @@ export default function App() {
     [online, setOnline] = useState(navigator.onLine);
   const weatherKey = ["weather", location.country, location.latitude, location.longitude, location.timezone];
   const airKey = ["air", location.country, location.latitude, location.longitude, location.timezone];
-  const weather = useQuery({
-    queryKey: weatherKey,
-    queryFn: ({ signal }) => { recordRefresh(weatherKey); return getWeather(location, signal); },
-    staleTime: 600000, refetchOnReconnect: false, refetchOnWindowFocus: false,
-    retryOnMount: false, refetchOnMount: (query) => automaticRefreshAllowed(query.queryKey),
-  });
+  const weather = useQuery(weatherQueryOptions(queryClient, location, weatherKey));
   const air = useQuery({
     queryKey: airKey,
     queryFn: ({ signal }) => { recordRefresh(airKey); return getAirQuality(location, signal); },

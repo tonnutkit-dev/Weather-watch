@@ -106,6 +106,23 @@ describe("App regressions", () => {
       ),
     ).toBeInTheDocument();
   });
+  it("offline banner stays the same when the production weather retry policy is active", async () => {
+    const before = vi.mocked(getWeather).mock.calls.length;
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <App />
+      </QueryClientProvider>,
+    );
+    await screen.findByTestId("temperature");
+    const calls = vi.mocked(getWeather).mock.calls.length;
+    expect(calls).toBeGreaterThan(before);
+    fireEvent(window, new Event("offline"));
+    expect(screen.getByText(/ไม่มีการเชื่อมต่ออินเทอร์เน็ต/)).toBeInTheDocument();
+    expect(vi.mocked(getWeather).mock.calls.length).toBe(calls);
+    fireEvent(window, new Event("online"));
+    expect(screen.queryByText(/ไม่มีการเชื่อมต่ออินเทอร์เน็ต/)).not.toBeInTheDocument();
+    expect(vi.mocked(getWeather).mock.calls.length).toBe(calls);
+  });
   it("offline event shows explicit connectivity state", async () => {
     mount();
     await screen.findByTestId("temperature");

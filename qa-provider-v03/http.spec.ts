@@ -54,11 +54,15 @@ test('HTTP actual App location change and unmount cancel ignored transport',asyn
  for(const q of states){expect(q.data).toBeUndefined();expect(q.fetchStatus).toBe('idle');}
  await info.attach('app-cancellation',{body:JSON.stringify({scope:'TEST-only root/client exposure; actual App selection and unmount. Ignored aborted transport cannot populate old-location cache.',states}),contentType:'application/json'});
 });
-test('HTTP actual App ignores native abort but completes one retry with Unknown by26s',async({page},info)=>{
+test('HTTP actual App bounds an uncached weather stall to three attempts',async({page},info)=>{
  await page.route('https://air-quality-api.open-meteo.com/**',r=>r.fulfill({json:fixture.air.body}));
  await page.addInitScript(()=>{const w=window as any;w.__LAB_STARTED=[];const original=window.fetch;window.fetch=function(input:any,init?:RequestInit){if(String(input).startsWith('https://api.open-meteo.com/')){const row={at:performance.now(),aborted:false};init?.signal?.addEventListener('abort',()=>row.aborted=true);w.__LAB_STARTED.push(row);return new Promise(()=>{});}return original.call(window,input,init);};});
- await page.goto('./');await expect(page.getByText('โหลดข้อมูลอากาศไม่ได้',{exact:true})).toBeVisible({timeout:30000});await expect(page.locator('.situation-panel')).toHaveAttribute('data-verdict','Unknown');
+ await page.goto('./');await expect(page.getByText('โหลดข้อมูลอากาศไม่ได้',{exact:true})).toBeVisible({timeout:55000});await expect(page.locator('.situation-panel')).toHaveAttribute('data-verdict','Unknown');
  const r=await page.evaluate(()=>{const w=window as any;const q=w.__WW_QUERY_CLIENT.getQueryCache().getAll().find((q:any)=>q.queryKey[0]==='weather');const e=w.__WW_QUERY_EVENTS.findLast((e:any)=>e.key[0]==='weather'&&e.action==='error');return {requests:w.__LAB_STARTED,terminal:e,status:q.state.status,fetchStatus:q.state.fetchStatus,failures:q.state.fetchFailureCount};});
- expect(r.requests).toHaveLength(2);expect(r.requests.every((x:any)=>x.aborted)).toBe(true);expect(r.terminal.at-r.requests[0].at).toBeGreaterThanOrEqual(24900);expect(r.terminal.at-r.requests[0].at).toBeLessThan(26000);expect(r.status).toBe('error');expect(r.fetchStatus).toBe('idle');expect(r.failures).toBe(2);
- await info.attach('bounded-production-retry',{body:JSON.stringify({scope:'Actual original App/QueryClient options, ignored native abort, real browser time. No retry/polling change.',result:r}),contentType:'application/json'});
+ expect(r.requests).toHaveLength(3);expect(r.requests.every((x:any)=>x.aborted)).toBe(true);
+ expect(r.requests[1].at-r.requests[0].at).toBeGreaterThanOrEqual(18900);expect(r.requests[1].at-r.requests[0].at).toBeLessThan(21000);
+ expect(r.requests[2].at-r.requests[1].at).toBeGreaterThanOrEqual(12900);expect(r.requests[2].at-r.requests[1].at).toBeLessThan(15500);
+ expect(r.terminal.at-r.requests[0].at).toBeGreaterThanOrEqual(44000);expect(r.terminal.at-r.requests[0].at).toBeLessThan(52000);
+ expect(r.status).toBe('error');expect(r.fetchStatus).toBe('idle');expect(r.failures).toBe(3);
+ await info.attach('bounded-production-retry',{body:JSON.stringify({scope:'Actual App. Uncached weather: 18s first attempt, then two 12s retries. Cached refresh stays one retry. Ignored native abort, real browser time.',result:r}),contentType:'application/json'});
 });

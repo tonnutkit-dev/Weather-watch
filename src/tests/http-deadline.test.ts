@@ -50,6 +50,18 @@ describe('Logical HTTP deadline, cancellation and cleanup',()=>{
  it('preserves network error text',async()=>{
   vi.stubGlobal('fetch',vi.fn(async()=>{throw new Error('network refused');}));const r=await result(fetchJson('https://test.invalid/'));expect(r.error.message).toBe('เชื่อมต่อแหล่งข้อมูลไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่');expect(vi.getTimerCount()).toBe(0);
  });
+ it('uses an explicit first-attempt budget without moving the 12s default',async()=>{
+  const late=deferred<Response>();vi.stubGlobal('fetch',vi.fn(()=>late.promise));
+  let settled=false;const p=result(fetchJson('https://test.invalid/',undefined,18000)).then(r=>{settled=true;return r;});
+  await vi.advanceTimersByTimeAsync(12000);expect(settled).toBe(false);
+  await vi.advanceTimersByTimeAsync(5999);expect(settled).toBe(false);
+  await vi.advanceTimersByTimeAsync(1);const r=await p;expect(r.error).toBeInstanceOf(ProviderError);expect(r.error.message).toBe('แหล่งข้อมูลตอบช้าเกินไป กรุณาลองใหม่');expect(vi.getTimerCount()).toBe(0);
+ });
+ it('caller abort still wins inside a longer budget',async()=>{
+  const caller=new AbortController(),reason=new Error('location switched');vi.stubGlobal('fetch',vi.fn(()=>new Promise(()=>{})));
+  const p=result(fetchJson('https://test.invalid/',caller.signal,18000));await vi.advanceTimersByTimeAsync(50);caller.abort(reason);
+  expect((await p).error).toBe(reason);expect(vi.getTimerCount()).toBe(0);
+ });
 });
 const contracts=[
  {name:'weather',run:(signal?:AbortSignal)=>getWeather(defaultLocation,signal),body:weather,host:'api.open-meteo.com',check:(x:any)=>{expect(x.currentMeta.sourceId).toBe('open-meteo');expect(x.currentMeta.dataType).toBe('MODELED');expect(x.currentMeta.observedAt).toBeNull();expect(x.current.temperature).toBe(weather.current.temperature_2m);}},
