@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { resolve, dirname } from 'node:path';
+import { settings, sourceIdentity, inventory, validateManifest } from './release-contract.mjs';
+const config = settings(), source = sourceIdentity();
+const release = JSON.parse(await readFile(resolve(config.directory, 'release.json'), 'utf8'));
+for (const key of ['base', 'channel', 'site']) assert.equal(release[key], config[key]);
+const files = await inventory(config.directory);
+const manifest = validateManifest({ schema: 1, source, release, build: { directory: config.directory, target: config.base === '/' ? 'isolated-owner-qa-unpublished' : 'github-pages-candidate', node: process.version, generatedAt: new Date().toISOString() }, files });
+const path = process.env.WW_RC_MANIFEST || 'qa-rc-v03/artifacts/pages-manifest.json';
+assert.ok(!resolve(path).startsWith(resolve(config.directory) + '/'), 'Manifest must be external to hashed build');
+await mkdir(dirname(path), { recursive: true }); await writeFile(path, JSON.stringify(manifest, null, 2) + '\n');
+console.log('Immutable external manifest', path, files.length, 'files', source.commit);

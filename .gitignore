@@ -1,3 +1,4 @@
+node_modules
 node_modules/
 dist/
 .env
@@ -9,3 +10,23 @@ test-results/
 
 # Raw provider documentation HTML is transient audit input, not distributable application source.
 evidence/*.html
+# Isolated P0 lab output is published as Actions artifacts, never shipped.
+diagnostics-p0/raw/
+diagnostics-p0/dist-diagnostic/
+diagnostics-p0/baseline/
+qa-owner-v03/raw/
+qa-owner-v03/browser-report/
+qa-owner-v03/test-results/
+qa-playback-v03/browser-report/
+qa-playback-v03/test-results/
+qa-smooth-v03/browser-report/
+qa-smooth-v03/test-results/
+
+qa-visual-v03/browser-report/
+qa-visual-v03/test-results/
+baseline-visual-results/
+baseline-visual-report/
+qa-mobile-v03/browser-report/
+qa-mobile-v03/test-results/
+mobile-baseline-report/
+mobile-baseline-results/

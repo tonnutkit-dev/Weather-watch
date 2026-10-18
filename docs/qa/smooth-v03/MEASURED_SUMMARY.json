@@ -1,0 +1,134 @@
+{
+  "evidence": "MEASURED",
+  "source": "8f137edc921d677cd3693229b670506495057cd2",
+  "beforeSource": "b17c5a5e1af4900cd9aba80cb1488f6447bf450f",
+  "beforeRun": 38155775590,
+  "acceptedRun": 38157833087,
+  "deployedRun": 38158557257,
+  "labRun": 38158793640,
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "environment": "Linux GitHub Actions, fresh contexts, unthrottled CPU/network, not physical iPhone",
+  "subsequentSamplesPerProfile": 5,
+  "profiles": [
+    {
+      "browser": "chromium",
+      "engine": "maplibre",
+      "beforeFirstSelectedMs": 1696,
+      "beforeIntervalsMs": [
+        4997,
+        4974,
+        5009,
+        4989,
+        5039
+      ],
+      "afterFirstSelectedMs": 1690,
+      "afterFirstVisibleSampleMs": 1983,
+      "afterIntervalsMs": [
+        2511,
+        2498,
+        2514,
+        2503,
+        2492
+      ],
+      "beforePeakStarts": 42,
+      "afterPeakStarts": 42,
+      "afterHeapStart": 26000000,
+      "afterHeapEnd": 26000000,
+      "beforeRAFp95Ms": 16.8,
+      "afterRAFp95Ms": 33.3,
+      "sameGLCanvas": true
+    },
+    {
+      "browser": "webkit",
+      "engine": "maplibre",
+      "beforeFirstSelectedMs": 1634,
+      "beforeIntervalsMs": [
+        4992,
+        5034,
+        5044,
+        5049,
+        5031
+      ],
+      "afterFirstSelectedMs": 1636,
+      "afterFirstVisibleSampleMs": 1978,
+      "afterIntervalsMs": [
+        2500,
+        2498,
+        2515,
+        2535,
+        2526
+      ],
+      "beforePeakStarts": 42,
+      "afterPeakStarts": 42,
+      "afterHeapStart": null,
+      "afterHeapEnd": null,
+      "beforeRAFp95Ms": 18,
+      "afterRAFp95Ms": 23,
+      "sameGLCanvas": true
+    },
+    {
+      "browser": "leaflet-reduced",
+      "engine": "leaflet-fallback",
+      "beforeFirstSelectedMs": 1615,
+      "beforeIntervalsMs": [
+        4999,
+        5001,
+        4995,
+        5008,
+        4998
+      ],
+      "afterFirstSelectedMs": 1600,
+      "afterFirstVisibleSampleMs": 1862,
+      "afterIntervalsMs": [
+        2505,
+        2482,
+        2502,
+        2506,
+        2524
+      ],
+      "beforePeakStarts": 24,
+      "afterPeakStarts": 24,
+      "afterHeapStart": 10000000,
+      "afterHeapEnd": 10000000,
+      "beforeRAFp95Ms": 16.8,
+      "afterRAFp95Ms": 16.8,
+      "sameGLCanvas": null
+    }
+  ],
+  "tests": {
+    "unit": 93,
+    "accepted": {
+      "labFinal": 3,
+      "originalFinal": 9,
+      "originalFlaky": 2,
+      "hotfix": 1,
+      "realFinal": 3,
+      "realFlaky": 1
+    },
+    "deployed": {
+      "originalFinal": 9,
+      "originalFlaky": 3,
+      "hotfix": 1,
+      "realFinal": 3,
+      "realFlaky": 1,
+      "verifiedAssets": 36
+    },
+    "separateLab": {
+      "final": 3,
+      "flaky": 1,
+      "flake": "WebKit zero changed pixels inside 750ms after qualified transport; retry passed"
+    }
+  },
+  "limits": [
+    "Transport is not complete viewport pixel confirmation",
+    "First visible sample is not exact paint onset",
+    "rAF includes startup/screenshots and different runners; higher GL p95 is an open risk",
+    "Short heap sample is not leak/GPU proof",
+    "Post-render barrier proposed but not implemented due execution-service failure",
+    "Physical iPhone, thermal/battery and sustained GPU memory NOT TESTED"
+  ],
+  "decision": "CONDITIONAL OWNER QA; not full P1 closure"
+}

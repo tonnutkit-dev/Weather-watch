@@ -11,22 +11,43 @@ export async function fetchJson(
   url: string,
   signal?: AbortSignal,
 ): Promise<unknown> {
-  const timeout = AbortSignal.timeout(12000);
+  if (signal?.aborted) throw signal.reason;
+  const request = new AbortController();
+  let timedOut = false;
+  let rejectAbort!: (reason: unknown) => void;
+  const aborted = new Promise<never>((_resolve, reject) => {
+    rejectAbort = reject;
+  });
+  const cancel = (reason: unknown) => {
+    request.abort(reason);
+    rejectAbort(reason);
+  };
+  const onCallerAbort = () => cancel(signal?.reason);
+  signal?.addEventListener("abort", onCallerAbort, { once: true });
+  const deadline = setTimeout(() => {
+    timedOut = true;
+    cancel(new DOMException("Provider deadline exceeded", "TimeoutError"));
+  }, 12000);
   try {
-    const res = await fetch(url, {
-      signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
-    });
-    if (!res.ok)
-      throw new ProviderError(`แหล่งข้อมูลตอบกลับ ${res.status}`, res.status);
-    return await res.json();
+    const response = async () => {
+      const res = await fetch(url, { signal: request.signal });
+      if (!res.ok)
+        throw new ProviderError(`แหล่งข้อมูลตอบกลับ ${res.status}`, res.status);
+      return await res.json();
+    };
+    // Settle the whole fetch/body operation even if native transport abort stalls.
+    return await Promise.race([response(), aborted]);
   } catch (e) {
     if (signal?.aborted) throw e;
     if (e instanceof ProviderError) throw e;
     throw new ProviderError(
-      timeout.aborted
+      timedOut
         ? "แหล่งข้อมูลตอบช้าเกินไป กรุณาลองใหม่"
         : "เชื่อมต่อแหล่งข้อมูลไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่",
     );
+  } finally {
+    clearTimeout(deadline);
+    signal?.removeEventListener("abort", onCallerAbort);
   }
 }
 export const object = (v: unknown): Record<string, unknown> =>

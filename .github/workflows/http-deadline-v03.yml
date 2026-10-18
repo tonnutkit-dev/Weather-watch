@@ -1,0 +1,121 @@
+name: Weather Watch approved HTTP deadline patch QA
+on:
+  push:
+    branches: [work/isolated-webkit-diagnosis-v03]
+    paths: [src/providers/http.ts, src/tests/http-deadline.test.ts, qa-provider-v03/**, .github/workflows/http-deadline-v03.yml]
+permissions: {contents: read}
+jobs:
+  deterministic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - name: Protect refs and allow only approved HTTP source change
+        run: |
+          test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
+          test "$(git rev-parse origin/work/mobile-map-correction-v03)" = 8ca9ae7afe67551d4a43de5ebf2fc0d47ec4c23a
+          git diff --exit-code 532637a69db54e57f8f0abc133d446b49378f0a0 HEAD -- src public DESIGN.md package.json package-lock.json vite.config.ts .github/workflows/pages.yml ':!src/providers/http.ts' ':!src/tests/http-deadline.test.ts'
+      - run: npm ci && npm run typecheck && npm test && npm run build && npm run verify:pages
+      - name: Freeze ordinary Pages output, no test inputs or observer code
+        run: |
+          node qa-provider-v03/artifacts.mjs
+          tar -czf qa-provider-v03/artifacts/candidate-pages.tar.gz -C dist .
+          sha256sum qa-provider-v03/artifacts/candidate-pages.tar.gz > qa-provider-v03/artifacts/candidate-pages.sha256
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Separate LAB build observes actual client and imports actual HTTP helper
+        run: npx vite build --config qa-provider-v03/vite.config.ts
+      - name: Focused logical deadline, ignored abort, cancellation and real App retry
+        run: npx playwright test --config qa-provider-v03/playwright.config.ts --grep HTTP
+      - name: Save focused outcomes before next suite
+        if: always()
+        run: |
+          if [ -d qa-provider-v03/results ]; then mv qa-provider-v03/results qa-provider-v03/http-results; fi
+          if [ -d qa-provider-v03/report ]; then mv qa-provider-v03/report qa-provider-v03/http-report; fi
+      - name: Original LAB fault and ready-map offline gates
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-provider-v03/playwright.config.ts --grep LAB
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: http-deterministic-${{ github.run_id }}
+          path: |
+            qa-provider-v03/results/
+            qa-provider-v03/report/
+            qa-provider-v03/http-results/
+            qa-provider-v03/http-report/
+            qa-provider-v03/artifacts/
+          retention-days: 90
+  live-and-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - run: npm ci && npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Original45s live provider gate, three samples per engine, zero test retries
+        env: {WW_DIAG_CONTROL: '1'}
+        run: npx playwright test --config qa-provider-v03/playwright.config.ts --grep LIVE
+      - name: Accepted Design C map geometry touch fallback Reduced Motion
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-mobile-v03/playwright.config.ts --grep-invert 'live mobile'
+      - name: Existing original live mobile regressions, original retries retained
+        if: ${{ !cancelled() }}
+        run: npm run test:e2e
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: http-live-and-visual-${{ github.run_id }}
+          path: |
+            qa-provider-v03/results/
+            qa-provider-v03/report/
+            qa-mobile-v03/test-results/
+            qa-mobile-v03/browser-report/
+            test-results/
+            playwright-report/
+          retention-days: 90
+  radar-and-performance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - run: npm ci && npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Protected real radar Play Pause scrub budget and provenance
+        run: npx playwright test --config qa-playback-v03/playwright.config.ts
+      - name: Original real radar pixel tests, keep inherited failures and retries
+        if: ${{ !cancelled() }}
+        run: npx playwright test playback.spec.ts --config qa-smooth-v03/playwright.config.ts
+      - name: Matched HTTP-before baseline UI benchmark
+        if: ${{ !cancelled() }}
+        run: |
+          git worktree add /tmp/ww-http-before 532637a69db54e57f8f0abc133d446b49378f0a0
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/ww-http-before/node_modules
+          cd /tmp/ww-http-before
+          npm run build
+          WW_VISUAL_PHASE=http-before npx playwright test --config qa-visual-v03/playwright.config.ts --grep 'matched UI'
+      - name: Matched HTTP-after UI benchmark
+        if: ${{ !cancelled() }}
+        run: WW_VISUAL_PHASE=http-after npx playwright test --config qa-visual-v03/playwright.config.ts --grep 'matched UI'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: http-radar-and-performance-${{ github.run_id }}
+          path: |
+            qa-playback-v03/test-results/
+            qa-playback-v03/browser-report/
+            qa-smooth-v03/test-results/
+            qa-smooth-v03/browser-report/
+            /tmp/ww-http-before/qa-visual-v03/test-results/
+            /tmp/ww-http-before/qa-visual-v03/browser-report/
+            qa-visual-v03/test-results/
+            qa-visual-v03/browser-report/
+          retention-days: 90

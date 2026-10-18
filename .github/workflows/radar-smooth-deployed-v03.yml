@@ -1,0 +1,84 @@
+name: Weather Watch smooth radar isolated HTTPS verification
+on:
+  push:
+    branches: [work/radar-smooth-playback-v03]
+    paths: [.github/workflows/radar-smooth-deployed-v03.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deployed-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      WW_SMOOTH_PHASE: deployed
+      WW_EXPECT_INTERVAL: 2500
+      WW_E2E_BASE_URL: https://weather-watch-v03-p0-owner-qa-ton.tonnutkit.chatgpt.site/
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: { node-version: 24, cache: npm }
+      - name: Verify isolated source and all static assets anonymously
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          import { mkdirSync, writeFileSync } from 'node:fs';
+          const base = process.env.WW_E2E_BASE_URL;
+          const release = await fetch(new URL('release.json', base)).then(r => { if(!r.ok) throw Error(`release HTTP ${r.status}`); return r.json(); });
+          if(release.commit !== '8f137edc921d677cd3693229b670506495057cd2' || release.base !== '/' || release.diagnosticFixturesIncluded !== false) throw Error('Unexpected deployed source');
+          const integrity = await fetch(new URL('asset-integrity.json', base)).then(r=>r.json());
+          for(const a of integrity.assets) {
+            const r = await fetch(new URL(a.path, base)); if(!r.ok) throw Error(`asset HTTP ${r.status}: ${a.path}`);
+            const bytes = Buffer.from(await r.arrayBuffer());
+            let sourceBytes = bytes;
+            // Cloudflare adds a request-specific JS-detection suffix to public HTML.
+            // Only that identified suffix may be removed; all application bytes still must match.
+            if(a.path==='index.html') {
+              const html = bytes.toString();
+              const suffix = html.match(/<script>\(function\(\)\{function c\(\).*?<\/script>(?=<\/body><\/html>\s*$)/s)?.[0];
+              if(suffix?.includes('window.__CF$cv$params') && suffix.includes('/cdn-cgi/challenge-platform/scripts/jsd/main.js')) {
+                mkdirSync('deployed-integrity-evidence', {recursive:true});
+                writeFileSync('deployed-integrity-evidence/cloudflare-served-index.html', bytes);
+                sourceBytes = Buffer.from(html.replace(suffix, ''));
+                console.log('Identified Cloudflare JS-detection suffix; verifying the remaining HTML against its exact build hash.');
+              }
+            }
+            if(createHash('sha256').update(sourceBytes).digest('hex') !== a.sha256) {
+              mkdirSync('deployed-integrity-evidence', {recursive:true});
+              writeFileSync(`deployed-integrity-evidence/${a.path.replaceAll('/','_')}`, bytes);
+              console.log(JSON.stringify({path:a.path,expected:a.sha256,actual:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length,contentType:r.headers.get('content-type')}));
+              if(a.path==='index.html') console.log(bytes.toString());
+              throw Error(`asset mismatch: ${a.path}`);
+            }
+          }
+          const prior = await fetch('https://tonnutkit-dev.github.io/Weather-watch/release.json').then(r=>r.json());
+          if(prior.commit !== '2036e2ac788cb31d25fd387cb40520ad95c408a6') throw Error('Protected Pages release changed');
+          console.log(JSON.stringify({release,verifiedAssets:integrity.assets.length,protectedPages:prior.commit}));
+          NODE
+          test "$(git rev-parse origin/main)" = 2036e2ac788cb31d25fd387cb40520ad95c408a6
+      - run: npm ci
+      - run: npm run typecheck && npm test && npm run build && npm run verify:pages
+      - id: browser-install
+        run: npx playwright install --with-deps chromium webkit
+      - name: Original regression tests on actual HTTPS deployment
+        run: npm run test:e2e
+      - name: Real automatic playback on actual HTTPS deployment
+        if: ${{ !cancelled() && steps.browser-install.outcome == 'success' }}
+        run: npx playwright test --config qa-playback-v03/playwright.config.ts
+      - name: Real visible frames and timing on Chromium, WebKit and Leaflet
+        if: ${{ !cancelled() && steps.browser-install.outcome == 'success' }}
+        run: npx playwright test playback.spec.ts --config qa-smooth-v03/playwright.config.ts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: radar-smooth-deployed-v03-${{ github.run_id }}
+          path: |
+            deployed-integrity-evidence/
+            qa-smooth-v03/browser-report/
+            qa-smooth-v03/test-results/
+            playwright-report/
+            test-results/
+            qa-playback-v03/browser-report/
+            qa-playback-v03/test-results/
+          retention-days: 90

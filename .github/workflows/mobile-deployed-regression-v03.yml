@@ -1,0 +1,36 @@
+name: Weather Watch final public mobile regression
+on:
+  push:
+    branches: [work/mobile-map-correction-v03]
+    paths: [.github/workflows/mobile-deployed-regression-v03.yml]
+permissions: {contents: read}
+jobs:
+  deployed-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      WW_E2E_BASE_URL: https://weather-watch-v03-design-c-owner-qa-ton.tonnutkit.chatgpt.site/
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24, cache: npm}
+      - name: Prove unchanged application and original assertions
+        run: git diff --exit-code 0ed053acdcf1b4e477e9f988d257902de4c081e3 HEAD -- src package.json package-lock.json vite.config.ts qa-mobile-v03 tests
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Complete original nine regressions on actual public HTTPS
+        run: npm run test:e2e
+      - name: Independent WebKit live confirmation with original timeout
+        if: ${{ !cancelled() }}
+        run: npx playwright test --config qa-mobile-v03/playwright.config.ts --project webkit --grep 'live mobile'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: mobile-public-regression-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+            qa-mobile-v03/browser-report/
+            qa-mobile-v03/test-results/
+          retention-days: 90

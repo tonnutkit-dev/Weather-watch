@@ -1,0 +1,109 @@
+{
+  "baseline": "d7791d88c8de70793d76d5a53565ab46eb245204",
+  "candidate": "a695711dab58caca660657ab83564b3a59f9fccb",
+  "scope": "Fresh output directories. All emitted JS/CSS/worker assets, not initial page transfer. Same installed lockfile, no dependency changes.",
+  "before": {
+    "assets": [
+      {
+        "file": "RasterCanvas-CIGW-MKW.css",
+        "bytes": 15607,
+        "gzipBytes": 6453
+      },
+      {
+        "file": "GLCanvas-CIUxznwC.js",
+        "bytes": 1043773,
+        "gzipBytes": 282834
+      },
+      {
+        "file": "maplibre-gl-worker-VaXr2Fck.mjs",
+        "bytes": 508314,
+        "gzipBytes": 143724
+      },
+      {
+        "file": "index-B4l3krA0.js",
+        "bytes": 422387,
+        "gzipBytes": 134734
+      },
+      {
+        "file": "layout-DAOTmOmW.js",
+        "bytes": 546,
+        "gzipBytes": 331
+      },
+      {
+        "file": "MapCanvas-yM1ghuQ4.js",
+        "bytes": 918,
+        "gzipBytes": 561
+      },
+      {
+        "file": "RasterCanvas-BEOeoWvS.js",
+        "bytes": 158298,
+        "gzipBytes": 46269
+      },
+      {
+        "file": "index-yMtrcX5j.css",
+        "bytes": 35939,
+        "gzipBytes": 7511
+      },
+      {
+        "file": "GLCanvas-RZO-t2LB.css",
+        "bytes": 83127,
+        "gzipBytes": 10453
+      }
+    ],
+    "bytes": 2268909,
+    "gzipBytes": 632870
+  },
+  "after": {
+    "assets": [
+      {
+        "file": "RasterCanvas-CIGW-MKW.css",
+        "bytes": 15607,
+        "gzipBytes": 6453
+      },
+      {
+        "file": "GLCanvas-CJfrr4mB.js",
+        "bytes": 1044717,
+        "gzipBytes": 283209
+      },
+      {
+        "file": "index-agpCA3zS.css",
+        "bytes": 35897,
+        "gzipBytes": 7591
+      },
+      {
+        "file": "index-CELJ00Im.js",
+        "bytes": 423500,
+        "gzipBytes": 135077
+      },
+      {
+        "file": "maplibre-gl-worker-VaXr2Fck.mjs",
+        "bytes": 508314,
+        "gzipBytes": 143724
+      },
+      {
+        "file": "layout-DAOTmOmW.js",
+        "bytes": 546,
+        "gzipBytes": 331
+      },
+      {
+        "file": "MapCanvas-DkwSYxEH.js",
+        "bytes": 918,
+        "gzipBytes": 562
+      },
+      {
+        "file": "GLCanvas-RZO-t2LB.css",
+        "bytes": 83127,
+        "gzipBytes": 10453
+      },
+      {
+        "file": "RasterCanvas-DAcaCSTM.js",
+        "bytes": 158298,
+        "gzipBytes": 46269
+      }
+    ],
+    "bytes": 2270924,
+    "gzipBytes": 633669
+  },
+  "deltaBytes": 2015,
+  "deltaGzipBytes": 799
+}
