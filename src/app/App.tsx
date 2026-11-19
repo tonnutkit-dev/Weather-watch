@@ -4,7 +4,7 @@ import { Search, LocateFixed, Globe } from "lucide-react";
 import type { Location } from "../locations/types";
 import { chinaCities } from "../locations/types";
 import { provinces, defaultLocation } from "../locations/provinces";
-import { locationFromCoordinates, isSupportedLocation } from "../locations/region";
+import { locationFromCoordinates, isSupportedLocation, nearestProvince } from "../locations/region";
 import type { MapLayers } from "../maps/MapCanvas";
 import { getAirQuality } from "../providers/airQuality";
 import { getRadar } from "../providers/radar";
@@ -44,7 +44,7 @@ export default function App() {
   const queryClient = useQueryClient();
   const theme = useTheme();
   const glass = useGlass();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [radarPresentationStore] = useState(() => new RadarPresentationStore());
   const [location, setLocation] = useState<Location>(initialLocation);
   const [favorites, setFavorites] = useState(() => readFavorites().filter(isSupportedLocation));
@@ -150,7 +150,10 @@ export default function App() {
               mapAction={mapAction}
               onSelect={(lat, lon) => {
                 const l = locationFromCoordinates(lat, lon);
-                if (l) select(l); else setMessage(t("map.outside"));
+                if (!l) { setMessage(t("map.outside")); return; }
+                // No reverse-geocoding provider: name the point after the nearest province (local list).
+                const near = nearestProvince(lat, lon);
+                select({ ...l, name: t("loc.near", { name: lang === "th" ? near.name : near.english ?? near.name }) });
               }}
             />
           </Suspense>

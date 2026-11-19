@@ -1,8 +1,10 @@
 import { useEffect, useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { useI18n } from "../i18n/i18n";
 /** Floating glass panel used for settings and radar details. Escape and backdrop close it. */
-export function Panel({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
+/** compact: at most ~half the viewport, body scrolls, footer stays visible, top chip stays uncovered. */
+export function Panel({ title, onClose, children, footer, compact }: { title: string; onClose: () => void; children: ReactNode; footer?: ReactNode; compact?: boolean }) {
   const { t } = useI18n();
   const box = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -15,10 +17,11 @@ export function Panel({ title, onClose, children }: { title: string; onClose: ()
       previous?.focus?.();
     };
   }, [onClose]);
-  return (
+  // Portal: escape the dock/sheet stacking contexts so the panel always sits above them.
+  return createPortal(
     <div className="ww-panel-layer">
       <div className="ww-scrim" onClick={onClose} />
-      <div ref={box} className="ww-panel glass" role="dialog" aria-modal="true" aria-label={title} tabIndex={-1}>
+      <div ref={box} className={`ww-panel glass ${compact ? "is-compact" : ""}`} role="dialog" aria-modal="true" aria-label={title} tabIndex={-1}>
         <div className="ww-panel-head">
           <h2>{title}</h2>
           <button className="ww-icon-btn" aria-label={t("panel.close")} onClick={onClose}>
@@ -26,7 +29,9 @@ export function Panel({ title, onClose, children }: { title: string; onClose: ()
           </button>
         </div>
         <div className="ww-panel-body">{children}</div>
+        {footer && <div className="ww-panel-foot">{footer}</div>}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

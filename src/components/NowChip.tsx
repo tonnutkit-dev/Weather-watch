@@ -41,6 +41,9 @@ export function NowChip(p: {
 }) {
   const { t, time } = useI18n();
   const w = p.weather.data;
+  // Device and location can be in different zones (e.g. phone in China, location in Thailand): tag the clock.
+  const zoneTag = w && w.utcOffsetSeconds / 60 !== -new Date().getTimezoneOffset()
+    ? ` ${p.location.timezone === "Asia/Shanghai" ? t("tz.cnShort") : t("tz.thShort")}` : "";
   const assessable = p.freshness === "expired" || p.freshness === "unavailable" ? undefined : w;
   const h = headline(assessable, p.air, (e) => time(e, p.location.timezone), p.now / 1000);
   const rain = maxRainChance(assessable, p.now / 1000);
@@ -49,7 +52,7 @@ export function NowChip(p: {
       <button className="ww-now-loc" onClick={p.onSearch} aria-label={`${t("now.change")}: ${p.location.name}`}>
         <MapPin size={15} aria-hidden="true" />
         <strong>{p.location.name}</strong>
-        {w && <span className="ww-now-time">· {time(w.current.time, p.location.timezone)}</span>}
+        {w && <span className="ww-now-time">· {time(w.current.time, p.location.timezone)}{zoneTag}</span>}
         <ChevronDown size={15} aria-hidden="true" className="ww-now-chev" />
       </button>
       {w ? (

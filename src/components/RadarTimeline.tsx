@@ -25,21 +25,19 @@ export interface RadarTimelineProps {
 }
 const noSubscribe = () => () => {};
 const noSnapshot = () => undefined;
-/** Thumb-zone radar scrubber. Presentation status stays honest: a selected frame is never shown as confirmed imagery. */
+/**
+ * Thumb-zone radar scrubber. The dock shows only human states ("loading", failure, stale);
+ * the honest machine state (presentation status, playback phase) stays in data attributes and
+ * in the info panel's details. Times are relative to now: the device and the location can be in
+ * different time zones, so absolute clocks appear only in details, labeled with the location zone.
+ */
 export function RadarTimeline(p: RadarTimelineProps) {
-  const { t, time, fullTime } = useI18n();
+  const { t, fullTime } = useI18n();
   const snapshot = useSyncExternalStore(p.presentationStore?.subscribe ?? noSubscribe, p.presentationStore?.getSnapshot ?? noSnapshot);
   const playback = useSyncExternalStore(p.playback?.subscribe ?? noSubscribe, p.playback?.getSnapshot ?? noSnapshot);
-  const playbackKey: Key | null =
-    playback?.phase === "budget" ? "radar.p.budget"
-    : playback?.phase === "suspended" ? "radar.p.suspended"
-    : playback?.phase === "failed" ? "radar.p.failed"
-    : playback?.playing && playback.reason === "starting" ? "radar.p.starting"
-    : playback?.playing && playback.phase === "buffering" ? "radar.p.buffering"
-    : playback?.playing ? "radar.p.playing"
-    : playback ? "radar.p.paused" : null;
   const presentation = snapshot?.key === p.requestKey ? snapshot : undefined;
   const status = presentation?.status ?? "pending";
+  const phase = playback?.phase ?? "paused";
   const [details, setDetails] = useState(false);
   const [now, setNow] = useState(() => Date.now() / 1000);
   useEffect(() => {
@@ -55,53 +53,50 @@ export function RadarTimeline(p: RadarTimelineProps) {
     first = frames[0],
     latest = frames.at(-1);
   const stale = isRadarStale(latest?.time, now);
-  const freshness: Key | null = p.error ? "radar.f.error" : !frames.length ? "radar.f.loading" : stale ? "radar.f.stale" : p.country === "CN" ? "radar.f.china" : null;
-  const notable = status === "failed" || (playbackKey !== null && playbackKey !== "radar.p.playing" && playbackKey !== "radar.p.paused");
+  const ago = (minutes: number) => {
+    const m = Math.max(0, Math.round(minutes));
+    if (m < 60) return t("radar.mins", { m });
+    const h = Math.floor(m / 60), r = Math.round((m % 60) / 10) * 10;
+    return r && r < 60 ? t("radar.hoursMins", { h, m: r }) : t("radar.hours", { h: r === 60 ? h + 1 : h });
+  };
+  const rel = (time?: number) => (time == null ? "—" : now - time < 600 ? t("radar.nowRel") : `−${ago((now - time) / 60)}`);
+  const failed = status === "failed" || phase === "failed";
+  const busy = !p.error && !failed && (!frames.length || p.loading || phase === "buffering" || phase === "budget" || (p.playing && status === "pending"));
+  const notice: { key: Key; warn?: boolean } | null =
+    p.error ? { key: "radar.f.error", warn: true }
+    : failed ? { key: "radar.f.partial", warn: true }
+    : stale ? { key: "radar.f.stale", warn: true }
+    : p.country === "CN" ? { key: "radar.f.china" } : null;
   const pct = max ? (index / max) * 100 : 100;
-  const ago = (m: number) => (m >= 60 && m % 60 === 0 ? t("radar.hoursAgo", { h: m / 60 }) : t("radar.minAgo", { m }));
+  const zone = p.timezone === "Asia/Shanghai" ? t("tz.cn") : t("tz.th");
+  const detailKey: Key = status === "failed" ? "radar.d.failed" : status === "pending" ? "radar.d.pending" : "radar.d.unverified";
+  const playKey: Key = phase === "budget" ? "radar.d.pBudget" : phase === "buffering" ? "radar.d.pBuffering"
+    : phase === "failed" ? "radar.d.pFailed" : phase === "suspended" ? "radar.d.pSuspended" : "radar.d.pIdle";
   return (
     <>
       <div className="ww-timeline glass" aria-label={t("radar.controls")} data-map-inset="bottom">
-        <button
-          className="ww-play"
-          aria-label={p.playing ? t("radar.pause") : t("radar.play")}
-          aria-pressed={p.playing}
-          disabled={frames.length < 2 || p.error}
-          onClick={p.onPlay}
-        >
+        <button className="ww-play" aria-label={p.playing ? t("radar.pause") : t("radar.play")} aria-pressed={p.playing}
+          disabled={frames.length < 2 || p.error} onClick={p.onPlay}>
           {p.playing ? <Pause size={19} fill="currentColor" /> : <Play size={19} fill="currentColor" />}
         </button>
         <div className="ww-tl-body">
           <div className="ww-tl-top">
             <time data-testid="radar-time" aria-label={t("radar.timeLabel")} dateTime={frame ? new Date(frame.time * 1000).toISOString() : undefined}>
-              {time(frame?.time, p.timezone)}
+              {rel(frame?.time)}
             </time>
-            <span className="ww-tl-status" data-quiet={!notable && !freshness}>
-              <span data-testid="radar-presentation" data-status={status} className={notable ? "" : "ww-sr"}>
-                <span data-testid="radar-playback" data-phase={playback?.phase ?? "paused"} role="status">
-                  {playbackKey ? t(playbackKey) + " · " : ""}
-                </span>
-                {t(`radar.s.${status}` as Key)}
-              </span>
-              {freshness && <span className={p.error || stale ? "ww-tl-warn" : ""} role="status">{t(freshness)}</span>}
+            <span data-testid="radar-presentation" data-status={status} hidden />
+            <span data-testid="radar-playback" data-phase={phase} hidden />
+            <span className="ww-tl-status" role="status">
+              {busy && <span className="ww-tl-busy"><span className="ww-spin" aria-hidden="true" />{t("radar.loading")}</span>}
+              {!busy && notice && <span className={notice.warn ? "ww-tl-warn" : ""}>{t(notice.key)}</span>}
             </span>
           </div>
-          <input
-            className="ww-range"
-            style={{ "--pct": `${pct}%` } as CSSProperties}
-            aria-label={t("radar.frame")}
-            type="range"
-            min="0"
-            max={max}
-            step="1"
-            value={index}
-            disabled={!frames.length || p.error}
-            aria-valuetext={frame ? fullTime(frame.time, p.timezone) : t("radar.noImage")}
-            onChange={(e) => p.onIndex(Number(e.target.value))}
-          />
+          <input className="ww-range" style={{ "--pct": `${pct}%` } as CSSProperties} aria-label={t("radar.frame")}
+            type="range" min="0" max={max} step="1" value={index} disabled={!frames.length || p.error}
+            aria-valuetext={frame ? rel(frame.time) : t("radar.noImage")} onChange={(e) => p.onIndex(Number(e.target.value))} />
           <div className="ww-tl-ticks num" aria-hidden="true">
-            <span>{first && latest ? ago(Math.round((latest.time - first.time) / 60)) : ""}</span>
-            <span>{t("radar.now")} {time(latest?.time, p.timezone)}</span>
+            <span>{first ? rel(first.time) : ""}</span>
+            <span>{latest ? rel(latest.time) : ""}</span>
           </div>
         </div>
         <button className="ww-icon-btn" aria-label={t("radar.details")} aria-expanded={details} onClick={() => setDetails(true)}>
@@ -109,39 +104,36 @@ export function RadarTimeline(p: RadarTimelineProps) {
         </button>
       </div>
       {details && (
-        <Panel title={t("radar.detailsTitle")} onClose={() => setDetails(false)}>
+        <Panel title={t("radar.detailsTitle")} onClose={() => setDetails(false)} compact
+          footer={<button className="ww-btn ww-btn-block" aria-label={t("radar.refresh")} onClick={p.onRefresh} disabled={p.loading}>
+            <RefreshCw size={16} /> {p.loading ? t("radar.refreshing") : t("radar.refresh")}</button>}>
           <div className="ww-radar-details">
-            <p role="status">{t(status === "failed" ? "radar.d.failed" : status === "pending" ? "radar.d.pending" : "radar.d.unverified")}</p>
-            {playback && (
-              <p className="ww-micro" role="status">
-                {t(playback.phase === "budget" ? "radar.d.pBudget" : playback.phase === "buffering" ? "radar.d.pBuffering"
-                  : playback.phase === "failed" ? "radar.d.pFailed" : playback.phase === "suspended" ? "radar.d.pSuspended" : "radar.d.pIdle")}
-              </p>
-            )}
-            <dl>
-              <div><dt>{t("radar.d.selected")}</dt><dd>{fullTime(frame?.time, p.timezone)} · {t("radar.d.selectedNote")}</dd></div>
-              <div><dt>{t("radar.d.latest")}</dt><dd>{fullTime(latest?.time, p.timezone)}</dd></div>
-              <div><dt>{t("radar.d.localNow")}</dt><dd>{fullTime(now, p.timezone)}</dd></div>
-            </dl>
-            <p className="ww-micro">{t("radar.d.frames", { tz: p.timezone, n: frames.length })}</p>
+            <p>{t("radar.i.what", { span: first && latest ? ago((latest.time - first.time) / 60) : "—" })}</p>
+            <p>{t("radar.i.blank")}</p>
+            {p.country === "CN" && <p>{t("radar.i.china")}</p>}
             {p.error && <p className="ww-bad" role="status">{t("radar.d.error")}</p>}
             {stale && (
               <p className="ww-warn" role="status">
                 {latest ? t("radar.d.age", { m: Math.max(0, Math.floor((now - latest.time) / 60)) }) : t("radar.d.noLatest")} · {t("radar.d.cannotAssess")}
               </p>
             )}
-            <p>{t("radar.d.about")}</p>
             <div className="ww-legend">
               <strong>{t("radar.d.legend")}</strong>
               <div className="ww-spectrum" />
               <div><span>{t("radar.d.light")}</span><span>{t("radar.d.heavy")}</span></div>
             </div>
-            <p>{t("radar.d.blank")}</p>
-            {p.country === "CN" && <p>{t("radar.d.china")}</p>}
-            <button className="ww-btn" aria-label={t("radar.refresh")} onClick={p.onRefresh} disabled={p.loading}>
-              <RefreshCw size={16} /> {p.loading ? t("radar.refreshing") : t("radar.refresh")}
-            </button>
-            <a href="https://www.rainviewer.com/" target="_blank" rel="noreferrer">Weather data by RainViewer</a>
+            <details className="ww-more">
+              <summary>{t("radar.i.more")}</summary>
+              <p role="status">{t(detailKey)}</p>
+              {playback && <p className="ww-micro">{t(playKey)}</p>}
+              <dl>
+                <div><dt>{t("radar.d.selected")}</dt><dd>{fullTime(frame?.time, p.timezone)}</dd></div>
+                <div><dt>{t("radar.d.latest")}</dt><dd>{fullTime(latest?.time, p.timezone)}</dd></div>
+                <div><dt>{t("radar.d.localNow")}</dt><dd>{fullTime(now, p.timezone)}</dd></div>
+              </dl>
+              <p className="ww-micro">{zone} · {t("radar.d.frames", { n: frames.length })} · {t("radar.d.about")}</p>
+              <a href="https://www.rainviewer.com/" target="_blank" rel="noreferrer">Weather data by RainViewer</a>
+            </details>
           </div>
         </Panel>
       )}

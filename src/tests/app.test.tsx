@@ -18,7 +18,8 @@ vi.mock("../maps/MapCanvas", async () => {
     React.useEffect(() => { p.onRadarPresentation?.({ key: radarRequestKey(p), requestedTime: p.frame?.time ?? null,
       displayedTime: null, status: 'unverified', evidence: 'test-only-transport-qualified;pixels-unverified' });
     }, [p.frame, p.theme, p.location, p.layers.radar]);
-    return null;
+    // Test-only stand-in for a map tap near Chonburi city.
+    return React.createElement("button", { onClick: () => p.onSelect(13.37, 100.99) }, "test-map-tap");
   } };
 });
 vi.mock("../providers/weather", async (original) => {
@@ -181,6 +182,13 @@ describe("App V1 map-first", () => {
     fireEvent.click(screen.getByRole("button", { name: "English" }));
     expect(screen.getByRole("radio", { name: "Radar" })).toBeInTheDocument();
     expect(document.documentElement.lang).toBe("en");
+  });
+  it("a tapped map point is named after the nearest province", async () => {
+    mount();
+    await screen.findByTestId("temperature");
+    fireEvent.click(screen.getByRole("button", { name: "test-map-tap" }));
+    await waitFor(() => expect(screen.getByRole("button", { name: /เปลี่ยนตำแหน่ง/ })).toHaveTextContent("ใกล้ชลบุรี"));
+    expect(screen.queryByText("จุดที่เลือกบนแผนที่")).not.toBeInTheDocument();
   });
   it("real fixtures stay in tests and trust classifications remain independent", () => {
     expect(normalizeWeather(w, defaultLocation).currentMeta.dataType).toBe("MODELED");

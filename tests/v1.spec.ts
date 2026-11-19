@@ -66,6 +66,25 @@ test.describe("LAB fixtures · map-first UI", () => {
     await expect(page.getByRole("button", { name: "เล่นเรดาร์ย้อนหลัง" })).toHaveAttribute("aria-pressed", "false");
   });
 
+  test("radar info panel stays compact: ≤ ~50% height, button visible, chip uncovered, no clocks in the dock", async ({ page }) => {
+    await labProviders(page);
+    await page.goto("./");
+    await expect(page.getByRole("button", { name: "เล่นเรดาร์ย้อนหลัง" })).toBeEnabled({ timeout: 15000 });
+    await expect(page.getByLabel("ควบคุมเรดาร์ย้อนหลัง")).not.toContainText(/\d{1,2}:\d{2}/);
+    await page.getByRole("button", { name: "รายละเอียดเรดาร์" }).click();
+    const panel = page.getByRole("dialog", { name: "เกี่ยวกับเรดาร์" });
+    const box = (await panel.boundingBox())!;
+    expect(box.height).toBeLessThanOrEqual(844 * 0.52);
+    const chip = (await page.locator(".ww-now").boundingBox())!;
+    expect(box.y).toBeGreaterThan(chip.y + chip.height);
+    const button = (await page.getByRole("button", { name: "รีเฟรชเรดาร์" }).boundingBox())!;
+    expect(button.y + button.height).toBeLessThanOrEqual(box.y + box.height);
+    expect(button.y).toBeGreaterThanOrEqual(box.y);
+    await page.getByRole("button", { name: "รีเฟรชเรดาร์" }).click({ trial: true, timeout: 3000 }); // fails if anything covers it
+    await expect(panel.getByText("พื้นที่ว่าง ≠ ไม่มีฝน อาจอยู่นอกการครอบคลุม")).toBeVisible();
+    await expect(panel.getByText("รายละเอียดเพิ่ม")).toBeVisible();
+  });
+
   test("weather error state offers retry and recovers", async ({ page }) => {
     await labProviders(page, { weather: "fail" });
     await page.clock.install();
