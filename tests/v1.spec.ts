@@ -27,13 +27,35 @@ test.describe("LAB fixtures · map-first UI", () => {
     await expect(page.getByTestId("temperature")).toBeVisible();
     const sheet = page.getByLabel("รายละเอียดอากาศ");
     await expect(sheet).toHaveAttribute("data-open", "false");
-    await expect(page.getByText("12 ชั่วโมงถัดไป")).toBeHidden();
+    await expect(page.getByText("24 ชั่วโมงถัดไป")).toBeHidden();
     await page.getByRole("button", { name: "เปิดรายละเอียด" }).click();
     await expect(sheet).toHaveAttribute("data-open", "true");
-    await expect(page.getByText("12 ชั่วโมงถัดไป")).toBeVisible();
+    await expect(page.getByText("24 ชั่วโมงถัดไป")).toBeVisible();
     await expect(page.locator(".ww-chart")).toBeVisible();
     await page.getByRole("button", { name: "ปิดรายละเอียด" }).click();
     await expect(sheet).toHaveAttribute("data-open", "false");
+  });
+
+  test("details sheet: labeled 24 h chart, AQ breakdown, 16 days with expand, sources", async ({ page }) => {
+    await labProviders(page);
+    await page.goto("./");
+    await expect(page.getByTestId("temperature")).toBeVisible();
+    await page.getByRole("button", { name: "เปิดรายละเอียด" }).click();
+    const sheet = page.getByLabel("รายละเอียดอากาศ");
+    await expect(sheet.locator(".ww-hourly-heads > div")).toHaveCount(24);
+    await expect(sheet.locator(".ww-pt-label")).toHaveCount(24); // every hour labeled
+    await expect(sheet.getByText("พอใช้ คนที่ไวต่อฝุ่นควรสังเกตอาการ")).toBeVisible(); // Bangkok AQI 81
+    await expect(sheet.locator(".ww-aq-bars > div")).toHaveCount(12);
+    const days = sheet.locator(".ww-day");
+    await expect(days).toHaveCount(16);
+    await days.nth(1).click();
+    await expect(sheet.getByText(/ฝนรวม .* มม\./)).toBeVisible();
+    await sheet.getByRole("button", { name: "แหล่งข้อมูล" }).first().click();
+    const panel = page.getByRole("dialog", { name: "แหล่งข้อมูล" });
+    await expect(panel.locator(".ww-src")).toHaveCount(4);
+    await expect(panel.getByText("แบบจำลอง").first()).toBeVisible();
+    const box = (await panel.boundingBox())!;
+    expect(box.height).toBeLessThanOrEqual(844 * 0.52);
   });
 
   test("layer switch changes map layer and bottom companion", async ({ page }) => {

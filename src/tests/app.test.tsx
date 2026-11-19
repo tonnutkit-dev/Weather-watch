@@ -80,7 +80,7 @@ describe("App V1 map-first", () => {
     expect(sheet).toHaveAttribute("data-open", "false");
     fireEvent.click(screen.getByRole("button", { name: "เปิดรายละเอียด" }));
     expect(sheet).toHaveAttribute("data-open", "true");
-    expect(screen.getByText("12 ชั่วโมงถัดไป")).toBeVisible();
+    expect(screen.getByText("24 ชั่วโมงถัดไป")).toBeVisible();
     fireEvent.keyDown(screen.getByRole("button", { name: "ปิดรายละเอียด" }), { key: "ArrowDown" });
     expect(sheet).toHaveAttribute("data-open", "false");
     fireEvent.keyDown(screen.getByRole("button", { name: "เปิดรายละเอียด" }), { key: "ArrowUp" });

@@ -163,9 +163,13 @@ a { color: var(--accent); }
 .ww-chart .ww-pt-label { fill: var(--ink); font-size: 12px; font-weight: 700; }
 .ww-chart .ww-bar-label { fill: var(--accent); font-size: 10px; font-weight: 600; }
 .ww-chart .ww-axis { fill: var(--sub); font-size: 11px; }
-.ww-day { display: flex; align-items: center; gap: 10px; height: 42px; font-size: 15px; border-top: 1px solid var(--faint); }
-.ww-day:first-of-type { border-top: 0; }
-.ww-day-d { width: 54px; }
+.ww-day-wrap { border-top: 1px solid var(--faint); }
+.ww-day-wrap:first-child { border-top: 0; }
+.ww-day { display: flex; align-items: center; gap: 10px; width: 100%; height: 44px; font-size: 15px; text-align: left; }
+.ww-day-chev { color: var(--sub); transition: transform .2s var(--ease); flex: none; }
+.ww-day-wrap.is-open .ww-day-chev { transform: rotate(180deg); }
+.ww-day-more { font-size: 13px; color: var(--sub); padding: 0 0 10px 64px; }
+.ww-day-d { width: 54px; white-space: nowrap; }
 .ww-day-p { width: 38px; font-size: 12px; font-weight: 600; color: var(--accent); }
 .ww-day-lo, .ww-day-hi { width: 32px; text-align: right; }
 .ww-day-lo { color: var(--sub); }
@@ -175,7 +179,31 @@ a { color: var(--accent); }
 .ww-small { font-size: 13px; color: var(--sub); margin: 4px 0; }
 .ww-link { display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 600; margin: 2px 0 6px; }
 .ww-micro { font-size: 11px; color: var(--sub); line-height: 1.5; }
-.ww-sources { margin: 14px 4px 0; }
+.ww-card-flush { padding-left: 0; padding-right: 0; }
+.ww-card-flush .ww-card-t { padding: 0 14px; }
+.ww-hourly { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding: 0 4px; }
+.ww-hourly::-webkit-scrollbar { display: none; }
+.ww-hourly-inner { position: relative; }
+.ww-hourly-heads { display: flex; }
+.ww-hourly-heads > div { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 11px; color: var(--sub); flex: none; }
+.ww-hourly-heads > div:first-child span { color: var(--ink); font-weight: 600; }
+.ww-advice { font-size: 14px; margin: 6px 0 0; }
+.ww-pm { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.ww-pm > div { display: flex; align-items: baseline; gap: 6px; padding: 8px 10px; border-radius: 12px; background: var(--hi); font-size: 12px; color: var(--sub); }
+.ww-pm b { font-size: 17px; color: var(--ink); }
+.ww-aq-trend { margin-top: 12px; }
+.ww-aq-cap { font-size: 12px; color: var(--sub); margin-bottom: 6px; }
+.ww-aq-bars { display: flex; gap: 4px; height: 64px; align-items: stretch; }
+.ww-aq-bars > div { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 3px; min-width: 0; }
+.ww-aq-bars i { width: 100%; max-width: 18px; border-radius: 4px 4px 2px 2px; opacity: .85; }
+.ww-aq-bars span { font-size: 10px; color: var(--sub); height: 12px; line-height: 12px; }
+.ww-card .ww-micro { margin-top: 8px; }
+.ww-src-btn { display: inline-flex; align-items: center; gap: 6px; margin: 14px 4px 0; font-size: 13px; font-weight: 600; color: var(--accent); }
+.ww-sources-list { display: flex; flex-direction: column; gap: 12px; }
+.ww-src { padding-bottom: 10px; border-bottom: 1px solid var(--faint); }
+.ww-src-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ww-src-meta { font-size: 13px; color: var(--sub); margin-top: 2px; }
+.ww-tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--hi); color: var(--sub); border: 1px solid var(--glass-edge); flex: none; }
 .ww-muted { color: var(--sub); font-size: 13px; }
 .ww-warn { color: var(--warn); } .ww-bad { color: var(--bad); }
 

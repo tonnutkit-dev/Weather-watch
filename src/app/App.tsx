@@ -192,7 +192,8 @@ export default function App() {
         <LayerSwitcher mode={mode} onMode={changeMode} />
       </div>
 
-      <DetailSheet open={sheetOpen} onOpen={setSheetOpen} location={location} weather={w} air={a} now={now} favorite={favorite} onFavorite={toggleFavorite} />
+      <DetailSheet open={sheetOpen} onOpen={setSheetOpen} location={location} weather={w} air={a} now={now} favorite={favorite} onFavorite={toggleFavorite}
+        radar={radar.data} weatherFreshness={weatherFresh.state} airFreshness={airFresh.state} />
 
       {!online && (
         <div className="ww-banner glass" role="status">
