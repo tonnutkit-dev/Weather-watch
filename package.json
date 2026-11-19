@@ -11,8 +11,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "verify:data": "python3 scripts/verify_providers.py",
-    "preview": "vite preview",
-    "verify:pages": "node scripts/verify_pages_build.mjs"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@fontsource/noto-sans-thai": "^5.2.0",
