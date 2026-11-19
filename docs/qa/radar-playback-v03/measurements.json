@@ -1,0 +1,718 @@
+{
+  "environment": {
+    "baseline": "2036e2ac788cb31d25fd387cb40520ad95c408a6",
+    "correction": "c5862c6fac08b16313a4be5cd71df15dc9d008a2",
+    "node": "v24.21.0",
+    "platform": "linux",
+    "cpu": "AMD EPYC 7763 64-Core Processor",
+    "physicalIphone": false,
+    "softwareGPU": true,
+    "fixtureClock": "2026-10-11T07:46:00.000Z",
+    "notes": [
+      "Screenshots with fixture/test tiles are laboratory evidence, not live weather observations. Original live E2E screenshot evidence is retained separately.",
+      "Deterministic recorded provider responses, synthetic test PNG tiles and minimal LAB basemap. Never exposed by production.",
+      "No representative field INP, physical display FPS, GPU memory, battery or thermal measurement.",
+      "Matched lab measurements constrain UI/raster overhead; do not replace real-world basemap performance acceptance."
+    ],
+    "browser": "156.0.8078.4"
+  },
+  "failures": [],
+  "checks": [
+    {
+      "name": "before-radar-maplibre",
+      "status": "passed"
+    },
+    {
+      "name": "before-radar-leaflet",
+      "status": "passed"
+    },
+    {
+      "name": "after-radar-maplibre",
+      "status": "passed"
+    },
+    {
+      "name": "after-radar-leaflet",
+      "status": "passed"
+    },
+    {
+      "name": "before-three-hour-idle",
+      "status": "passed"
+    },
+    {
+      "name": "after-three-hour-idle",
+      "status": "passed"
+    },
+    {
+      "name": "after-refresh-failure-recovery-and-China-isolation",
+      "status": "passed"
+    },
+    {
+      "name": "after-offline-online-resume-and-timeout",
+      "status": "passed"
+    },
+    {
+      "name": "after-partial-AQ-failure-slow-load-and-missing-tiles",
+      "status": "passed"
+    },
+    {
+      "name": "before-actual-DOM-pinch",
+      "status": "passed"
+    },
+    {
+      "name": "after-actual-DOM-pinch",
+      "status": "passed"
+    },
+    {
+      "name": "after-geometry-375-light",
+      "status": "passed"
+    },
+    {
+      "name": "after-geometry-375-dark",
+      "status": "passed"
+    },
+    {
+      "name": "after-geometry-390-light",
+      "status": "passed"
+    },
+    {
+      "name": "after-geometry-390-dark",
+      "status": "passed"
+    },
+    {
+      "name": "after-geometry-430-light",
+      "status": "passed"
+    },
+    {
+      "name": "after-geometry-430-dark",
+      "status": "passed"
+    },
+    {
+      "name": "before-matched-interaction-1",
+      "status": "passed"
+    },
+    {
+      "name": "before-matched-interaction-2",
+      "status": "passed"
+    },
+    {
+      "name": "before-matched-interaction-3",
+      "status": "passed"
+    },
+    {
+      "name": "after-matched-interaction-1",
+      "status": "passed"
+    },
+    {
+      "name": "after-matched-interaction-2",
+      "status": "passed"
+    },
+    {
+      "name": "after-matched-interaction-3",
+      "status": "passed"
+    }
+  ],
+  "loads": [
+    {
+      "after": false,
+      "profile": "desktop",
+      "run": 1,
+      "cache": "cold",
+      "FCP": 136,
+      "LCP": 136,
+      "CLS": 0.07520635452835649,
+      "INP": null,
+      "blockingWindowMs": 112,
+      "longTasks": 4,
+      "transferredBytes": 530996
+    },
+    {
+      "after": false,
+      "profile": "desktop",
+      "run": 1,
+      "cache": "warm",
+      "FCP": 76,
+      "LCP": 76,
+      "CLS": 0.07520635452835649,
+      "INP": null,
+      "blockingWindowMs": 78,
+      "longTasks": 3,
+      "transferredBytes": 530996
+    },
+    {
+      "after": false,
+      "profile": "desktop",
+      "run": 2,
+      "cache": "cold",
+      "FCP": 120,
+      "LCP": 120,
+      "CLS": 0.07520635452835649,
+      "INP": null,
+      "blockingWindowMs": 84,
+      "longTasks": 4,
+      "transferredBytes": 530996
+    },
+    {
+      "after": false,
+      "profile": "desktop",
+      "run": 2,
+      "cache": "warm",
+      "FCP": 72,
+      "LCP": 72,
+      "CLS": 0.07520635452835649,
+      "INP": null,
+      "blockingWindowMs": 71,
+      "longTasks": 3,
+      "transferredBytes": 530996
+    },
+    {
+      "after": false,
+      "profile": "desktop",
+      "run": 3,
+      "cache": "cold",
+      "FCP": 128,
+      "LCP": 128,
+      "CLS": 0.07520635452835649,
+      "INP": null,
+      "blockingWindowMs": 89,
+      "longTasks": 4,
+      "transferredBytes": 530996
+    },
+    {
+      "after": false,
+      "profile": "desktop",
+      "run": 3,
+      "cache": "warm",
+      "FCP": 84,
+      "LCP": 84,
+      "CLS": 0.07520635452835649,
+      "INP": null,
+      "blockingWindowMs": 69,
+      "longTasks": 3,
+      "transferredBytes": 530996
+    },
+    {
+      "after": false,
+      "profile": "mobile",
+      "run": 1,
+      "cache": "cold",
+      "FCP": 96,
+      "LCP": 176,
+      "CLS": 0,
+      "INP": null,
+      "blockingWindowMs": 9,
+      "longTasks": 2,
+      "transferredBytes": 518964
+    },
+    {
+      "after": false,
+      "profile": "mobile",
+      "run": 1,
+      "cache": "warm",
+      "FCP": 56,
+      "LCP": 108,
+      "CLS": 0,
+      "INP": null,
+      "blockingWindowMs": 8,
+      "longTasks": 1,
+      "transferredBytes": 518964
+    },
+    {
+      "after": false,
+      "profile": "mobile",
+      "run": 2,
+      "cache": "cold",
+      "FCP": 96,
+      "LCP": 180,
+      "CLS": 0,
+      "INP": null,
+      "blockingWindowMs": 7,
+      "longTasks": 1,
+      "transferredBytes": 518964
+    },
+    {
+      "after": false,
+      "profile": "mobile",
+      "run": 2,
+      "cache": "warm",
+      "FCP": 72,
+      "LCP": 112,
+      "CLS": 0,
+      "INP": null,
+      "blockingWindowMs": 3,
+      "longTasks": 1,
+      "transferredBytes": 518964
+    },
+    {
+      "after": false,
+      "profile": "mobile",
+      "run": 3,
+      "cache": "cold",
+      "FCP": 92,
+      "LCP": 176,
+      "CLS": 0,
+      "INP": null,
+      "blockingWindowMs": 5,
+      "longTasks": 1,
+      "transferredBytes": 518964
+    },
+    {
+      "after": false,
+      "profile": "mobile",
+      "run": 3,
+      "cache": "warm",
+      "FCP": 72,
+      "LCP": 128,
+      "CLS": 0,
+      "INP": null,
+      "blockingWindowMs": 5,
+      "longTasks": 1,
+      "transferredBytes": 518964
+    },
+    {
+      "after": false,
+      "profile": "mobile-throttled",
+      "run": 1,
+      "cache": "cold",
+      "FCP": 1252,
+      "LCP": 1252,
+      "CLS": 0.000562570448064267,
+      "INP": null,
+      "blockingWindowMs": 192,
+      "longTasks": 7,
+      "transferredBytes": 518964
+    },
+    {
+      "after": false,
+      "profile": "mobile-throttled",
+      "run": 1,
+      "cache": "warm",
+      "FCP": 1116,
+      "LCP": 1116,
+      "CLS": 0.000554164667106102,
+      "INP": null,
+      "blockingWindowMs": 71,
+      "longTasks": 4,
+      "transferredBytes": 518964
+    },
+    {
+      "after": false,
+      "profile": "mobile-throttled",
+      "run": 2,
+      "cache": "cold",
+      "FCP": 1272,
+      "LCP": 1272,
+      "CLS": 0.000554164667106102,
+      "INP": null,
+      "blockingWindowMs": 233,
+      "longTasks": 8,
+      "transferredBytes": 518964
+    },
+    {
+      "after": false,
+      "profile": "mobile-throttled",
+      "run": 2,
+      "cache": "warm",
+      "FCP": 1124,
+      "LCP": 1124,
+      "CLS": 0.0005458036557870415,
+      "INP": null,
+      "blockingWindowMs": 37,
+      "longTasks": 3,
+      "transferredBytes": 518964
+    },
+    {
+      "after": false,
+      "profile": "mobile-throttled",
+      "run": 3,
+      "cache": "cold",
+      "FCP": 1260,
+      "LCP": 1260,
+      "CLS": 0.000562570448064267,
+      "INP": null,
+      "blockingWindowMs": 198,
+      "longTasks": 7,
+      "transferredBytes": 518964
+    },
+    {
+      "after": false,
+      "profile": "mobile-throttled",
+      "run": 3,
+      "cache": "warm",
+      "FCP": 1112,
+      "LCP": 1112,
+      "CLS": 0.0005798691891438152,
+      "INP": null,
+      "blockingWindowMs": 39,
+      "longTasks": 4,
+      "transferredBytes": 518964
+    },
+    {
+      "after": true,
+      "profile": "desktop",
+      "run": 1,
+      "cache": "cold",
+      "FCP": 132,
+      "LCP": 132,
+      "CLS": 0.07925890939971547,
+      "INP": null,
+      "blockingWindowMs": 91,
+      "longTasks": 4,
+      "transferredBytes": 535011
+    },
+    {
+      "after": true,
+      "profile": "desktop",
+      "run": 1,
+      "cache": "warm",
+      "FCP": 80,
+      "LCP": 80,
+      "CLS": 0.12959386999059605,
+      "INP": null,
+      "blockingWindowMs": 80,
+      "longTasks": 3,
+      "transferredBytes": 535011
+    },
+    {
+      "after": true,
+      "profile": "desktop",
+      "run": 2,
+      "cache": "cold",
+      "FCP": 124,
+      "LCP": 124,
+      "CLS": 0.07925890939971547,
+      "INP": null,
+      "blockingWindowMs": 84,
+      "longTasks": 4,
+      "transferredBytes": 535011
+    },
+    {
+      "after": true,
+      "profile": "desktop",
+      "run": 2,
+      "cache": "warm",
+      "FCP": 84,
+      "LCP": 84,
+      "CLS": 0.07925890939971547,
+      "INP": null,
+      "blockingWindowMs": 90,
+      "longTasks": 3,
+      "transferredBytes": 535011
+    },
+    {
+      "after": true,
+      "profile": "desktop",
+      "run": 3,
+      "cache": "cold",
+      "FCP": 128,
+      "LCP": 128,
+      "CLS": 0.07925890939971547,
+      "INP": null,
+      "blockingWindowMs": 93,
+      "longTasks": 3,
+      "transferredBytes": 535011
+    },
+    {
+      "after": true,
+      "profile": "desktop",
+      "run": 3,
+      "cache": "warm",
+      "FCP": 84,
+      "LCP": 84,
+      "CLS": 0.12959386999059605,
+      "INP": null,
+      "blockingWindowMs": 79,
+      "longTasks": 3,
+      "transferredBytes": 535011
+    },
+    {
+      "after": true,
+      "profile": "mobile",
+      "run": 1,
+      "cache": "cold",
+      "FCP": 92,
+      "LCP": 176,
+      "CLS": 7.857139154729055e-05,
+      "INP": null,
+      "blockingWindowMs": 6,
+      "longTasks": 1,
+      "transferredBytes": 522979
+    },
+    {
+      "after": true,
+      "profile": "mobile",
+      "run": 1,
+      "cache": "warm",
+      "FCP": 64,
+      "LCP": 120,
+      "CLS": 7.857139154729055e-05,
+      "INP": null,
+      "blockingWindowMs": 7,
+      "longTasks": 1,
+      "transferredBytes": 522979
+    },
+    {
+      "after": true,
+      "profile": "mobile",
+      "run": 2,
+      "cache": "cold",
+      "FCP": 108,
+      "LCP": 192,
+      "CLS": 7.857139154729055e-05,
+      "INP": null,
+      "blockingWindowMs": 5,
+      "longTasks": 1,
+      "transferredBytes": 522979
+    },
+    {
+      "after": true,
+      "profile": "mobile",
+      "run": 2,
+      "cache": "warm",
+      "FCP": 84,
+      "LCP": 136,
+      "CLS": 7.857139154729055e-05,
+      "INP": null,
+      "blockingWindowMs": 0,
+      "longTasks": 0,
+      "transferredBytes": 522979
+    },
+    {
+      "after": true,
+      "profile": "mobile",
+      "run": 3,
+      "cache": "cold",
+      "FCP": 92,
+      "LCP": 172,
+      "CLS": 7.857139154729055e-05,
+      "INP": null,
+      "blockingWindowMs": 5,
+      "longTasks": 1,
+      "transferredBytes": 522979
+    },
+    {
+      "after": true,
+      "profile": "mobile",
+      "run": 3,
+      "cache": "warm",
+      "FCP": 64,
+      "LCP": 120,
+      "CLS": 7.857139154729055e-05,
+      "INP": null,
+      "blockingWindowMs": 0,
+      "longTasks": 0,
+      "transferredBytes": 522979
+    },
+    {
+      "after": true,
+      "profile": "mobile-throttled",
+      "run": 1,
+      "cache": "cold",
+      "FCP": 1272,
+      "LCP": 1456,
+      "CLS": 0.0005582014712230299,
+      "INP": null,
+      "blockingWindowMs": 185,
+      "longTasks": 7,
+      "transferredBytes": 522979
+    },
+    {
+      "after": true,
+      "profile": "mobile-throttled",
+      "run": 1,
+      "cache": "warm",
+      "FCP": 1192,
+      "LCP": 1276,
+      "CLS": 0.0005157301569080912,
+      "INP": null,
+      "blockingWindowMs": 41,
+      "longTasks": 3,
+      "transferredBytes": 522979
+    },
+    {
+      "after": true,
+      "profile": "mobile-throttled",
+      "run": 2,
+      "cache": "cold",
+      "FCP": 1272,
+      "LCP": 1460,
+      "CLS": 0.0005465289126918786,
+      "INP": null,
+      "blockingWindowMs": 186,
+      "longTasks": 8,
+      "transferredBytes": 522979
+    },
+    {
+      "after": true,
+      "profile": "mobile-throttled",
+      "run": 2,
+      "cache": "warm",
+      "FCP": 1176,
+      "LCP": 1272,
+      "CLS": 0.0005263992793446942,
+      "INP": null,
+      "blockingWindowMs": 49,
+      "longTasks": 4,
+      "transferredBytes": 522979
+    },
+    {
+      "after": true,
+      "profile": "mobile-throttled",
+      "run": 3,
+      "cache": "cold",
+      "FCP": 1280,
+      "LCP": 1472,
+      "CLS": 0.0005157301569080912,
+      "INP": null,
+      "blockingWindowMs": 207,
+      "longTasks": 8,
+      "transferredBytes": 522979
+    },
+    {
+      "after": true,
+      "profile": "mobile-throttled",
+      "run": 3,
+      "cache": "warm",
+      "FCP": 1180,
+      "LCP": 1260,
+      "CLS": 0.0005157301569080912,
+      "INP": null,
+      "blockingWindowMs": 37,
+      "longTasks": 3,
+      "transferredBytes": 522979
+    }
+  ],
+  "interactions": [
+    {
+      "after": false,
+      "run": 1,
+      "frameCount": 299,
+      "medianMs": 16.699999999999818,
+      "p95Ms": 50,
+      "heapBefore": 7973584,
+      "heapAfterGc": 9289048,
+      "listenersSame": true,
+      "mapInstances": 1,
+      "counts": {
+        "weather": 1,
+        "air": 1,
+        "tiles": 20
+      }
+    },
+    {
+      "after": false,
+      "run": 2,
+      "frameCount": 295,
+      "medianMs": 16.699999999999818,
+      "p95Ms": 50,
+      "heapBefore": 7891244,
+      "heapAfterGc": 9282776,
+      "listenersSame": true,
+      "mapInstances": 1,
+      "counts": {
+        "weather": 1,
+        "air": 1,
+        "tiles": 20
+      }
+    },
+    {
+      "after": false,
+      "run": 3,
+      "frameCount": 304,
+      "medianMs": 16.699999999999818,
+      "p95Ms": 50,
+      "heapBefore": 7891204,
+      "heapAfterGc": 9273736,
+      "listenersSame": true,
+      "mapInstances": 1,
+      "counts": {
+        "weather": 1,
+        "air": 1,
+        "tiles": 20
+      }
+    },
+    {
+      "after": true,
+      "run": 1,
+      "frameCount": 302,
+      "medianMs": 16.699999999999818,
+      "p95Ms": 50,
+      "heapBefore": 7964288,
+      "heapAfterGc": 9392200,
+      "listenersSame": true,
+      "mapInstances": 1,
+      "counts": {
+        "weather": 1,
+        "air": 1,
+        "tiles": 20
+      }
+    },
+    {
+      "after": true,
+      "run": 2,
+      "frameCount": 295,
+      "medianMs": 16.700000000000728,
+      "p95Ms": 50,
+      "heapBefore": 7954236,
+      "heapAfterGc": 9370040,
+      "listenersSame": true,
+      "mapInstances": 1,
+      "counts": {
+        "weather": 1,
+        "air": 1,
+        "tiles": 20
+      }
+    },
+    {
+      "after": true,
+      "run": 3,
+      "frameCount": 297,
+      "medianMs": 16.699999999999818,
+      "p95Ms": 50.09999999999991,
+      "heapBefore": 7974672,
+      "heapAfterGc": 9393708,
+      "listenersSame": true,
+      "mapInstances": 1,
+      "counts": {
+        "weather": 1,
+        "air": 1,
+        "tiles": 20
+      }
+    }
+  ],
+  "livePredeploy": {
+    "baseURL": "http://127.0.0.1:4173/Weather-watch/",
+    "firstSelectedFrameMs": 1649,
+    "requestCount": 20,
+    "peakRolling60s": 20,
+    "frameIntervals": {
+      "count": 940,
+      "p95Ms": 33.39999999999782,
+      "excludedOver1000ms": 0
+    },
+    "sameCanvas": true,
+    "errors": [],
+    "note": "Transport readiness is qualified only; selected time is not confirmed pixels. Linux Chromium emulation, not physical iPhone."
+  },
+  "liveDeployed": {
+    "baseURL": "https://weather-watch-v03-p0-owner-qa-ton.tonnutkit.chatgpt.site/",
+    "firstSelectedFrameMs": 1653,
+    "requestCount": 20,
+    "peakRolling60s": 20,
+    "frameIntervals": {
+      "count": 1721,
+      "p95Ms": 33.29999999999927,
+      "excludedOver1000ms": 0
+    },
+    "sameCanvas": true,
+    "errors": [],
+    "note": "Transport readiness is qualified only; selected time is not confirmed pixels. Linux Chromium emulation, not physical iPhone."
+  },
+  "actions": {
+    "sourceQa": 38150871753,
+    "matchedP0": 38144354075,
+    "deployedQa": 38151629900,
+    "deployedArtifact": 11705879530,
+    "deployedResult": "success",
+    "physicalIphone": "NOT TESTED"
+  }
+}

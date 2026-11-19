@@ -1,3 +1,4 @@
+import { decodeRadarImage } from "./decode";
 // Per-app rolling request cap below RainViewer's documented 100/IP/min.
 const starts: number[] = [];
 const cache = new Map<string, { at: number; data: ArrayBuffer }>();
@@ -16,6 +17,7 @@ export async function radarImage(
     !parsed.hostname.endsWith(".rainviewer.com")
   )
     throw new Error("Untrusted radar URL");
+  signal.throwIfAborted();
   const hit = cache.get(url);
   if (hit && Date.now() - hit.at < 300000) return hit.data.slice(0);
   // Timed waits are abortable and bounded by queue; do not start network calls past budget.
@@ -46,6 +48,7 @@ export async function radarImage(
   });
   if (!r.ok) throw new Error(`Radar tiles ${r.status}`);
   const data = await r.arrayBuffer();
+  await decodeRadarImage(data, signal);
   cache.set(url, { at: Date.now(), data });
   if (cache.size > 90) cache.delete(cache.keys().next().value!);
   return data.slice(0);

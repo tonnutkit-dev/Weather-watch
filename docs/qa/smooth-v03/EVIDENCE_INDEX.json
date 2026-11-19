@@ -1,0 +1,43 @@
+{
+  "repository": "https://github.com/tonnutkit-dev/Weather-watch",
+  "branch": "work/radar-smooth-playback-v03",
+  "deployedApplication": "8f137edc921d677cd3693229b670506495057cd2",
+  "packagingSource": "41d9d93de39c19c3af4074201b1a838d4c73d7bb",
+  "ownerQA": "https://weather-watch-v03-p0-owner-qa-ton.tonnutkit.chatgpt.site/",
+  "protectedMain": "2036e2ac788cb31d25fd387cb40520ad95c408a6",
+  "artifacts": [
+    {
+      "run": 38155775590,
+      "name": "radar-smooth-v03-38155775590",
+      "id": 11708288298
+    },
+    {
+      "run": 38156537839,
+      "name": "radar-smooth-v03-38156537839",
+      "id": 11708736466
+    },
+    {
+      "run": 38157833087,
+      "name": "radar-smooth-v03-38157833087",
+      "id": 11709537232
+    },
+    {
+      "run": 38158557257,
+      "name": "radar-smooth-deployed-v03-38158557257",
+      "id": 11708654493
+    },
+    {
+      "run": 38158793640,
+      "name": "radar-audit-lab-v03-38158793640",
+      "id": 11708778422
+    }
+  ],
+  "artifactRetentionDays": 90,
+  "artifactAuth": "GitHub access required; Lead can retrieve directly; no owner re-upload",
+  "runnerFailure": "exec-server transport disconnected; local final status/parsing unavailable",
+  "deployment": {
+    "version": 3,
+    "id": "appgdep_6acbc2b70160819188155fbb6a668f0e",
+    "status": "succeeded"
+  }
+}

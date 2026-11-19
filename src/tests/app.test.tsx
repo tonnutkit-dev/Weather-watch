@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "../app/App";
 import { getWeather, normalizeWeather } from "../providers/weather";
@@ -10,7 +10,16 @@ import w from "../../evidence/weather-bangkok.json";
 import a from "../../evidence/air-bangkok.json";
 import r from "../../evidence/radar.json";
 // Map rendering is browser QA. These component tests exercise orchestration with labeled test fixtures.
-vi.mock("../maps/MapCanvas", () => ({ default: () => null }));
+vi.mock("../maps/MapCanvas", async () => {
+  const React = await import('react');
+  const { radarRequestKey } = await import('../radar/presentation');
+  return { default: (p: import('../maps/MapCanvas').MapProps) => {
+    React.useEffect(() => { p.onRadarPresentation?.({ key: radarRequestKey(p), requestedTime: p.frame?.time ?? null,
+      displayedTime: null, status: 'unverified', evidence: 'test-only-transport-qualified;pixels-unverified' });
+    }, [p.frame, p.theme, p.location, p.layers.radar]);
+    return null;
+  } };
+});
 vi.mock("../providers/weather", async (original) => {
   const actual = await original<typeof import("../providers/weather")>();
   return {
@@ -45,6 +54,23 @@ const mount = () =>
     </QueryClientProvider>,
   );
 describe("App regressions", () => {
+  it("actual App sheet transitions do not terminate automatic playback", async () => {
+    window.matchMedia = vi.fn().mockReturnValue({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() });
+    mount();
+    await screen.findByTestId('temperature');
+    await waitFor(() => expect(screen.getByRole('button', { name: 'เล่นเรดาร์ย้อนหลัง' })).toBeEnabled());
+    vi.useFakeTimers();
+    try {
+      const time = screen.getByTestId('radar-time').getAttribute('datetime');
+      fireEvent.click(screen.getByRole('button', { name: 'เล่นเรดาร์ย้อนหลัง' }));
+      expect(screen.getByRole('button', { name: 'หยุดเรดาร์' })).toHaveAttribute('aria-pressed', 'true');
+      fireEvent.click(screen.getByRole('button', { name: 'ขยายแผง' }));
+      fireEvent.click(screen.getByRole('button', { name: 'ขยายแผง' }));
+      await act(async () => { vi.advanceTimersByTime(1500); });
+      expect(screen.getByTestId('radar-time').getAttribute('datetime')).not.toBe(time);
+      expect(screen.getByRole('button', { name: 'หยุดเรดาร์', hidden: true })).toHaveAttribute('aria-pressed', 'true');
+    } finally { vi.useRealTimers(); }
+  });
   it("location switching changes provider coordinates and timezone, without Thai alert logic in China", async () => {
     mount();
     await screen.findByTestId("temperature");
@@ -79,6 +105,23 @@ describe("App regressions", () => {
         "ยังไม่เชื่อมต่อข้อมูลน้ำท่วมที่ตรวจสอบแล้ว ไม่สามารถสรุปว่าไม่มีน้ำท่วมในพื้นที่",
       ),
     ).toBeInTheDocument();
+  });
+  it("offline banner stays the same when the production weather retry policy is active", async () => {
+    const before = vi.mocked(getWeather).mock.calls.length;
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <App />
+      </QueryClientProvider>,
+    );
+    await screen.findByTestId("temperature");
+    const calls = vi.mocked(getWeather).mock.calls.length;
+    expect(calls).toBeGreaterThan(before);
+    fireEvent(window, new Event("offline"));
+    expect(screen.getByText(/ไม่มีการเชื่อมต่ออินเทอร์เน็ต/)).toBeInTheDocument();
+    expect(vi.mocked(getWeather).mock.calls.length).toBe(calls);
+    fireEvent(window, new Event("online"));
+    expect(screen.queryByText(/ไม่มีการเชื่อมต่ออินเทอร์เน็ต/)).not.toBeInTheDocument();
+    expect(vi.mocked(getWeather).mock.calls.length).toBe(calls);
   });
   it("offline event shows explicit connectivity state", async () => {
     mount();

@@ -53,7 +53,7 @@ async function theme(page: Page, mode: "light" | "dark") {
     { timeout: 30000 },
   );
 }
-test.describe("Mobile V0.2 composition", () => {
+test.describe("Signature Hybrid mobile composition", () => {
   test.use({ hasTouch: true, isMobile: true });
   for (const size of sizes) {
     test(`${size.width}×${size.height}: all sheet states, light/dark, controls and map`, async ({
@@ -118,6 +118,11 @@ test.describe("Mobile V0.2 composition", () => {
           const g = await geometry(page);
           measurements.push({ mode, state, ...g });
           expect(g.overflow).toBe(false);
+          const locationTarget=await page.locator('.location-heading').boundingBox();
+          expect(locationTarget!.height).toBeGreaterThanOrEqual(44);
+          const titleBox=await page.locator('.location-title').boundingBox();
+          const sourceBox=await page.locator('.overview-freshness').boundingBox();
+          expect(titleBox!.y+titleBox!.height).toBeLessThanOrEqual(sourceBox!.y);
           expect(g.scrollLeft).toBe(0);
           await expect(page.getByTestId("temperature")).toBeInViewport({
             ratio: 1,
@@ -141,13 +146,13 @@ test.describe("Mobile V0.2 composition", () => {
                 `${mode}/${state}: overlays ${i} and ${j}`,
               ).toBe(false);
           if (state === "collapsed") {
-            expect(g.sheet!.height).toBeGreaterThanOrEqual(130);
-            expect(g.sheet!.height).toBeLessThanOrEqual(160);
+            expect(g.sheet!.height).toBeGreaterThanOrEqual(80); // Owner correction: collapsed verdict sheet must occupy 80–100px.
+            expect(g.sheet!.height).toBeLessThanOrEqual(100);
             expect(g.radar!.height).toBeGreaterThanOrEqual(64);
             expect(g.radar!.height).toBeLessThanOrEqual(88);
             expect(
               g.radar!.y - (g.toolbar!.y + g.toolbar!.height),
-            ).toBeGreaterThan(220);
+            ).toBeGreaterThanOrEqual(size.width === 375 ? 240 : 300); // Owner map-first gate: count only the lane below toolbar and above radar.
             await expect(page.locator(".summary-message")).toBeInViewport({
               ratio: 1,
             });
@@ -179,13 +184,30 @@ test.describe("Mobile V0.2 composition", () => {
       const beforeZoom = await map.getAttribute("data-map-zoom");
       // Actual Chromium touch pinch, independent of hidden zoom buttons.
       const cdp = await context.newCDPSession(page);
-      await cdp.send("Input.synthesizePinchGesture", {
-        x: 140,
-        y: 230,
-        scaleFactor: 1.4,
-        gestureSourceType: "touch",
-        relativeSpeed: 300,
+      const bounds = await map.boundingBox();
+      if (!bounds) throw Error("Missing map");
+      // Both fingertips (not only their midpoint) must hit the canvas. A location
+      // marker can intercept one finger in this shorter editorial map viewport.
+      const gestureY = await page.evaluate(() => {
+        const radar = document.querySelector('.radar-controls')!.getBoundingClientRect();
+        const map = document.querySelector('.map-canvas')!.getBoundingClientRect();
+        for (let y = radar.top - 24; y > map.top + 70; y -= 8) {
+          if ([88,104,140,176,192].every(x => document.elementFromPoint(x,y)?.closest('.maplibregl-canvas'))) return y;
+        }
+        throw new Error('No unobstructed two-finger map gesture lane');
       });
+      // Send real two-finger DOM touch input: compositor-only synthesized pinch can
+      // zoom the browser or do nothing in headless mobile Chromium. Zoom assertion stays unchanged.
+      const fingers = (spread: number) => [
+        { x: 140 - spread, y: gestureY, id: 0, radiusX: 3, radiusY: 3, force: 1 },
+        { x: 140 + spread, y: gestureY, id: 1, radiusX: 3, radiusY: 3, force: 1 },
+      ];
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: fingers(36) });
+      for (let step = 1; step <= 8; step++) {
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: fingers(36 * (1 + .4 * step / 8)) });
+        await page.waitForTimeout(20); // Spaced input events, not a readiness sleep.
+      }
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
 
       await expect
         .poll(() => map.getAttribute("data-map-zoom"), { timeout: 10000 })
@@ -214,21 +236,29 @@ test.describe("Mobile V0.2 composition", () => {
       await expect(page.getByTestId("temperature")).toBeInViewport({
         ratio: 1,
       });
+      const panY = await page.evaluate(() => {
+        const radar = document.querySelector('.radar-controls')!.getBoundingClientRect();
+        const map = document.querySelector('.map-canvas')!.getBoundingClientRect();
+        for (let y = radar.top - 32; y > map.top + 70; y -= 8) {
+          if ([100,120,140,160,180,200].every(x => document.elementFromPoint(x,y)?.closest('.maplibregl-canvas'))) return y;
+        }
+        throw new Error('No unobstructed touch-pan lane');
+      });
+      const beforePan = await map.getAttribute("data-map-center");
+      // Touch profile: use touch pan, not a synthetic mouse immediately after
+      // sheet touch events (browsers may suppress compatibility mouse input).
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:100,y:panY,id:0}]});
+      for(let step=1;step<=8;step++){
+        await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:100+step*12,y:panY,id:0}]});
+        await page.waitForTimeout(20);
+      }
+      await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      await expect.poll(() => map.getAttribute("data-map-center"), {timeout:10000}).not.toBe(beforePan);
       await cdp.detach();
       const afterPinch = await map.getAttribute("data-map-zoom");
       await canvas.focus();
       await page.keyboard.press("Equal");
-      await expect
-        .poll(() => map.getAttribute("data-map-zoom"), { timeout: 10000 })
-        .not.toBe(afterPinch);
-      const beforePan = await map.getAttribute("data-map-center");
-      await page.mouse.move(120, 230);
-      await page.mouse.down();
-      await page.mouse.move(200, 260, { steps: 8 });
-      await page.mouse.up();
-      await expect
-        .poll(() => map.getAttribute("data-map-center"), { timeout: 10000 })
-        .not.toBe(beforePan);
+      await expect.poll(() => map.getAttribute("data-map-zoom"), {timeout:10000}).not.toBe(afterPinch);
       await page
         .getByRole("button", { name: "กลับไปยังตำแหน่งที่เลือก" })
         .click();
@@ -286,7 +316,12 @@ test("tablet layout retains map, forecast, geography and both themes", async ({
   await expect(page.locator('[data-map-status="ready"]')).toBeVisible({
     timeout: 30000,
   });
-  await expect(page.locator(".region-bar")).toBeVisible();
+  // Approved Design C consolidates region navigation into the location selector.
+  await expect(page.locator(".region-bar")).toBeHidden();
+  await page.getByRole("button", { name: "ค้นหาตำแหน่ง", exact: true }).click();
+  await page.locator(".secondary-locations summary").click();
+  await expect(page.locator(".china-options button")).toHaveCount(3);
+  await page.getByRole("button", { name: "ปิด", exact: true }).click();
   for (const mode of ["light", "dark"] as const) {
     if (mode === "dark") await theme(page, mode);
     await info.attach(`tablet-${mode}`, {

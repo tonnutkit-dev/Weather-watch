@@ -29,7 +29,9 @@ test("live map/weather and appearance/location integrity", async ({
   await expect(
     page.getByRole("heading", { name: "กรุงเทพมหานคร", exact: true }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "🇨🇳 ซีอาน", exact: true }).click();
+  await page.getByRole("button", { name: "ค้นหาตำแหน่ง", exact: true }).click();
+  await page.locator(".secondary-locations summary").click();
+  await page.getByRole("button", { name: /ซีอาน.*Xi/ }).click();
   await expect(
     page.getByRole("heading", { name: "ซีอาน", exact: true }),
   ).toBeVisible();

@@ -138,5 +138,8 @@ export function normalizeWeather(
     },
   };
 }
-export const getWeather = async (l: Location, signal?: AbortSignal) =>
-  normalizeWeather(await fetchJson(weatherUrl(l), signal), l);
+export const getWeather = async (
+  l: Location,
+  signal?: AbortSignal,
+  deadlineMs?: number,
+) => normalizeWeather(await fetchJson(weatherUrl(l), signal, deadlineMs), l);
