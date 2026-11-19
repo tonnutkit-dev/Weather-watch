@@ -1,4 +1,6 @@
 import type { Hour } from "../weather/types";
+import { CalendarX2 } from "lucide-react";
+import { StateBlock } from "./StateBlock";
 import { useI18n } from "../i18n/i18n";
 import { WeatherIcon } from "./WeatherIcon";
 const COL = 48, LINE_TOP = 22, LINE_H = 52, BAR_H = 30;
@@ -10,7 +12,7 @@ const COL = 48, LINE_TOP = 22, LINE_H = 52, BAR_H = 30;
 export function HourlyChart({ hours, timezone }: { hours: Hour[]; timezone: string }) {
   const { t, hour } = useI18n();
   const temps = hours.map((h) => h.temperature).filter((v): v is number => v !== null);
-  if (temps.length < 2) return <p className="ww-muted">{t("sheet.noForecast")}</p>;
+  if (temps.length < 2) return <StateBlock compact icon={CalendarX2} title={t("sheet.noForecast")} />;
   const W = hours.length * COL;
   const lo = Math.min(...temps) - 1, hi = Math.max(...temps) + 1;
   const x = (i: number) => i * COL + COL / 2;

@@ -1,4 +1,4 @@
-import type { Map } from "maplibre-gl";
+import type { Map, ExpressionSpecification } from "maplibre-gl";
 /** Presentation only. Called once per existing style.load; never touches WW raster sources. */
 export function applyEditorialStyle(map: Pick<Map, "getStyle" | "setPaintProperty" | "setLayoutProperty">, theme: string) {
  const dark=theme==='dark';
@@ -15,4 +15,24 @@ export function applyEditorialStyle(map: Pick<Map, "getStyle" | "setPaintPropert
    map.setPaintProperty(layer.id,'text-halo-color',land);
   }
  }
+}
+/** Label sources whose text-field is a place/feature name (never road refs/shields). */
+const NAMED_LAYERS = ["place", "water_name", "waterway", "transportation_name", "poi", "park", "mountain_peak", "aerodrome_label", "boundary"];
+/**
+ * One label language that follows the UI language: no bilingual stacks, no uppercase.
+ * Features without a name in that language fall back to English, then to the local name.
+ */
+export function labelExpression(lang: string): ExpressionSpecification {
+  const chain = lang === "th" ? ["name:th", "name:en", "name"] : lang === "zh" ? ["name:zh-Hans", "name:zh", "name:en", "name"] : ["name:en", "name:latin", "name"];
+  return ["coalesce", ...chain.map((k) => ["get", k] as ExpressionSpecification)] as ExpressionSpecification;
+}
+export function applyMapLanguage(map: Pick<Map, "getStyle" | "setLayoutProperty">, lang: string) {
+  for (const layer of map.getStyle().layers) {
+    if (layer.id.startsWith("ww-") || layer.type !== "symbol" || !("source-layer" in layer)) continue;
+    if (!NAMED_LAYERS.includes(layer["source-layer"] || "")) continue;
+    const field = JSON.stringify(layer.layout?.["text-field"] ?? "");
+    if (!field || field === '""' || /\bref\b|"ref"/.test(field)) continue;
+    map.setLayoutProperty(layer.id, "text-field", labelExpression(lang));
+    map.setLayoutProperty(layer.id, "text-transform", "none");
+  }
 }

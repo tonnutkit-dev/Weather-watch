@@ -1,4 +1,7 @@
-import { applyEditorialStyle } from "./editorialStyle";
+import { applyEditorialStyle, applyMapLanguage } from "./editorialStyle";
+import { useI18n } from "../i18n/i18n";
+import { MapPinOff, RefreshCw, TriangleAlert } from "lucide-react";
+import { StateBlock } from "../components/StateBlock";
 import { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
 import type { Map, GeoJSONSource, RasterTileSource } from "maplibre-gl";
@@ -23,6 +26,9 @@ maplibregl.addProtocol("wwradar", async (params, controller) => {
   }
 });
 export default function GLCanvas(props: MapProps) {
+  const { t, lang } = useI18n();
+  const langRef = useRef(lang);
+  langRef.current = lang;
   const host = useRef<HTMLDivElement>(null),
     map = useRef<Map | null>(null),
     current = useRef(props);
@@ -245,6 +251,7 @@ export default function GLCanvas(props: MapProps) {
       });
       m.on("style.load", () => {
         applyEditorialStyle(m, current.current.theme);
+        applyMapLanguage(m, langRef.current);
         styleReady.current = true;
         setStyleTheme(current.current.theme);
         sync.current();
@@ -291,6 +298,10 @@ export default function GLCanvas(props: MapProps) {
     }
   }, [props.theme]);
   useEffect(() => {
+    const m = map.current;
+    if (m && styleReady.current) applyMapLanguage(m, lang);
+  }, [lang]);
+  useEffect(() => {
     prepareRadar();
     sync.current();
   }, [
@@ -332,7 +343,7 @@ export default function GLCanvas(props: MapProps) {
       <div
         ref={host}
         className="map-canvas"
-        aria-label="แผนที่อากาศแบบโต้ตอบ"
+        aria-label={t("map.label")}
         data-map-engine="maplibre"
         data-theme={styleTheme ?? undefined}
         data-map-status={status}
@@ -340,29 +351,17 @@ export default function GLCanvas(props: MapProps) {
         data-weather-layer={props.layers.weather}
         data-air-layer={props.layers.air}
       />
-      {status !== "ready" && (
-        <div className="map-status" role="status">
-          {status === "loading" ? (
-            "กำลังโหลดแผนที่…"
-          ) : (
-            <>
-              โหลดแผนที่ไม่ได้{" "}
-              <button
-                onClick={() => {
-                  setStatus("loading");
-                  setRetry((v) => v + 1);
-                }}
-              >
-                ลองใหม่
-              </button>
-            </>
-          )}
+      {status === "loading" && (
+        <div className="map-status" role="status"><span className="ww-spin" aria-hidden="true" /> {t("map.loading")}</div>
+      )}
+      {status === "error" && (
+        <div className="map-status">
+          <StateBlock icon={MapPinOff} tone="bad" compact role="alert" title={t("map.error")} body={t("map.errorBody")}
+            action={<button className="ww-btn" onClick={() => { setStatus("loading"); setRetry((v) => v + 1); }}><RefreshCw size={15} /> {t("now.retry")}</button>} />
         </div>
       )}
       {radarError && props.layers.radar && (
-        <div className="tile-error" role="status">
-          โหลดภาพเรดาร์บางส่วนไม่สำเร็จ ภาพว่างไม่ยืนยันว่าไม่มีฝน
-        </div>
+        <div className="tile-error" role="status"><TriangleAlert size={14} aria-hidden="true" /> {t("map.radarTileError")}</div>
       )}
     </>
   );

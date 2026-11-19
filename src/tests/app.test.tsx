@@ -107,7 +107,12 @@ describe("App V1 map-first", () => {
     await screen.findByText("โหลดข้อมูลอากาศไม่ได้");
     expect(screen.getByRole("radiogroup", { name: "ชั้นข้อมูลแผนที่" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "เปิดรายละเอียด" }));
-    expect(screen.getByText("ยังไม่เชื่อมต่อข้อมูลน้ำท่วมที่ตรวจสอบแล้ว ไม่สามารถสรุปว่าไม่มีน้ำท่วมในพื้นที่")).toBeInTheDocument();
+    // Main view keeps one compact alerts row; the flood caveat lives in ⓘ Sources.
+    expect(screen.queryByText(/ไม่สามารถสรุปว่าไม่มีน้ำท่วม/)).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /ประกาศเตือนภัย.*กรมอุตุนิยมวิทยา/ })).toHaveAttribute("href", expect.stringContaining("tmd.go.th"));
+    fireEvent.click(screen.getAllByRole("button", { name: "แหล่งข้อมูล" })[0]!);
+    expect(screen.getByText(/ยังไม่เชื่อมต่อข้อมูลน้ำท่วมที่ตรวจสอบแล้ว ไม่สามารถสรุปว่าไม่มีน้ำท่วมในพื้นที่/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "ปิด" }));
     // No data yet: Retry works immediately (no 30 s cooldown).
     fireEvent.click(screen.getByRole("button", { name: "ลองใหม่" }));
     expect(await screen.findByTestId("temperature")).toHaveTextContent(/\d+°C/);
@@ -182,6 +187,18 @@ describe("App V1 map-first", () => {
     fireEvent.click(screen.getByRole("button", { name: "English" }));
     expect(screen.getByRole("radio", { name: "Radar" })).toBeInTheDocument();
     expect(document.documentElement.lang).toBe("en");
+  });
+  it("中文 covers the main flows with no Thai fallback (chip, dock, sheet)", async () => {
+    mount();
+    await screen.findByTestId("temperature");
+    fireEvent.click(screen.getByRole("button", { name: "ตั้งค่าและภาษา" }));
+    fireEvent.click(screen.getByRole("button", { name: "中文" }));
+    fireEvent.click(screen.getByRole("button", { name: "关闭" }));
+    expect(screen.getByRole("radio", { name: "雷达" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "展开详情" }));
+    const thai = /[\u0E00-\u0E7F]/;
+    for (const region of [screen.getByLabelText("天气详情"), document.querySelector(".ww-dock")!, document.querySelector(".ww-now")!])
+      expect(region.textContent).not.toMatch(thai);
   });
   it("a tapped map point is named after the nearest province", async () => {
     mount();

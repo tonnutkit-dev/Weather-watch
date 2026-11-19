@@ -10,6 +10,7 @@ export function LayerSwitcher({ mode, onMode }: { mode: Mode; onMode: (m: Mode) 
   const { t } = useI18n();
   return (
     <div className="ww-seg glass" role="radiogroup" aria-label={t("layer.group")}>
+      <span className="ww-seg-pill" aria-hidden="true" style={{ transform: `translateX(calc(${items.findIndex(([id]) => id === mode)} * (100% + 4px)))` }} />
       {items.map(([id, key, Icon]) => (
         <button
           key={id}

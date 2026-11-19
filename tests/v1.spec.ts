@@ -31,6 +31,8 @@ test.describe("LAB fixtures · map-first UI", () => {
     await page.getByRole("button", { name: "เปิดรายละเอียด" }).click();
     await expect(sheet).toHaveAttribute("data-open", "true");
     await expect(page.getByText("24 ชั่วโมงถัดไป")).toBeVisible();
+    // Location + temperature appear once: the chip steps away while the sheet is open.
+    await expect(page.locator(".ww-now")).toHaveCSS("opacity", "0");
     await expect(page.locator(".ww-chart")).toBeVisible();
     await page.getByRole("button", { name: "ปิดรายละเอียด" }).click();
     await expect(sheet).toHaveAttribute("data-open", "false");
@@ -52,7 +54,8 @@ test.describe("LAB fixtures · map-first UI", () => {
     await expect(sheet.getByText(/ฝนรวม .* มม\./)).toBeVisible();
     await sheet.getByRole("button", { name: "แหล่งข้อมูล" }).first().click();
     const panel = page.getByRole("dialog", { name: "แหล่งข้อมูล" });
-    await expect(panel.locator(".ww-src")).toHaveCount(4);
+    await expect(panel.locator(".ww-src")).toHaveCount(5); // weather, forecast, air, radar, alerts/flood
+    await expect(panel.getByText(/ไม่สามารถสรุปว่าไม่มีน้ำท่วม/)).toBeVisible();
     await expect(panel.getByText("แบบจำลอง").first()).toBeVisible();
     const box = (await panel.boundingBox())!;
     expect(box.height).toBeLessThanOrEqual(844 * 0.52);

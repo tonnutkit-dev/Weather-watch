@@ -100,9 +100,10 @@ a { color: var(--accent); }
   position: absolute; z-index: 20; left: 12px; right: 12px; bottom: calc(var(--peek) + 8px);
   display: flex; flex-direction: column; gap: 8px; transition: opacity .25s var(--ease), transform .3s var(--ease);
 }
-.ww-seg { display: flex; gap: 4px; padding: 5px; border-radius: 20px; }
-.ww-seg button { flex: 1; height: 42px; border-radius: 15px; display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 15px; font-weight: 600; color: var(--sub); transition: background .2s, color .2s; }
-.ww-seg button.on { background: var(--ink); color: var(--sea); }
+.ww-seg { position: relative; display: flex; gap: 4px; padding: 5px; border-radius: 20px; }
+.ww-seg-pill { position: absolute; top: 5px; bottom: 5px; left: 5px; width: calc((100% - 18px) / 3); border-radius: 15px; background: var(--ink); transition: transform .32s var(--ease); }
+.ww-seg button { position: relative; z-index: 1; flex: 1; height: 42px; border-radius: 15px; display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 15px; font-weight: 600; color: var(--sub); transition: background .2s, color .2s; }
+.ww-seg button.on { color: var(--sea); }
 
 .ww-timeline { display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 8px; border-radius: 22px; }
 .ww-play { width: 46px; height: 46px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; flex: none; }
@@ -141,12 +142,17 @@ a { color: var(--accent); }
   display: flex; flex-direction: column;
 }
 .ww-sheet.is-open { transform: translateY(0); }
+.ww-sheet { transition: transform .38s var(--ease), height .38s var(--ease); }
 .ww-handle { flex: none; height: 54px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 8px; touch-action: none; }
 .ww-grab { width: 40px; height: 5px; border-radius: 3px; background: var(--track); }
 .ww-peek { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; color: var(--sub); }
 .ww-sheet.is-open .ww-peek { display: none; }
 .ww-sheet-body { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 0 16px calc(var(--safe-b) + 24px); -webkit-overflow-scrolling: touch; }
 .ww-app.sheet-open .ww-dock, .ww-app.sheet-open .ww-fabs { opacity: 0; pointer-events: none; }
+/* Sheet open: the sheet header carries location + temperature, so the chip steps away. */
+.ww-now { transition: opacity .25s var(--ease), transform .3s var(--ease); }
+.ww-app.sheet-open .ww-now { opacity: 0; transform: translateY(-14px) scale(.98); pointer-events: none; }
+.ww-app.sheet-open .ww-sheet { height: calc(100dvh - var(--safe-t) - 12px); }
 .ww-app.sheet-open .ww-dock { transform: translateY(16px); }
 .ww-sheet-head { display: flex; align-items: center; gap: 12px; padding: 0 2px 10px; }
 .ww-sheet-temp { font-size: 42px; font-weight: 600; letter-spacing: -1.5px; line-height: 1; }
@@ -261,16 +267,16 @@ a { color: var(--accent); }
 .ww-input input::placeholder { color: var(--sub); }
 
 .ww-banner, .ww-toast { position: absolute; z-index: 40; left: 50%; transform: translateX(-50%); width: calc(100% - 24px); max-width: 460px; border-radius: 16px; padding: 10px 14px; font-size: 14px; display: flex; align-items: center; gap: 10px; }
-.ww-banner { top: calc(var(--safe-t) + 150px); }
+.ww-top > .ww-banner { position: static; transform: none; width: 100%; max-width: none; }
 .ww-banner .ww-btn { margin-left: auto; flex: none; height: 34px; }
 .ww-toast { bottom: calc(var(--peek) + var(--dock-h, 140px) + 18px); justify-content: center; text-align: center; }
 
 /* ---------- Map engine messages and attribution ---------- */
 .map-status, .tile-error, .basemap-note {
-  position: absolute; z-index: 5; left: 50%; transform: translateX(-50%); top: calc(var(--safe-t) + 200px);
+  position: absolute; z-index: 5; left: 50%; transform: translate(-50%, -50%); top: 46%;
   padding: 8px 14px; border-radius: 14px; font-size: 13px; background: var(--solid); border: 1px solid var(--glass-edge); color: var(--ink); max-width: calc(100% - 32px); text-align: center;
 }
-.tile-error, .basemap-note { top: auto; bottom: calc(var(--peek) + var(--dock-h, 140px) + 18px); color: var(--warn); }
+.tile-error, .basemap-note { top: auto; transform: translateX(-50%); bottom: calc(var(--peek) + var(--dock-h, 140px) + 18px); color: var(--warn); }
 .map-status button { color: var(--accent); font-weight: 600; margin-left: 6px; }
 .fallback-note { position: absolute; z-index: 5; left: 12px; bottom: calc(var(--peek) + var(--dock-h, 140px) + 16px); font-size: 11px; color: var(--sub); background: var(--solid); padding: 2px 8px; border-radius: 8px; }
 .maplibregl-ctrl-bottom-right, .leaflet-bottom.leaflet-right { bottom: calc(var(--peek) + var(--dock-h, 140px) + 12px) !important; }
@@ -294,6 +300,8 @@ a { color: var(--accent); }
 @media (min-width: 760px) {
   .ww-top { left: 16px; right: 16px; flex-direction: row; justify-content: space-between; align-items: flex-start; }
   .ww-now { width: 420px; }
+  .ww-top { flex-wrap: wrap; }
+  .ww-top > .ww-banner { order: 3; width: 420px; }
   .ww-dock { left: 16px; right: auto; width: 420px; bottom: calc(var(--peek) + 12px); }
   .ww-sheet { left: 16px; right: auto; width: 440px; bottom: 0; height: min(86dvh, 820px); }
   .maplibregl-ctrl-bottom-right, .leaflet-bottom.leaflet-right { bottom: 8px !important; }
@@ -303,4 +311,70 @@ a { color: var(--accent); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* ---------- One icon family (lucide line icons, one stroke weight) ---------- */
+svg.lucide { stroke-width: 1.9; flex: none; }
+.ww-wx { color: var(--sub); }
+.ww-wx[data-tone="sun"] { color: #ffc23d; }
+.ww-wx[data-tone="night"] { color: #b6c6ec; }
+.ww-wx[data-tone="rain"] { color: var(--rain); }
+.ww-wx[data-tone="storm"] { color: #ffb547; }
+.ww-wx[data-tone="snow"] { color: #9fd3ff; }
+:root[data-theme="light"] .ww-wx[data-tone="sun"] { color: #e09a00; }
+/* MapLibre attribution button drawn with the same info glyph */
+.maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-button {
+  background-image: none !important; filter: none !important; position: relative;
+}
+.maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-button::after {
+  content: ""; position: absolute; inset: 8px; background: var(--ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.9' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* ---------- Designed states ---------- */
+.ww-state { display: flex; align-items: center; gap: 12px; min-height: 56px; width: 100%; }
+.ww-state.is-compact { min-height: 40px; gap: 10px; }
+.ww-state-ico { width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; flex: none; color: var(--sub); background: var(--hi); }
+.ww-state.is-compact .ww-state-ico { width: 32px; height: 32px; border-radius: 11px; }
+.ww-state[data-tone="bad"] .ww-state-ico { color: var(--bad); background: color-mix(in srgb, var(--bad) 14%, transparent); }
+.ww-state[data-tone="warn"] .ww-state-ico { color: var(--warn); background: color-mix(in srgb, var(--warn) 14%, transparent); }
+.ww-state-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.ww-state-text strong { font-size: 15px; font-weight: 600; line-height: 1.35; }
+.ww-state.is-compact .ww-state-text strong { font-size: 14px; }
+.ww-state-text small { font-size: 12.5px; color: var(--sub); line-height: 1.4; }
+.ww-state-act { flex: none; }
+.ww-now-loading { display: flex; align-items: center; gap: 14px; min-height: 56px; }
+.ww-sk-temp { width: 76px; height: 46px; }
+.ww-sk-lines { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.ww-sk-lines i { display: block; height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--hi), var(--track), var(--hi)); background-size: 200% 100%; animation: ww-shimmer 1.4s linear infinite; }
+.ww-sk-lines i:first-child { width: 80%; height: 15px; } .ww-sk-lines i:last-child { width: 55%; }
+.ww-now-warn { display: flex; align-items: center; gap: 5px; }
+.ww-spinning { animation: ww-rot .9s linear infinite; }
+.ww-searching { display: flex; align-items: center; gap: 8px; }
+.ww-banner { padding: 8px 10px 8px 12px; }
+.ww-toast { gap: 8px; }
+.map-status { display: flex; align-items: center; gap: 8px; }
+.map-status .ww-state { min-width: 260px; text-align: left; }
+.tile-error, .basemap-note { display: flex; align-items: center; gap: 6px; }
+
+/* ---------- Compact alerts row ---------- */
+.ww-alert-row { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); font-size: 14px; }
+.ww-alert-row svg:first-child { color: var(--sub); }
+.ww-alert-row b { font-weight: 600; color: var(--accent); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ww-alert-row .ww-alert-arrow { color: var(--sub); }
+.ww-alert-row svg:last-child { margin-left: auto; color: var(--sub); }
+
+/* ---------- Motion ---------- */
+.ww-mode { display: flex; flex-direction: column; animation: ww-mode-in .28s var(--ease); }
+@keyframes ww-mode-in { from { opacity: 0; transform: translateY(8px); } }
+.ww-panel-layer .ww-scrim, .ww-search .ww-scrim { animation: ww-fade .22s var(--ease); }
+@keyframes ww-fade { from { opacity: 0; } }
+.ww-panel-layer.is-closing .ww-panel, .ww-search.is-closing .ww-search-col { animation: ww-sink .18s var(--ease) forwards; }
+.ww-panel-layer.is-closing .ww-scrim, .ww-search.is-closing .ww-scrim { animation: ww-fade-out .18s var(--ease) forwards; }
+@keyframes ww-sink { to { transform: translateY(24px); opacity: 0; } }
+@keyframes ww-fade-out { to { opacity: 0; } }
+.ww-day-more { animation: ww-mode-in .2s var(--ease); }
+@media (prefers-reduced-motion: reduce) {
+  .ww-seg-pill, .ww-now, .ww-sheet { transition: none !important; }
 }

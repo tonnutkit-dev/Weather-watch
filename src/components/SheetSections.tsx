@@ -1,11 +1,14 @@
 import { useState, type CSSProperties } from "react";
+import { CalendarX2, Wind } from "lucide-react";
+import { StateBlock } from "./StateBlock";
 import { ChevronDown } from "lucide-react";
 import type { Weather } from "../weather/types";
 import type { AirQuality } from "../air-quality/types";
 import type { Radar } from "../radar/types";
 import type { Location } from "../locations/types";
 import type { DataType } from "../shared/provenance";
-import { freshnessLabel, type FreshnessKind } from "../reliability/freshness";
+import type { FreshnessKind } from "../reliability/freshness";
+import { alertFoundation } from "../alerts/types";
 import { useI18n } from "../i18n/i18n";
 import type { Key } from "../i18n/strings";
 import { aqiBand } from "../app/headline";
@@ -19,7 +22,7 @@ const ADVICE: Key[] = ["aq.a0", "aq.a1", "aq.a2", "aq.a3", "aq.a4", "aq.a4"];
 export function AirCard({ air, timezone, now }: { air?: AirQuality; timezone: string; now: number }) {
   const { t, hour } = useI18n();
   const band = aqiBand(air?.aqi ?? null);
-  if (!air || !band) return <p className="ww-muted">{t("air.noData")}</p>;
+  if (!air || !band) return <StateBlock compact icon={Wind} title={t("air.noData")} />;
   const next = air.hourly.filter((h) => h.time > now / 1000 - 3600 && h.aqi !== null).slice(0, 12);
   const top = Math.max(150, ...next.map((h) => h.aqi!));
   return (
@@ -60,7 +63,7 @@ export function DailyList({ weather }: { weather?: Weather }) {
   const { t, locale } = useI18n();
   const [open, setOpen] = useState<number | null>(null);
   const days = weather?.daily ?? [];
-  if (!days.length) return <p className="ww-muted">{t("sheet.noForecast")}</p>;
+  if (!days.length) return <StateBlock compact icon={CalendarX2} title={t("sheet.noForecast")} />;
   const lows = days.map((d) => d.low).filter((v): v is number => v !== null);
   const highs = days.map((d) => d.high).filter((v): v is number => v !== null);
   const lo = Math.min(...lows), hi = Math.max(...highs), span = Math.max(1, hi - lo);
@@ -102,7 +105,7 @@ export function SourcesPanel(p: {
   onClose: () => void; location: Location; weather?: Weather; air?: AirQuality; radar?: Radar;
   weatherFreshness?: FreshnessKind; airFreshness?: FreshnessKind; now: number;
 }) {
-  const { t } = useI18n();
+  const { t, fresh } = useI18n();
   const ago = (epoch?: number | null) => {
     if (epoch == null) return t("src.unknown");
     const m = Math.max(0, Math.round((p.now / 1000 - epoch) / 60));
@@ -125,11 +128,18 @@ export function SourcesPanel(p: {
             </div>
             <div className="ww-src-meta">
               <a href={r.url} target="_blank" rel="noreferrer">{r.name}</a> · {t("src.updated", { ago: ago(r.time) })}
-              {r.fresh && <> · {freshnessLabel[r.fresh]}</>}
+              {r.fresh && <> · {fresh(r.fresh)}</>}
             </div>
             {r.note && <p className="ww-micro">{t(r.note)}</p>}
           </div>
         ))}
+        <div className="ww-src">
+          <div className="ww-src-top"><b>{t("src.alerts")}</b><span className="ww-tag">{t("src.notConnected")}</span></div>
+          <div className="ww-src-meta">
+            <a href={alertFoundation(p.location.country).url} target="_blank" rel="noreferrer">{t(p.location.country === "CN" ? "alert.cma" : "alert.tmd")}</a>
+          </div>
+          <p className="ww-micro">{t("src.alertsNote")} {t(p.location.country === "CN" ? "src.floodCN" : "src.floodTH")}</p>
+        </div>
         <p className="ww-micro">{t("src.map")}</p>
       </div>
     </Panel>

@@ -1,5 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { LANGS, translate, type Key, type Lang } from "./strings";
+import type { Location } from "../locations/types";
+import type { FreshnessKind } from "../reliability/freshness";
+import { nearestProvince } from "../locations/region";
 
 const LANG_KEY = "ww-lang";
 export function readLang(): Lang {
@@ -25,7 +28,24 @@ function makeApi(lang: Lang, setLang: (l: Lang) => void) {
     epoch == null || !Number.isFinite(epoch)
       ? "—"
       : new Intl.DateTimeFormat(locale, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone }).format(new Date(epoch * 1000));
-  return { lang, setLang, locale, t, time, hour, weekday, fullTime };
+  /** Location name in the UI language. Province/city data has Thai + English (+ Chinese for CN cities). */
+  const placeName = (l: Location): string => {
+    if (l.kind === "coordinates") return t("loc.near", { name: placeName(nearestProvince(l.latitude, l.longitude)) });
+    if (l.kind === "geolocation") return t("loc.myLocation");
+    if (lang === "th" || !l.english || l.kind === "place") return l.name;
+    const [latin, chinese] = l.english.split(/\s*·\s*/);
+    return lang === "zh" && chinese ? chinese : latin ?? l.name;
+  };
+  /** Secondary line under a name: the other-script name where it helps. */
+  const placeSub = (l: Location): string => (lang === "th" || (lang === "en" && l.kind === "place") ? l.english ?? "" : "");
+  const fresh = (k: FreshnessKind) => t(`fresh.${k}` as Key);
+  /** Provider messages are Thai (kept data layer); other languages get a translated generic reason. */
+  const errorText = (e: unknown) => {
+    const m = e instanceof Error ? e.message : "";
+    if (lang === "th") return m;
+    return t(/ช้า|timeout/i.test(m) ? "err.timeout" : /ตอบกลับ|\d{3}/.test(m) ? "err.status" : "err.connection");
+  };
+  return { lang, setLang, locale, t, time, hour, weekday, fullTime, placeName, placeSub, fresh, errorText };
 }
 export type I18n = ReturnType<typeof makeApi>;
 // Default (no provider) is Thai, so components render correctly in isolation and in tests.

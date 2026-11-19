@@ -1,12 +1,13 @@
 import type { UseQueryResult } from "@tanstack/react-query";
-import { MapPin, RefreshCw, ChevronDown } from "lucide-react";
+import { MapPin, RefreshCw, ChevronDown, CloudOff, Clock } from "lucide-react";
+import { StateBlock } from "./StateBlock";
 import type { Weather } from "../weather/types";
 import type { AirQuality } from "../air-quality/types";
 import type { Location } from "../locations/types";
 import { useI18n } from "../i18n/i18n";
 import { headline, maxRainChance, type Headline } from "../app/headline";
 import { value } from "../shared/time";
-import { freshnessLabel, type FreshnessKind } from "../reliability/freshness";
+import type { FreshnessKind } from "../reliability/freshness";
 
 export type WeatherState = Pick<UseQueryResult<Weather>, "data" | "isError" | "isPending" | "isFetching" | "error">;
 const toneColor: Record<Headline["tone"], string> = {
@@ -39,8 +40,9 @@ export function NowChip(p: {
   /** No data yet: immediate retry (~3 s anti-spam guard). Falls back to onRefresh. */
   onRetry?: () => void;
 }) {
-  const { t, time } = useI18n();
+  const { t, time, placeName, fresh, errorText } = useI18n();
   const w = p.weather.data;
+  const name = placeName(p.location);
   // Device and location can be in different zones (e.g. phone in China, location in Thailand): tag the clock.
   const zoneTag = w && w.utcOffsetSeconds / 60 !== -new Date().getTimezoneOffset()
     ? ` ${p.location.timezone === "Asia/Shanghai" ? t("tz.cnShort") : t("tz.thShort")}` : "";
@@ -48,10 +50,10 @@ export function NowChip(p: {
   const h = headline(assessable, p.air, (e) => time(e, p.location.timezone), p.now / 1000);
   const rain = maxRainChance(assessable, p.now / 1000);
   return (
-    <section className="ww-now glass" aria-label={p.location.name} data-map-inset="top" data-selected-location={p.location.id}>
-      <button className="ww-now-loc" onClick={p.onSearch} aria-label={`${t("now.change")}: ${p.location.name}`}>
+    <section className="ww-now glass" aria-label={name} data-map-inset="top" data-selected-location={p.location.id}>
+      <button className="ww-now-loc" onClick={p.onSearch} aria-label={`${t("now.change")}: ${name}`}>
         <MapPin size={15} aria-hidden="true" />
-        <strong>{p.location.name}</strong>
+        <strong>{name}</strong>
         {w && <span className="ww-now-time">· {time(w.current.time, p.location.timezone)}{zoneTag}</span>}
         <ChevronDown size={15} aria-hidden="true" className="ww-now-chev" />
       </button>
@@ -84,23 +86,18 @@ export function NowChip(p: {
           )}
         </div>
       ) : p.weather.isError ? (
-        <div className="ww-now-state" role="alert">
-          <div>
-            <strong>{t("now.error")}</strong>
-            <small>{p.weather.error instanceof Error ? p.weather.error.message : ""}</small>
-          </div>
-          <button className="ww-btn" onClick={p.onRetry ?? p.onRefresh} disabled={p.weather.isFetching}>
-            <RefreshCw size={16} /> {t("now.retry")}
-          </button>
-        </div>
+        <StateBlock icon={CloudOff} tone="bad" role="alert" title={t("now.error")} body={errorText(p.weather.error)}
+          action={<button className="ww-btn" onClick={p.onRetry ?? p.onRefresh} disabled={p.weather.isFetching}>
+            <RefreshCw size={16} className={p.weather.isFetching ? "ww-spinning" : ""} /> {t("now.retry")}</button>} />
       ) : (
-        <div className="ww-now-state" role="status">
-          <span className="ww-skeleton" aria-hidden="true" />
-          <span>{t("now.loading")}</span>
+        <div className="ww-now-loading" role="status">
+          <span className="ww-skeleton ww-sk-temp" aria-hidden="true" />
+          <span className="ww-sk-lines" aria-hidden="true"><i /><i /></span>
+          <span className="ww-sr">{t("now.loading")}</span>
         </div>
       )}
-      {w && p.weather.isError && <p className="ww-now-warn" role="status">{t("now.refreshFailed")}</p>}
-      {w && !p.weather.isError && !assessable && p.freshness && <p className="ww-now-warn" role="status">{freshnessLabel[p.freshness]}</p>}
+      {w && p.weather.isError && <p className="ww-now-warn" role="status"><Clock size={13} aria-hidden="true" /> {t("now.refreshFailed")}</p>}
+      {w && !p.weather.isError && !assessable && p.freshness && <p className="ww-now-warn" role="status"><Clock size={13} aria-hidden="true" /> {fresh(p.freshness)}</p>}
     </section>
   );
 }

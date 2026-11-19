@@ -1,5 +1,5 @@
 import { useRef, useState, type PointerEvent as RPointerEvent } from "react";
-import { Star, ChevronUp, ChevronDown, ExternalLink, Info } from "lucide-react";
+import { Star, ChevronUp, ChevronDown, ExternalLink, Info, Megaphone, ArrowRight } from "lucide-react";
 import type { Weather } from "../weather/types";
 import type { AirQuality } from "../air-quality/types";
 import type { Location } from "../locations/types";
@@ -26,7 +26,7 @@ export function DetailSheet(p: {
   weatherFreshness?: FreshnessKind;
   airFreshness?: FreshnessKind;
 }) {
-  const { t, time } = useI18n();
+  const { t, time, placeName, placeSub } = useI18n();
   const [sources, setSources] = useState(false);
   const drag = useRef<{ y: number; moved: boolean } | null>(null);
   const w = p.weather, a = p.air;
@@ -65,7 +65,7 @@ export function DetailSheet(p: {
         <header className="ww-sheet-head">
           <div className="ww-sheet-temp num">{value(w?.current.temperature)}°</div>
           <div className="ww-sheet-title">
-            <h2>{p.location.name} {p.location.english && <small>{p.location.english}</small>}</h2>
+            <h2>{placeName(p.location)} {placeSub(p.location) && <small>{placeSub(p.location)}</small>}</h2>
             <HeadlineText h={h} />
           </div>
           <button className="ww-icon-btn" aria-label={t("src.title")} onClick={() => setSources(true)}>
@@ -91,12 +91,13 @@ export function DetailSheet(p: {
           <DailyList weather={w} />
         </div>
 
-        <div className="ww-card">
-          <div className="ww-card-t"><span>{t("sheet.official")}</span></div>
-          <p className="ww-small">{alert.reason}</p>
-          <a className="ww-link" href={alert.url} target="_blank" rel="noreferrer">{alert.authority} <ExternalLink size={13} /></a>
-          <p className="ww-small">{p.location.country === "TH" ? t("sheet.floodTH") : t("sheet.floodCN")}</p>
-        </div>
+        <a className="ww-card ww-alert-row" href={alert.url} target="_blank" rel="noreferrer">
+          <Megaphone size={17} aria-hidden="true" />
+          <span>{t("alert.label")}</span>
+          <ArrowRight size={14} aria-hidden="true" className="ww-alert-arrow" />
+          <b>{t(p.location.country === "CN" ? "alert.cma" : "alert.tmd")}</b>
+          <ExternalLink size={14} aria-hidden="true" />
+        </a>
         <button className="ww-src-btn" onClick={() => setSources(true)}><Info size={15} /> {t("src.title")}</button>
       </div>
       {sources && (

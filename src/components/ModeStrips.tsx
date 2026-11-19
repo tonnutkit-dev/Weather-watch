@@ -1,4 +1,6 @@
 import type { CSSProperties } from "react";
+import { CalendarX2, Wind } from "lucide-react";
+import { StateBlock } from "./StateBlock";
 import type { Weather } from "../weather/types";
 import type { AirQuality } from "../air-quality/types";
 import { useI18n } from "../i18n/i18n";
@@ -24,7 +26,7 @@ export function TempStrip({ weather, timezone, now }: { weather?: Weather; timez
           ))}
         </div>
       ) : (
-        <p className="ww-muted">{t("sheet.noForecast")}</p>
+        <StateBlock compact icon={CalendarX2} title={t("sheet.noForecast")} />
       )}
     </div>
   );
@@ -57,7 +59,7 @@ export function AirStrip({ air }: { air?: AirQuality }) {
           <AqiScale aqi={air.aqi} />
         </>
       ) : (
-        <p className="ww-muted">{t("air.noData")}</p>
+        <StateBlock compact icon={Wind} title={t("air.noData")} />
       )}
     </div>
   );

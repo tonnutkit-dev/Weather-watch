@@ -9,7 +9,11 @@ import { mapInsets, observeMapLayout } from "./layout";
 // Net vertical camera offset: bottom dock pushes the point up, the top chip pushes it down.
 const netInset = (host: HTMLElement) => { const i = mapInsets(host); return i.bottom - i.top; };
 import { BoundedRadarLayer } from "./BoundedRadarLayer";
+import { useI18n } from "../i18n/i18n";
+import { MapPinOff, TriangleAlert } from "lucide-react";
+import { StateBlock } from "../components/StateBlock";
 export default function RasterCanvas(p: MapProps) {
+  const { t } = useI18n();
   const host = useRef<HTMLDivElement>(null),
     map = useRef<L.Map | null>(null),
     latest = useRef(p);
@@ -279,7 +283,7 @@ export default function RasterCanvas(p: MapProps) {
         ref={host}
         className="map-canvas raster-map"
         data-theme={p.theme}
-        aria-label="แผนที่อากาศแบบโต้ตอบ 2D"
+        aria-label={`${t("map.label")} 2D`}
         data-map-engine="leaflet-fallback"
         data-map-status={status}
         data-radar-status={radarStatus}
@@ -288,21 +292,16 @@ export default function RasterCanvas(p: MapProps) {
         data-air-layer={p.layers.air}
       />
       {status === "error" && (
-        <div className="map-status" role="status">
-          โหลดแผนที่สำรองไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วรีเฟรชหน้า
+        <div className="map-status">
+          <StateBlock icon={MapPinOff} tone="bad" compact role="alert" title={t("map.error")} body={t("map.errorBody")}
+            action={<button className="ww-btn" onClick={() => window.location.reload()}>{t("map.reload")}</button>} />
         </div>
       )}
-      {tileError && (
-        <div className="basemap-note" role="status">
-          ไทล์แผนที่บางส่วนโหลดไม่สำเร็จ
-        </div>
-      )}
+      {tileError && <div className="basemap-note" role="status"><TriangleAlert size={14} aria-hidden="true" /> {t("map.tileError")}</div>}
       {radarStatus === "error" && p.layers.radar && (
-        <div className="tile-error">
-          ภาพเรดาร์บางส่วนโหลดไม่สำเร็จ ภาพว่างไม่ยืนยันว่าไม่มีฝน
-        </div>
+        <div className="tile-error"><TriangleAlert size={14} aria-hidden="true" /> {t("map.radarTileError")}</div>
       )}
-      <span className="fallback-note">แผนที่ 2D · อุปกรณ์ไม่รองรับ WebGL</span>
+      <span className="fallback-note">{t("map.fallback")}</span>
     </>
   );
 }

@@ -1,10 +1,11 @@
 import { lazy, Suspense, useState, useEffect, useCallback, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Search, LocateFixed, Globe } from "lucide-react";
+import { Search, LocateFixed, Globe, WifiOff, RefreshCw, Info } from "lucide-react";
+import { StateBlock } from "../components/StateBlock";
 import type { Location } from "../locations/types";
 import { chinaCities } from "../locations/types";
 import { provinces, defaultLocation } from "../locations/provinces";
-import { locationFromCoordinates, isSupportedLocation, nearestProvince } from "../locations/region";
+import { locationFromCoordinates, isSupportedLocation } from "../locations/region";
 import type { MapLayers } from "../maps/MapCanvas";
 import { getAirQuality } from "../providers/airQuality";
 import { getRadar } from "../providers/radar";
@@ -45,6 +46,7 @@ export default function App() {
   const theme = useTheme();
   const glass = useGlass();
   const { t, lang } = useI18n();
+  void lang;
   const [radarPresentationStore] = useState(() => new RadarPresentationStore());
   const [location, setLocation] = useState<Location>(initialLocation);
   const [favorites, setFavorites] = useState(() => readFavorites().filter(isSupportedLocation));
@@ -150,10 +152,8 @@ export default function App() {
               mapAction={mapAction}
               onSelect={(lat, lon) => {
                 const l = locationFromCoordinates(lat, lon);
-                if (!l) { setMessage(t("map.outside")); return; }
-                // No reverse-geocoding provider: name the point after the nearest province (local list).
-                const near = nearestProvince(lat, lon);
-                select({ ...l, name: t("loc.near", { name: lang === "th" ? near.name : near.english ?? near.name }) });
+                // Tapped points are named "near <nearest province>" by i18n placeName (no reverse geocoding).
+                if (l) select(l); else setMessage(t("map.outside"));
               }}
             />
           </Suspense>
@@ -162,6 +162,12 @@ export default function App() {
 
       <div className="ww-top">
       <NowChip location={location} weather={weather} air={a} freshness={weatherFresh.state} now={now} onSearch={() => setOverlay("search")} onRefresh={() => refresh()} onRetry={retryInitial} />
+      {!online && (
+        <div className="ww-banner glass">
+          <StateBlock icon={WifiOff} tone="warn" compact role="status" title={t("offline.title")} body={t("offline")}
+            action={<button className="ww-btn" onClick={() => refresh()}><RefreshCw size={15} /> {t("now.retry")}</button>} />
+        </div>
+      )}
       <div className="ww-fabs">
         <button className="ww-fab glass" aria-label={t("search.open")} onClick={() => setOverlay("search")}><Search size={19} /></button>
         <button className="ww-fab glass" aria-label={t("map.recenter")} onClick={() => setMapAction((v) => v + 1)}><LocateFixed size={19} /></button>
@@ -170,6 +176,7 @@ export default function App() {
       </div>
 
       <div className="ww-dock" data-map-inset="bottom">
+        <div className="ww-mode" key={mode}>
         {mode === "radar" && (
           <RadarTimeline
             radar={radar.data}
@@ -189,18 +196,19 @@ export default function App() {
         )}
         {mode === "temp" && <TempStrip weather={w} timezone={location.timezone} now={now} />}
         {mode === "air" && <AirStrip air={a} />}
+        </div>
         <LayerSwitcher mode={mode} onMode={changeMode} />
       </div>
 
       <DetailSheet open={sheetOpen} onOpen={setSheetOpen} location={location} weather={w} air={a} now={now} favorite={favorite} onFavorite={toggleFavorite}
         radar={radar.data} weatherFreshness={weatherFresh.state} airFreshness={airFresh.state} />
 
-      {!online && (
-        <div className="ww-banner glass" role="status">
-          {t("offline")} <button className="ww-btn" onClick={() => refresh()}>{t("now.retry")}</button>
+      {(message || geoLoading) && (
+        <div className="ww-toast glass" role="status">
+          {geoLoading ? <span className="ww-spin" aria-hidden="true" /> : <Info size={16} aria-hidden="true" />}
+          {geoLoading ? t("loc.locating") : message}
         </div>
       )}
-      {(message || geoLoading) && <div className="ww-toast glass" role="status">{geoLoading ? t("loc.locating") : message}</div>}
       {overlay === "search" && <SearchPanel onClose={() => setOverlay(null)} onSelect={select} favorites={favorites} onLocate={locate} />}
       {overlay === "settings" && (
         <SettingsPanel onClose={() => setOverlay(null)} appearance={theme.appearance} onAppearance={theme.setAppearance}
