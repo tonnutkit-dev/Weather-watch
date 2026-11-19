@@ -72,7 +72,6 @@ test.describe("LAB fixtures · map-first UI", () => {
     await page.goto("./");
     await page.clock.runFor(60_000); // initial load: three failed attempts (unchanged policy)
     await expect(page.getByText("โหลดข้อมูลอากาศไม่ได้")).toBeVisible();
-    await page.clock.runFor(31_000); // manual refresh cooldown (unchanged policy)
     await page.getByRole("button", { name: "ลองใหม่" }).click();
     await expect(page.getByTestId("temperature")).toHaveText(/\d+°C/);
   });

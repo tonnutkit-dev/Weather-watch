@@ -18,6 +18,7 @@ import { radarRequestKey, RadarPresentationStore } from "../radar/presentation";
 import { useRadarPlayback } from "../radar/usePlayback";
 import { useI18n } from "../i18n/i18n";
 import { useGlass } from "./glass";
+import { createRetryGuard } from "./retryGuard";
 import { MapBoundary } from "../components/MapBoundary";
 import { NowChip } from "../components/NowChip";
 import { LayerSwitcher, type Mode } from "../components/LayerSwitcher";
@@ -64,6 +65,14 @@ export default function App() {
     retryOnMount: false, refetchOnMount: (query) => automaticRefreshAllowed(query.queryKey),
   });
   const refresh = useBoundedRefresh(weatherKey, airKey);
+  const [retryGuard] = useState(() => createRetryGuard());
+  // No data yet: bypass the 30 s manual cooldown, keep only the ~3 s anti-spam guard.
+  const retryInitial = () => {
+    if (!navigator.onLine || !retryGuard()) return;
+    for (const [key, q] of [[weatherKey, weather], [airKey, air]] as const)
+      if (q.isError && q.data === undefined && q.fetchStatus !== "fetching")
+        void queryClient.refetchQueries({ queryKey: key, exact: true, type: "active" }, { cancelRefetch: false });
+  };
   const now = useSourceClock(weather.data?.current.time, air.data?.time, weather.data?.currentMeta.fetchedAt, air.data?.meta.fetchedAt);
   const weatherFresh = freshness(weather.data?.current.time, weather.data?.currentMeta.fetchedAt, "weather", weather.isFetching, weather.isError, now);
   const airFresh = freshness(air.data?.time, air.data?.meta.fetchedAt, "air", air.isFetching, air.isError, now);
@@ -149,7 +158,7 @@ export default function App() {
       </main>
 
       <div className="ww-top">
-      <NowChip location={location} weather={weather} air={a} freshness={weatherFresh.state} now={now} onSearch={() => setOverlay("search")} onRefresh={() => refresh()} />
+      <NowChip location={location} weather={weather} air={a} freshness={weatherFresh.state} now={now} onSearch={() => setOverlay("search")} onRefresh={() => refresh()} onRetry={retryInitial} />
       <div className="ww-fabs">
         <button className="ww-fab glass" aria-label={t("search.open")} onClick={() => setOverlay("search")}><Search size={19} /></button>
         <button className="ww-fab glass" aria-label={t("map.recenter")} onClick={() => setMapAction((v) => v + 1)}><LocateFixed size={19} /></button>

@@ -34,7 +34,10 @@ export function NowChip(p: {
   freshness?: FreshnessKind;
   now: number;
   onSearch: () => void;
+  /** Cached data present: refresh (30 s cooldown applies). */
   onRefresh: () => void;
+  /** No data yet: immediate retry (~3 s anti-spam guard). Falls back to onRefresh. */
+  onRetry?: () => void;
 }) {
   const { t, time } = useI18n();
   const w = p.weather.data;
@@ -83,7 +86,7 @@ export function NowChip(p: {
             <strong>{t("now.error")}</strong>
             <small>{p.weather.error instanceof Error ? p.weather.error.message : ""}</small>
           </div>
-          <button className="ww-btn" onClick={p.onRefresh} disabled={p.weather.isFetching}>
+          <button className="ww-btn" onClick={p.onRetry ?? p.onRefresh} disabled={p.weather.isFetching}>
             <RefreshCw size={16} /> {t("now.retry")}
           </button>
         </div>

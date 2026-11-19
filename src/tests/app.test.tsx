@@ -107,11 +107,31 @@ describe("App V1 map-first", () => {
     expect(screen.getByRole("radiogroup", { name: "ชั้นข้อมูลแผนที่" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "เปิดรายละเอียด" }));
     expect(screen.getByText("ยังไม่เชื่อมต่อข้อมูลน้ำท่วมที่ตรวจสอบแล้ว ไม่สามารถสรุปว่าไม่มีน้ำท่วมในพื้นที่")).toBeInTheDocument();
-    // Kept refresh gate: manual retry has a 30 s cooldown from the last attempt (unchanged policy).
-    const realNow = Date.now();
-    vi.spyOn(Date, "now").mockReturnValue(realNow + 31_000);
+    // No data yet: Retry works immediately (no 30 s cooldown).
     fireEvent.click(screen.getByRole("button", { name: "ลองใหม่" }));
     expect(await screen.findByTestId("temperature")).toHaveTextContent(/\d+°C/);
+  });
+  it("error-screen Retry has a ~3 s anti-spam guard", async () => {
+    const original = vi.mocked(getWeather).getMockImplementation();
+    vi.mocked(getWeather).mockRejectedValue(new Error("test-only network failure"));
+    try {
+      mount();
+      await screen.findByText("โหลดข้อมูลอากาศไม่ได้");
+      const before = vi.mocked(getWeather).mock.calls.length;
+      const now = Date.now();
+      const clock = vi.spyOn(Date, "now").mockReturnValue(now);
+      fireEvent.click(screen.getByRole("button", { name: "ลองใหม่" }));
+      await waitFor(() => expect(vi.mocked(getWeather).mock.calls.length).toBe(before + 1));
+      await screen.findByText("โหลดข้อมูลอากาศไม่ได้");
+      clock.mockReturnValue(now + 1000);
+      fireEvent.click(screen.getByRole("button", { name: "ลองใหม่" }));
+      expect(vi.mocked(getWeather).mock.calls.length).toBe(before + 1);
+      clock.mockReturnValue(now + 3100);
+      fireEvent.click(screen.getByRole("button", { name: "ลองใหม่" }));
+      await waitFor(() => expect(vi.mocked(getWeather).mock.calls.length).toBe(before + 2));
+    } finally {
+      vi.mocked(getWeather).mockImplementation(original!);
+    }
   });
   it("search switches to Xi'an with China timezone and China official source", async () => {
     mount();
