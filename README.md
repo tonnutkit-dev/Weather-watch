@@ -7,12 +7,11 @@ Node >=22.12 (verified with Node 24), npm.
 npm ci
 npm run dev
 ```
-Open the Vite local URL on your own computer, including /Weather-watch/. Public QA target: https://tonnutkit-dev.github.io/Weather-watch/ (only confirmed live by the subsequent deployment report).
+Open the Vite local URL on your own computer. Hosting: Cloudflare Pages (https://weather-watch-thcn.pages.dev/), built at the root path.
 ```
 npm run typecheck
 npm test
 npm run build
-npm run verify:pages
 npm run preview
 npm run verify:data
 npm run test:e2e

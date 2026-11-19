@@ -8,7 +8,7 @@ export default defineConfig({
   retries: 1,
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
-    baseURL: deployedUrl || "http://127.0.0.1:4173/Weather-watch/",
+    baseURL: deployedUrl || "http://127.0.0.1:4173/",
     browserName: "chromium",
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
@@ -17,7 +17,7 @@ export default defineConfig({
     ? undefined
     : {
         command: "npm run preview -- --host 127.0.0.1 --port 4173",
-        url: "http://127.0.0.1:4173/Weather-watch/",
+        url: "http://127.0.0.1:4173/",
         reuseExistingServer: !process.env.CI,
       },
 });
