@@ -1,86 +1,59 @@
-import { lazy, Suspense, useState, useEffect, useCallback } from "react";
+import { lazy, Suspense, useState, useEffect, useCallback, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Search,
-  Settings2,
-  ChevronDown,
-  Layers,
-  CloudRain,
-  Leaf,
-  LocateFixed,
-  Star,
-  Info,
-  RefreshCw,
-  Sun,
-  Moon,
-  Monitor,
-  Check,
-} from "lucide-react";
+import { Search, LocateFixed, Globe } from "lucide-react";
 import type { Location } from "../locations/types";
 import { chinaCities } from "../locations/types";
 import { provinces, defaultLocation } from "../locations/provinces";
-import {
-  locationFromCoordinates,
-  isSupportedLocation,
-} from "../locations/region";
+import { locationFromCoordinates, isSupportedLocation } from "../locations/region";
 import type { MapLayers } from "../maps/MapCanvas";
 import { getAirQuality } from "../providers/airQuality";
 import { getRadar } from "../providers/radar";
 import { useTheme } from "../shared/theme";
 import { readFavorites, saveFavorites } from "../shared/preferences";
-import { LocationSearch } from "../components/LocationSearch";
-import { WeatherOverview } from "../components/WeatherOverview";
-import { BrandMark } from "../components/BrandMark";
-import { SituationPanel } from "../components/SituationPanel";
-import type { SheetState } from "../components/SituationPanel";
-import { RadarControls } from "../components/RadarControls";
-import { Modal } from "../components/Modal";
-import { MapBoundary } from "../components/MapBoundary";
 import { freshness } from "../reliability/freshness";
 import { useSourceClock } from "../reliability/useFreshness";
 import { recordRefresh, useBoundedRefresh, automaticRefreshAllowed } from "../reliability/useRefresh";
 import { weatherQueryOptions } from "../reliability/weatherLoad";
 import { radarRequestKey, RadarPresentationStore } from "../radar/presentation";
 import { useRadarPlayback } from "../radar/usePlayback";
-import { value } from "../shared/time";
+import { useI18n } from "../i18n/i18n";
+import { useGlass } from "./glass";
+import { MapBoundary } from "../components/MapBoundary";
+import { NowChip } from "../components/NowChip";
+import { LayerSwitcher, type Mode } from "../components/LayerSwitcher";
+import { RadarTimeline } from "../components/RadarTimeline";
+import { TempStrip, AirStrip } from "../components/ModeStrips";
+import { DetailSheet } from "../components/DetailSheet";
+import { SearchPanel } from "../components/SearchPanel";
+import { SettingsPanel } from "../components/SettingsPanel";
 const MapCanvas = lazy(() => import("../maps/MapCanvas"));
+
 function initialLocation() {
   try {
     const id = localStorage.getItem("ww-last-preset");
-    return (
-      [...provinces, ...chinaCities].find((p) => p.id === id) || defaultLocation
-    );
+    return [...provinces, ...chinaCities].find((p) => p.id === id) || defaultLocation;
   } catch {
     return defaultLocation;
   }
 }
+const layersFor = (mode: Mode): MapLayers => ({ radar: mode === "radar", weather: mode === "temp", air: mode === "air", coverage: false });
+const RADAR_OPACITY = 0.72;
+
 export default function App() {
   const queryClient = useQueryClient();
   const theme = useTheme();
+  const glass = useGlass();
+  const { t } = useI18n();
   const [radarPresentationStore] = useState(() => new RadarPresentationStore());
-  const reportRadar = radarPresentationStore.report;
-  const [location, setLocation] = useState<Location>(initialLocation),
-    [favorites, setFavorites] = useState(() =>
-      readFavorites().filter(isSupportedLocation),
-    );
-  const [modal, setModal] = useState<
-      "search" | "settings" | "layers" | "info" | null
-    >(null),
-    [sheet, setSheet] = useState<SheetState>("collapsed");
-  const [view, setView] = useState<"overview" | "forecast" | "environment">(
-      "overview",
-    ),
-    [layers, setLayers] = useState<MapLayers>({
-      radar: true,
-      weather: !window.matchMedia("(max-width: 759px)").matches,
-      air: false,
-      coverage: false,
-    });
-  const [opacity, setOpacity] = useState(0.65),
-    [message, setMessage] = useState(""),
-    [geoLoading, setGeoLoading] = useState(false),
-    [mapAction, setMapAction] = useState(0),
-    [online, setOnline] = useState(navigator.onLine);
+  const [location, setLocation] = useState<Location>(initialLocation);
+  const [favorites, setFavorites] = useState(() => readFavorites().filter(isSupportedLocation));
+  const [overlay, setOverlay] = useState<"search" | "settings" | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [mode, setMode] = useState<Mode>("radar");
+  const layers = useMemo(() => layersFor(mode), [mode]);
+  const [message, setMessage] = useState(""), [geoLoading, setGeoLoading] = useState(false);
+  const [mapAction, setMapAction] = useState(0), [online, setOnline] = useState(navigator.onLine);
+
   const weatherKey = ["weather", location.country, location.latitude, location.longitude, location.timezone];
   const airKey = ["air", location.country, location.latitude, location.longitude, location.timezone];
   const weather = useQuery(weatherQueryOptions(queryClient, location, weatherKey));
@@ -92,515 +65,133 @@ export default function App() {
   });
   const refresh = useBoundedRefresh(weatherKey, airKey);
   const now = useSourceClock(weather.data?.current.time, air.data?.time, weather.data?.currentMeta.fetchedAt, air.data?.meta.fetchedAt);
-  const weatherFreshness = freshness(weather.data?.current.time, weather.data?.currentMeta.fetchedAt,
-    'weather', weather.isFetching, weather.isError, now);
-  const airFreshness = freshness(air.data?.time, air.data?.meta.fetchedAt,
-    'air', air.isFetching, air.isError, now);
-  const radar = useQuery({
-    queryKey: ["radar"],
-    queryFn: ({ signal }) => getRadar(signal),
-    staleTime: 300000,
-    enabled: layers.radar || layers.coverage,
-  });
-  const { index, playing, controller: playback } = useRadarPlayback(radar.data, layers.radar,
-    radar.isFetching, radar.isError, i => radarRequestKey({ frame: radar.data?.frames[i], location, theme: theme.theme, layers }), radarPresentationStore);
+  const weatherFresh = freshness(weather.data?.current.time, weather.data?.currentMeta.fetchedAt, "weather", weather.isFetching, weather.isError, now);
+  const airFresh = freshness(air.data?.time, air.data?.meta.fetchedAt, "air", air.isFetching, air.isError, now);
+  const w = weatherFresh.assessmentAllowed ? weather.data : undefined;
+  const a = airFresh.assessmentAllowed ? air.data : undefined;
+  const radar = useQuery({ queryKey: ["radar"], queryFn: ({ signal }) => getRadar(signal), staleTime: 300000, enabled: layers.radar });
+  const { index, playing, controller: playback } = useRadarPlayback(radar.data, layers.radar, radar.isFetching, radar.isError,
+    (i) => radarRequestKey({ frame: radar.data?.frames[i], location, theme: theme.theme, layers }), radarPresentationStore);
+
   useEffect(() => {
-    const yes = () => setOnline(true),
-      no = () => setOnline(false);
-    window.addEventListener("online", yes);
-    window.addEventListener("offline", no);
-    return () => {
-      window.removeEventListener("online", yes);
-      window.removeEventListener("offline", no);
-    };
+    const yes = () => setOnline(true), no = () => setOnline(false);
+    window.addEventListener("online", yes); window.addEventListener("offline", no);
+    return () => { window.removeEventListener("online", yes); window.removeEventListener("offline", no); };
   }, []);
   useEffect(() => {
     if (!message) return;
-    const id = setTimeout(() => setMessage(""), 7000);
+    const id = setTimeout(() => setMessage(""), 6000);
     return () => clearTimeout(id);
   }, [message]);
+
   const select = useCallback((l: Location) => {
-    if (!isSupportedLocation(l)) {
-      setMessage("ตำแหน่งนี้อยู่นอกพื้นที่ที่รองรับ");
-      return;
-    }
+    if (!isSupportedLocation(l)) { setMessage(t("loc.unsupported")); return; }
     setLocation(l);
     playback.stop("location-changed");
     try {
-      if (l.kind === "province" || l.kind === "city")
-        localStorage.setItem("ww-last-preset", l.id);
+      if (l.kind === "province" || l.kind === "city") localStorage.setItem("ww-last-preset", l.id);
       else localStorage.removeItem("ww-last-preset");
-    } catch {
-      /*optional preference*/
-    }
-  }, [playback]);
+    } catch { /* optional preference */ }
+  }, [playback, t]);
   const locate = useCallback(() => {
-    if (!navigator.geolocation) {
-      setMessage(
-        "เบราว์เซอร์นี้ไม่รองรับตำแหน่ง กรุณาค้นหาหรือเลือกจุดบนแผนที่",
-      );
-      return;
-    }
+    if (!navigator.geolocation) { setMessage(t("loc.noGeo")); return; }
     setGeoLoading(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setGeoLoading(false);
-        const l = locationFromCoordinates(
-          pos.coords.latitude,
-          pos.coords.longitude,
-          "geolocation",
-        );
-        if (l) {
-          select(l);
-          setMapAction((v) => v + 1);
-        } else
-          setMessage(
-            "รองรับประเทศไทยและสามเมืองจีนเท่านั้น กรุณาเลือกจากรายการ",
-          );
+        const l = locationFromCoordinates(pos.coords.latitude, pos.coords.longitude, "geolocation");
+        if (l) { select(l); setMapAction((v) => v + 1); } else setMessage(t("loc.region"));
       },
-      (err) => {
-        setGeoLoading(false);
-        setMessage(
-          err.code === 1
-            ? "ไม่ได้รับอนุญาตให้ใช้ตำแหน่ง เลือกจังหวัดหรือเมืองแทนได้"
-            : "รับตำแหน่งไม่ได้ กรุณาค้นหาหรือเลือกจุดบนแผนที่",
-        );
-      },
+      (err) => { setGeoLoading(false); setMessage(err.code === 1 ? t("loc.denied") : t("loc.failed")); },
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 },
     );
-  }, [select]);
-  const toggle = (key: keyof MapLayers) => {
-    setLayers((v) => ({ ...v, [key]: !v[key] }));
-    if (key === "radar") playback.stop("layer-changed");
-  };
+  }, [select, t]);
+  const changeMode = (m: Mode) => { if (m !== "radar") playback.stop("layer-changed"); setMode(m); };
   const favorite = favorites.some((f) => f.id === location.id);
-  const save = () => {
-    const list = favorite
-      ? favorites.filter((f) => f.id !== location.id)
-      : [...favorites, location].slice(-20);
-    setFavorites(list);
-    saveFavorites(list);
-    setMessage(
-      favorite ? "ลบตำแหน่งโปรดแล้ว" : "บันทึกตำแหน่งนี้ไว้ในอุปกรณ์แล้ว",
-    );
+  const toggleFavorite = () => {
+    const list = favorite ? favorites.filter((f) => f.id !== location.id) : [...favorites, location].slice(-20);
+    setFavorites(list); saveFavorites(list);
+    setMessage(favorite ? t("fav.removed") : t("fav.added"));
   };
-  const onView = (v: typeof view) => {
-    setView(v);
-    if (window.innerWidth < 760) setSheet("expanded");
-  };
-  const w = weatherFreshness.assessmentAllowed ? weather.data : undefined,
-    a = airFreshness.assessmentAllowed ? air.data : undefined;
+  useEffect(() => {
+    const dock = document.querySelector<HTMLElement>(".ww-dock");
+    if (!dock || typeof ResizeObserver === "undefined") return;
+    const set = () => document.documentElement.style.setProperty("--dock-h", `${dock.offsetHeight}px`);
+    const ro = new ResizeObserver(set); ro.observe(dock); set();
+    return () => ro.disconnect();
+  }, []);
   const presentationKey = radarRequestKey({ frame: radar.data?.frames[index], location, theme: theme.theme, layers });
+
   return (
-    <div className={`app sheet-state-${sheet}`}>
-      <header className="app-header">
-        <a
-          className="brand"
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            setView("overview");
-          }}
-          aria-label="Weather Watch หน้าแรก"
-        >
-          <span className="brand-icon">
-            <BrandMark />
-          </span>
-          <span>
-            <strong>Weather Watch</strong>
-            <small>THE WEATHER, CONSIDERED.</small>
-          </span>
-        </a>
-        <nav className="header-nav" aria-label="มุมมอง">
-          {(
-            [
-              ["overview", "แผนที่อากาศ"],
-              ["forecast", "พยากรณ์"],
-              ["environment", "สิ่งแวดล้อม"],
-            ] as const
-          ).map(([id, text]) => (
-            <button
-              key={id}
-              className={view === id ? "active" : ""}
-              onClick={() => onView(id)}
-            >
-              {text}
-            </button>
-          ))}
-        </nav>
-        <div className="header-actions">
-          <button
-            className="search-button"
-            aria-label="ค้นหาตำแหน่ง"
-            onClick={() => setModal("search")}
-          >
-            <Search size={17} />
-            <span>ค้นหาจังหวัดหรือสถานที่</span>
-            <kbd>⌕</kbd>
-          </button>
-          <button
-            className="icon-button"
-            title="ตำแหน่งโปรด"
-            aria-label="ตำแหน่งโปรด"
-            onClick={() => setModal("search")}
-          >
-            <Star size={19} />
-          </button>
-          <button
-            className="icon-button"
-            title="การแสดงผลและตั้งค่า"
-            aria-label="การแสดงผลและตั้งค่า"
-            onClick={() => setModal("settings")}
-          >
-            <Settings2 size={20} />
-          </button>
-        </div>
-      </header>
-      <div className="region-bar">
-        <button
-          className={`region-chip ${location.country === "TH" ? "selected" : ""}`}
-          onClick={() => {
-            if (location.country !== "TH") select(defaultLocation);
-            else setModal("search");
-          }}
-        >
-          <span>🇹🇭</span> ประเทศไทย <small>77 จังหวัด</small>
-          <ChevronDown size={14} />
-        </button>
-        <span className="region-divider" />
-        <span className="secondary-label">เมืองเสริม</span>
-        {chinaCities.map((c) => (
-          <button
-            key={c.id}
-            className={`city-chip ${location.id === c.id ? "selected" : ""}`}
-            onClick={() => select(c)}
-          >
-            <span>🇨🇳</span>
-            {c.name}
-          </button>
-        ))}
-        <span className="region-note">
-          <span className="live-dot" /> ข้อมูลจากแหล่งจริง{" "}
-          <button
-            className="icon-button"
-            aria-label="เกี่ยวกับข้อมูล"
-            onClick={() => setModal("info")}
-          >
-            <Info size={15} />
-          </button>
-        </span>
-      </div>
-      <main className="workspace">
-        <WeatherOverview location={location} weather={weather} now={now} favorite={favorite} onFavorite={save} onRefresh={() => refresh()} onSearch={() => setModal("search")} />
-        <section className="map-section" aria-label="แผนที่และเรดาร์ฝน">
-          <MapBoundary>
-            <Suspense
-              fallback={<div className="map-status">กำลังเตรียมแผนที่…</div>}
-            >
-              <MapCanvas
-                location={location}
-                onRadarPresentation={reportRadar}
-                theme={theme.theme}
-                layers={layers}
-                radar={radar.data}
-                frame={radar.data?.frames[index]}
-                opacity={opacity}
-                temperature={w?.current.temperature ?? null}
-                aqi={a?.aqi ?? null}
-                onLocate={locate}
-                mapAction={mapAction}
-                onSelect={(lat, lon) => {
-                  const l = locationFromCoordinates(lat, lon);
-                  if (l) select(l);
-                  else
-                    setMessage(
-                      "แตะตำแหน่งในประเทศไทย หรือเลือกสามเมืองจีนจากด้านบน",
-                    );
-                }}
-              />
-            </Suspense>
-          </MapBoundary>
-          <div className="map-heading"><span className="eyebrow">THE WEATHER AROUND YOU</span><h2>อากาศรอบตัว</h2><small>แผนที่ · เรดาร์ย้อนหลัง</small></div>
-          <div className="map-layer-chips" aria-label="ชั้นข้อมูลแผนที่">
-            <button
-              className={layers.radar ? "selected" : ""}
-              aria-pressed={layers.radar}
-              onClick={() => toggle("radar")}
-            >
-              <CloudRain size={16} /> เรดาร์ฝน
-            </button>
-            <button
-              className={layers.air ? "selected" : ""}
-              aria-pressed={layers.air}
-              onClick={() => toggle("air")}
-            >
-              <Leaf size={16} /> AQI จุดนี้
-            </button>
-            <button
-              aria-label="ชั้นข้อมูลเพิ่มเติม"
-              onClick={() => setModal("layers")}
-            >
-              <Layers size={17} />
-            </button>
-          </div>
-          <div
-            className="map-toolbar"
-            role="group"
-            aria-label="เครื่องมือแผนที่"
-          >
-            <button
-              className="mobile-layer-button icon-button"
-              aria-label="เลือกชั้นข้อมูล"
-              onClick={() => setModal("layers")}
-            >
-              <Layers size={20} />
-            </button>
-            <button
-              className="map-recenter icon-button"
-              title="กลับไปยังตำแหน่งที่เลือก"
-              aria-label="กลับไปยังตำแหน่งที่เลือก"
-              onClick={() => setMapAction((v) => v + 1)}
-            >
-              <LocateFixed size={20} />
-            </button>
-          </div>
-          {layers.radar && (
-            <>
-              <RadarControls
-                radar={radar.data}
-                presentationStore={radarPresentationStore}
-                requestKey={presentationKey}
-                index={index}
-                playing={playing}
-                playback={playback}
-                onIndex={playback.scrub}
-                onPlay={playback.toggle}
-                onRefresh={() => { void radar.refetch(); }}
-                onHide={() => {
-                  playback.stop("layer-hidden");
-                  setLayers((v) => ({ ...v, radar: false }));
-                }}
-                timezone={location.timezone}
-                loading={radar.isFetching}
-                error={radar.isError}
-                country={location.country}
-              />
-            </>
-          )}
-          {layers.air && (
-            <div className="point-notice">
-              US AQI {value(a?.aqi)} · ค่าจากแบบจำลองที่จุดเลือก
-              ไม่ใช่แผนที่ความเข้มข้น
-            </div>
-          )}
-          {location.country === "CN" && layers.radar && (
-            <div className="china-radar-note">
-              เรดาร์จีนอาจไม่มีข้อมูลครอบคลุม
-            </div>
-          )}
-        </section>
-        <SituationPanel
-          location={location}
-          now={now}
-          weather={weather}
-          air={air}
-          sheet={sheet}
-          onSheet={setSheet}
-          favorite={favorite}
-          onFavorite={save}
-          onRefresh={() => refresh()}
-          view={view}
-          onView={onView}
-        />
-      </main>
-      {!online && (
-        <div className="offline-banner" role="status">
-          ไม่มีการเชื่อมต่ออินเทอร์เน็ต ข้อมูลที่ดึงแล้วอาจไม่เป็นปัจจุบัน{" "}
-          <button onClick={() => refresh()}>ลองใหม่</button>
-        </div>
-      )}
-      {(message || geoLoading) && (
-        <div className="toast" role="status">
-          {geoLoading ? "กำลังขอตำแหน่งของคุณ…" : message}
-        </div>
-      )}
-      {modal === "search" && (
-        <LocationSearch
-          onClose={() => setModal(null)}
-          onSelect={select}
-          favorites={favorites}
-          onLocate={locate}
-        />
-      )}
-      {modal === "settings" && (
-        <Modal title="การแสดงผล" onClose={() => setModal(null)}>
-          <p className="muted">เลือกโหมดที่สบายตาสำหรับคุณ</p>
-          <div className="appearance-options">
-            {(
-              [
-                ["system", "ตามอุปกรณ์", Monitor],
-                ["light", "สว่าง", Sun],
-                ["dark", "มืด", Moon],
-              ] as const
-            ).map(([pref, label, Icon]) => (
-              <button
-                key={pref}
-                aria-pressed={theme.appearance === pref}
-                className={theme.appearance === pref ? "selected" : ""}
-                onClick={() => theme.setAppearance(pref)}
-              >
-                <Icon size={23} />
-                {label}
-                {theme.appearance === pref && <Check size={15} />}
-              </button>
-            ))}
-          </div>
-          <p className="settings-note">
-            โหมดตามอุปกรณ์จะติดตามการเปลี่ยนธีมของระบบ
-            ไม่มีการเปลี่ยนตามเวลาที่แอปกำหนดเอง
-          </p>
-          <button
-            className="location-use"
-            onClick={() => {
-              refresh();
-              setModal(null);
-            }}
-          >
-            <RefreshCw size={16} /> รีเฟรชอากาศและคุณภาพอากาศ
-          </button>
-          <button className="text-button" onClick={() => setModal("info")}>
-            <Info size={16} /> แหล่งข้อมูลและข้อจำกัด
-          </button>
-        </Modal>
-      )}
-      {modal === "layers" && (
-        <Modal title="ชั้นข้อมูลแผนที่" onClose={() => setModal(null)}>
-          <div className="layer-list">
-            {(
-              [
-                [
-                  "radar",
-                  "เรดาร์ย้อนหลัง",
-                  "RainViewer · ภาพจริงที่มีให้ ไม่ใช่พยากรณ์",
-                ],
-                [
-                  "weather",
-                  "อุณหภูมิที่จุดเลือก",
-                  "Open-Meteo · ค่าจากแบบจำลอง",
-                ],
-                [
-                  "air",
-                  "AQI จุดนี้",
-                  "CAMS · US AQI จากแบบจำลอง ไม่ใช่ heatmap",
-                ],
-                [
-                  "coverage",
-                  "พื้นที่ครอบคลุมเรดาร์",
-                  "บริเวณสีเข้มคือพื้นที่นอก coverage ที่ผู้ให้บริการระบุ",
-                ],
-              ] as const
-            ).map(([key, label, desc]) => (
-              <label key={key}>
-                <span>
-                  <strong>{label}</strong>
-                  <small>{desc}</small>
-                </span>
-                <input
-                  type="checkbox"
-                  checked={layers[key]}
-                  onChange={() => toggle(key)}
-                />
-              </label>
-            ))}
-            <label className="disabled-layer">
-              <span>
-                <strong>พื้นที่น้ำท่วม</strong>
-                <small>ยังไม่เชื่อมต่อข้อมูลที่ตรวจสอบแล้ว</small>
-              </span>
-              <input type="checkbox" disabled />
-            </label>
-          </div>
-          <label className="opacity-control">
-            ความทึบเรดาร์ <strong>{Math.round(opacity * 100)}%</strong>
-            <input
-              aria-label="ความทึบเรดาร์"
-              type="range"
-              min="0.1"
-              max="1"
-              step="0.05"
-              value={opacity}
-              onChange={(e) => setOpacity(Number(e.target.value))}
+    <div className={`ww-app ${sheetOpen ? "sheet-open" : ""}`} data-mode={mode}>
+      <main className="ww-map" aria-label={t("map.label")}>
+        <MapBoundary>
+          <Suspense fallback={<div className="map-status">…</div>}>
+            <MapCanvas
+              location={location}
+              onRadarPresentation={radarPresentationStore.report}
+              theme={theme.theme}
+              layers={layers}
+              radar={radar.data}
+              frame={radar.data?.frames[index]}
+              opacity={RADAR_OPACITY}
+              temperature={w?.current.temperature ?? null}
+              aqi={a?.aqi ?? null}
+              onLocate={locate}
+              mapAction={mapAction}
+              onSelect={(lat, lon) => {
+                const l = locationFromCoordinates(lat, lon);
+                if (l) select(l); else setMessage(t("map.outside"));
+              }}
             />
-          </label>
-          <p className="micro">
-            จีบนิ้วเพื่อซูม · คีย์บอร์ด + / − ซูมแผนที่ได้
-          </p>
-          <p className="micro">
-            ไทล์เรดาร์ละเอียดสูงสุด zoom 7 · ขยายแผนที่ได้
-            แต่ไม่ได้เพิ่มความละเอียดข้อมูล
-          </p>
-        </Modal>
+          </Suspense>
+        </MapBoundary>
+      </main>
+
+      <div className="ww-top">
+      <NowChip location={location} weather={weather} air={a} freshness={weatherFresh.state} now={now} onSearch={() => setOverlay("search")} onRefresh={() => refresh()} />
+      <div className="ww-fabs">
+        <button className="ww-fab glass" aria-label={t("search.open")} onClick={() => setOverlay("search")}><Search size={19} /></button>
+        <button className="ww-fab glass" aria-label={t("map.recenter")} onClick={() => setMapAction((v) => v + 1)}><LocateFixed size={19} /></button>
+        <button className="ww-fab glass" aria-label={t("settings.open")} onClick={() => setOverlay("settings")}><Globe size={19} /></button>
+      </div>
+      </div>
+
+      <div className="ww-dock" data-map-inset="bottom">
+        {mode === "radar" && (
+          <RadarTimeline
+            radar={radar.data}
+            presentationStore={radarPresentationStore}
+            requestKey={presentationKey}
+            index={index}
+            playing={playing}
+            playback={playback}
+            onIndex={playback.scrub}
+            onPlay={playback.toggle}
+            onRefresh={() => { void radar.refetch(); }}
+            timezone={location.timezone}
+            loading={radar.isFetching}
+            error={radar.isError}
+            country={location.country}
+          />
+        )}
+        {mode === "temp" && <TempStrip weather={w} timezone={location.timezone} now={now} />}
+        {mode === "air" && <AirStrip air={a} />}
+        <LayerSwitcher mode={mode} onMode={changeMode} />
+      </div>
+
+      <DetailSheet open={sheetOpen} onOpen={setSheetOpen} location={location} weather={w} air={a} now={now} favorite={favorite} onFavorite={toggleFavorite} />
+
+      {!online && (
+        <div className="ww-banner glass" role="status">
+          {t("offline")} <button className="ww-btn" onClick={() => refresh()}>{t("now.retry")}</button>
+        </div>
       )}
-      {modal === "info" && (
-        <Modal title="ข้อมูลที่ไว้วางใจได้" onClose={() => setModal(null)}>
-          <div className="trust-info">
-            <p>
-              Weather Watch แยกข้อมูลจากแบบจำลอง ภาพเรดาร์ย้อนหลัง
-              และประกาศทางการอย่างชัดเจน
-            </p>
-            <h3>อากาศ / พยากรณ์</h3>
-            <p>
-              <a
-                href="https://open-meteo.com/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Open-Meteo
-              </a>{" "}
-              · CC BY 4.0 · ค่าปัจจุบันเป็นแบบจำลอง พยากรณ์อาจเปลี่ยนแปลง
-            </p>
-            <h3>คุณภาพอากาศ</h3>
-            <p>
-              <a
-                href="https://atmosphere.copernicus.eu/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                CAMS
-              </a>{" "}
-              ผ่าน Open-Meteo · กริดประมาณ 45 กม. · US AQI ไม่ใช่ AQI
-              ไทยหรือสถานีตรวจวัด
-            </p>
-            <h3>เรดาร์</h3>
-            <p>
-              <a
-                href="https://www.rainviewer.com/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                RainViewer
-              </a>{" "}
-              · ย้อนหลังราว 2 ชั่วโมง · เวลาบนแถบคือเวลาสร้างภาพรวม
-              สถานีแต่ละแห่งอาจวัดคนละเวลา ภาพว่างไม่ยืนยันว่าไม่มีฝน
-            </p>
-            <h3>น้ำท่วม / ประกาศ</h3>
-            <p>
-              ยังไม่ได้เชื่อมต่อข้อมูลอัตโนมัติ
-              การประเมินของแอปไม่ยืนยันความปลอดภัย และไม่ทดแทนประกาศทางการ
-            </p>
-            <h3>แผนที่และตำแหน่ง</h3>
-            <p>
-              OpenFreeMap · OpenMapTiles · OpenStreetMap contributors ·
-              แผนที่สำรอง OpenTopoMap/SRTM (CC BY-SA 3.0, ปรับสีตามธีม) · WGS84
-              · ค้นหาสถานที่จาก <a href="https://www.geonames.org/">GeoNames</a>{" "}
-              อาจไม่ครบทุกอำเภอ
-            </p>
-            <p className="micro">
-              Owner QA 0.3 · ใช้ส่วนตัว · ไม่มีบัญชีผู้ใช้และไม่มีการบันทึก GPS
-              อัตโนมัติ
-            </p>
-          </div>
-        </Modal>
+      {(message || geoLoading) && <div className="ww-toast glass" role="status">{geoLoading ? t("loc.locating") : message}</div>}
+      {overlay === "search" && <SearchPanel onClose={() => setOverlay(null)} onSelect={select} favorites={favorites} onLocate={locate} />}
+      {overlay === "settings" && (
+        <SettingsPanel onClose={() => setOverlay(null)} appearance={theme.appearance} onAppearance={theme.setAppearance}
+          glass={glass.pref} onGlass={glass.setPref} onRefresh={() => refresh()} />
       )}
     </div>
   );

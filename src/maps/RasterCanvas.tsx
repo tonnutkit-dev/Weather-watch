@@ -5,7 +5,9 @@ import type { MapProps } from "./MapCanvas";
 import { radarTiles } from "../providers/radar";
 import { RadarPresentationGate, radarRequestKey, registerRadarGate, taggedRadarUrl } from "../radar/presentation";
 import { value } from "../shared/time";
-import { mapBottomInset, observeMapLayout } from "./layout";
+import { mapInsets, observeMapLayout } from "./layout";
+// Net vertical camera offset: bottom dock pushes the point up, the top chip pushes it down.
+const netInset = (host: HTMLElement) => { const i = mapInsets(host); return i.bottom - i.top; };
 import { BoundedRadarLayer } from "./BoundedRadarLayer";
 export default function RasterCanvas(p: MapProps) {
   const host = useRef<HTMLDivElement>(null),
@@ -36,8 +38,8 @@ export default function RasterCanvas(p: MapProps) {
       "(prefers-reduced-motion: reduce)",
     ).matches;
     const m = L.map(host.current, {
-      center: [14.1, 100.8],
-      zoom: 5,
+      center: [p.location.latitude, p.location.longitude],
+      zoom: 6,
       minZoom: 3,
       maxZoom: 14,
       zoomControl: false,
@@ -63,7 +65,6 @@ export default function RasterCanvas(p: MapProps) {
     document.addEventListener('visibilitychange', visibility);
 
     m.attributionControl.setPrefix(false);
-    L.control.zoom({ position: "topright" }).addTo(m);
     base.current = L.tileLayer(
       "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
       {
@@ -96,7 +97,7 @@ export default function RasterCanvas(p: MapProps) {
     let previousInset = 0;
     const disconnectLayout = observeMapLayout(host.current, () => {
       m.invalidateSize({ pan: false });
-      const inset = host.current ? mapBottomInset(host.current) : 0;
+      const inset = host.current ? netInset(host.current) : 0;
       if (inset !== previousInset)
         m.panBy([0, (inset - previousInset) / 2], { animate: false });
       previousInset = inset;
@@ -191,26 +192,26 @@ export default function RasterCanvas(p: MapProps) {
   useEffect(() => {
     const m = map.current;
     if (!m) return;
-    if (initial.current !== p.location.id || p.location.country === "CN") {
-      m.setView([p.location.latitude, p.location.longitude], 8, {
+    if (initial.current !== p.location.id) {
+      m.setView([p.location.latitude, p.location.longitude], Math.max(m.getZoom(), 7), {
         animate:
           !window.matchMedia("(max-width: 759px)").matches &&
           !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
       });
       if (host.current)
-        m.panBy([0, mapBottomInset(host.current) / 2], { animate: false });
+        m.panBy([0, netInset(host.current) / 2], { animate: false });
       initial.current = p.location.id;
     }
   }, [p.location]);
   useEffect(() => {
     if (p.mapAction > 0) {
-      map.current?.setView([p.location.latitude, p.location.longitude], 9, {
+      map.current?.setView([p.location.latitude, p.location.longitude], 8, {
         animate:
           !window.matchMedia("(max-width: 759px)").matches &&
           !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
       });
       if (host.current)
-        map.current?.panBy([0, mapBottomInset(host.current) / 2], {
+        map.current?.panBy([0, netInset(host.current) / 2], {
           animate: false,
         });
     }
@@ -302,15 +303,6 @@ export default function RasterCanvas(p: MapProps) {
         </div>
       )}
       <span className="fallback-note">แผนที่ 2D · อุปกรณ์ไม่รองรับ WebGL</span>
-      <button
-        className="map-locate icon-button"
-        aria-label="ใช้ตำแหน่งของฉัน"
-        onClick={p.onLocate}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="m3 10 18-7-7 18-3-8z" />
-        </svg>
-      </button>
     </>
   );
 }

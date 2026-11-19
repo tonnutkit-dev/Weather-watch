@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, cleanup, act } from "@testing-library/react";
-import { RadarControls } from "../components/RadarControls";
+import { RadarTimeline as RadarControls } from "../components/RadarTimeline";
 import { normalizeRadar } from "../providers/radar";
 import { RadarPlayback, type PlaybackEnvironment } from "../radar/playback";
 const now = Date.parse("2026-10-11T03:00:00Z") / 1000;
@@ -24,7 +24,6 @@ function props(latest = now - 600) {
     onIndex: vi.fn(),
     onPlay: vi.fn(),
     onRefresh: vi.fn(),
-    onHide: vi.fn(),
     timezone: "Asia/Bangkok",
     country: "TH" as const,
     loading: false,

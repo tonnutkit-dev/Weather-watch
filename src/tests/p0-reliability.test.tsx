@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, renderHook, render, screen } from '@testing-library/react';
 import { freshness, RefreshGate } from '../reliability/freshness';
-import { RadarControls } from '../components/RadarControls';
+import { RadarTimeline } from '../components/RadarTimeline';
 import { useSourceClock } from '../reliability/useFreshness';
 import { RadarPresentationGate, RadarPresentationStore, registerRadarGate, taggedRadarUrl, radarTransport } from '../radar/presentation';
 const at = Date.parse('2026-10-11T06:00:00Z');
@@ -90,8 +90,8 @@ describe('R01 honest frame lifecycle', () => {
   });
   it('updates radar status without rerendering the parent and masks superseded snapshots', () => {
     const store = new RadarPresentationStore(); let parentRenders = 0;
-    function Parent() { parentRenders++; return <RadarControls presentationStore={store} requestKey="b" index={0}
-      playing={false} onIndex={vi.fn()} onPlay={vi.fn()} onRefresh={vi.fn()} onHide={vi.fn()}
+    function Parent() { parentRenders++; return <RadarTimeline presentationStore={store} requestKey="b" index={0}
+      playing={false} onIndex={vi.fn()} onPlay={vi.fn()} onRefresh={vi.fn()}
       timezone="Asia/Bangkok" loading={false} error={false} country="TH" />; }
     const { unmount } = render(<Parent />);
     act(() => store.report({ key: 'a', requestedTime: 100, status: 'failed', displayedTime: null, evidence: 'old' }));
