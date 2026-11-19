@@ -5,9 +5,15 @@ import type { MapProps } from "./MapCanvas";
 import { radarTiles } from "../providers/radar";
 import { RadarPresentationGate, radarRequestKey, registerRadarGate, taggedRadarUrl } from "../radar/presentation";
 import { value } from "../shared/time";
-import { mapBottomInset, observeMapLayout } from "./layout";
+import { mapInsets, observeMapLayout } from "./layout";
+// Net vertical camera offset: bottom dock pushes the point up, the top chip pushes it down.
+const netInset = (host: HTMLElement) => { const i = mapInsets(host); return i.bottom - i.top; };
 import { BoundedRadarLayer } from "./BoundedRadarLayer";
+import { useI18n } from "../i18n/i18n";
+import { MapPinOff, TriangleAlert } from "lucide-react";
+import { StateBlock } from "../components/StateBlock";
 export default function RasterCanvas(p: MapProps) {
+  const { t } = useI18n();
   const host = useRef<HTMLDivElement>(null),
     map = useRef<L.Map | null>(null),
     latest = useRef(p);
@@ -36,8 +42,8 @@ export default function RasterCanvas(p: MapProps) {
       "(prefers-reduced-motion: reduce)",
     ).matches;
     const m = L.map(host.current, {
-      center: [14.1, 100.8],
-      zoom: 5,
+      center: [p.location.latitude, p.location.longitude],
+      zoom: 6,
       minZoom: 3,
       maxZoom: 14,
       zoomControl: false,
@@ -63,7 +69,6 @@ export default function RasterCanvas(p: MapProps) {
     document.addEventListener('visibilitychange', visibility);
 
     m.attributionControl.setPrefix(false);
-    L.control.zoom({ position: "topright" }).addTo(m);
     base.current = L.tileLayer(
       "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
       {
@@ -96,7 +101,7 @@ export default function RasterCanvas(p: MapProps) {
     let previousInset = 0;
     const disconnectLayout = observeMapLayout(host.current, () => {
       m.invalidateSize({ pan: false });
-      const inset = host.current ? mapBottomInset(host.current) : 0;
+      const inset = host.current ? netInset(host.current) : 0;
       if (inset !== previousInset)
         m.panBy([0, (inset - previousInset) / 2], { animate: false });
       previousInset = inset;
@@ -191,26 +196,26 @@ export default function RasterCanvas(p: MapProps) {
   useEffect(() => {
     const m = map.current;
     if (!m) return;
-    if (initial.current !== p.location.id || p.location.country === "CN") {
-      m.setView([p.location.latitude, p.location.longitude], 8, {
+    if (initial.current !== p.location.id) {
+      m.setView([p.location.latitude, p.location.longitude], Math.max(m.getZoom(), 7), {
         animate:
           !window.matchMedia("(max-width: 759px)").matches &&
           !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
       });
       if (host.current)
-        m.panBy([0, mapBottomInset(host.current) / 2], { animate: false });
+        m.panBy([0, netInset(host.current) / 2], { animate: false });
       initial.current = p.location.id;
     }
   }, [p.location]);
   useEffect(() => {
     if (p.mapAction > 0) {
-      map.current?.setView([p.location.latitude, p.location.longitude], 9, {
+      map.current?.setView([p.location.latitude, p.location.longitude], 8, {
         animate:
           !window.matchMedia("(max-width: 759px)").matches &&
           !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
       });
       if (host.current)
-        map.current?.panBy([0, mapBottomInset(host.current) / 2], {
+        map.current?.panBy([0, netInset(host.current) / 2], {
           animate: false,
         });
     }
@@ -278,7 +283,7 @@ export default function RasterCanvas(p: MapProps) {
         ref={host}
         className="map-canvas raster-map"
         data-theme={p.theme}
-        aria-label="แผนที่อากาศแบบโต้ตอบ 2D"
+        aria-label={`${t("map.label")} 2D`}
         data-map-engine="leaflet-fallback"
         data-map-status={status}
         data-radar-status={radarStatus}
@@ -287,30 +292,16 @@ export default function RasterCanvas(p: MapProps) {
         data-air-layer={p.layers.air}
       />
       {status === "error" && (
-        <div className="map-status" role="status">
-          โหลดแผนที่สำรองไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วรีเฟรชหน้า
+        <div className="map-status">
+          <StateBlock icon={MapPinOff} tone="bad" compact role="alert" title={t("map.error")} body={t("map.errorBody")}
+            action={<button className="ww-btn" onClick={() => window.location.reload()}>{t("map.reload")}</button>} />
         </div>
       )}
-      {tileError && (
-        <div className="basemap-note" role="status">
-          ไทล์แผนที่บางส่วนโหลดไม่สำเร็จ
-        </div>
-      )}
+      {tileError && <div className="basemap-note" role="status"><TriangleAlert size={14} aria-hidden="true" /> {t("map.tileError")}</div>}
       {radarStatus === "error" && p.layers.radar && (
-        <div className="tile-error">
-          ภาพเรดาร์บางส่วนโหลดไม่สำเร็จ ภาพว่างไม่ยืนยันว่าไม่มีฝน
-        </div>
+        <div className="tile-error"><TriangleAlert size={14} aria-hidden="true" /> {t("map.radarTileError")}</div>
       )}
-      <span className="fallback-note">แผนที่ 2D · อุปกรณ์ไม่รองรับ WebGL</span>
-      <button
-        className="map-locate icon-button"
-        aria-label="ใช้ตำแหน่งของฉัน"
-        onClick={p.onLocate}
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="m3 10 18-7-7 18-3-8z" />
-        </svg>
-      </button>
+      <span className="fallback-note">{t("map.fallback")}</span>
     </>
   );
 }

@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "./app/App";
+import { I18nProvider } from "./i18n/i18n";
 import { retryDelay, standardRetry } from "./reliability/loadPolicy";
 import "@fontsource/noto-sans-thai/400.css";
 import "@fontsource/noto-sans-thai/500.css";
@@ -21,7 +22,9 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <I18nProvider>
+        <App />
+      </I18nProvider>
     </QueryClientProvider>
   </React.StrictMode>,
 );

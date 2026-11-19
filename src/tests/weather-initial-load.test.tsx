@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { onlineManager } from "@tanstack/query-core";
-import { WeatherOverview } from "../components/WeatherOverview";
+import { NowChip } from "../components/NowChip";
 import { defaultLocation } from "../locations/provinces";
 import { ProviderError } from "../providers/http";
 import {
@@ -41,11 +41,9 @@ function Probe({ queryClient }: { queryClient: QueryClient }) {
       <button type="button" onClick={() => void weather.refetch()}>
         รีเฟรชในเทสต์
       </button>
-      <WeatherOverview
+      <NowChip
         location={defaultLocation}
         now={Date.now()}
-        favorite={false}
-        onFavorite={vi.fn()}
         onSearch={vi.fn()}
         onRefresh={() => void weather.refetch()}
         weather={weather}

@@ -1,4 +1,7 @@
-import { applyEditorialStyle } from "./editorialStyle";
+import { applyEditorialStyle, applyMapLanguage } from "./editorialStyle";
+import { useI18n } from "../i18n/i18n";
+import { MapPinOff, RefreshCw, TriangleAlert } from "lucide-react";
+import { StateBlock } from "../components/StateBlock";
 import { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
 import type { Map, GeoJSONSource, RasterTileSource } from "maplibre-gl";
@@ -9,7 +12,7 @@ import { radarTiles } from "../providers/radar";
 import { RadarPresentationGate, radarRequestKey, registerRadarGate, taggedRadarUrl, radarTransport } from "../radar/presentation";
 import { radarImage } from "../radar/budget";
 import { value } from "../shared/time";
-import { mapBottomInset, observeMapLayout } from "./layout";
+import { mapInsets, observeMapLayout } from "./layout";
 maplibregl.setWorkerUrl(workerUrl);
 maplibregl.addProtocol("wwradar", async (params, controller) => {
   const request = radarTransport(params.url);
@@ -23,6 +26,9 @@ maplibregl.addProtocol("wwradar", async (params, controller) => {
   }
 });
 export default function GLCanvas(props: MapProps) {
+  const { t, lang } = useI18n();
+  const langRef = useRef(lang);
+  langRef.current = lang;
   const host = useRef<HTMLDivElement>(null),
     map = useRef<Map | null>(null),
     current = useRef(props);
@@ -83,8 +89,8 @@ export default function GLCanvas(props: MapProps) {
         source: "ww-point",
         paint: {
           "circle-radius": 7,
-          "circle-color": "#277ef5",
-          "circle-stroke-color": p.theme === "dark" ? "#101e30" : "#fff",
+          "circle-color": p.theme === "dark" ? "#3ee0ff" : "#0089ad",
+          "circle-stroke-color": p.theme === "dark" ? "#070d19" : "#fff",
           "circle-stroke-width": 4,
         },
       });
@@ -100,8 +106,8 @@ export default function GLCanvas(props: MapProps) {
           "text-allow-overlap": true,
         },
         paint: {
-          "text-color": p.theme === "dark" ? "#e8f1ff" : "#12314b",
-          "text-halo-color": p.theme === "dark" ? "#122136" : "#fff",
+          "text-color": p.theme === "dark" ? "#eef3ff" : "#0d1726",
+          "text-halo-color": p.theme === "dark" ? "#070d19" : "#fff",
           "text-halo-width": 3,
         },
       });
@@ -214,11 +220,11 @@ export default function GLCanvas(props: MapProps) {
       const m = new maplibregl.Map({
         container: host.current,
         style: `https://tiles.openfreemap.org/styles/${p.theme === "dark" ? "dark" : "positron"}`,
-        center: [100.8, 14.1],
-        zoom: 4.6,
+        center: [p.location.longitude, p.location.latitude],
+        zoom: 6.4,
         minZoom: 3,
         maxZoom: 16,
-        attributionControl: { compact: false },
+        attributionControl: { compact: true },
         renderWorldCopies: false,
       });
       map.current = m;
@@ -238,22 +244,14 @@ export default function GLCanvas(props: MapProps) {
         else { gate.current!.suspend(); prepareRadar(); sync.current(); m.triggerRepaint(); }
       };
       document.addEventListener('visibilitychange', visibility);
-      m.setPadding({
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: mapBottomInset(host.current),
-      });
-      m.addControl(
-        new maplibregl.NavigationControl({ showCompass: false }),
-        "top-right",
-      );
+      m.setPadding({ left: 0, right: 0, ...mapInsets(host.current) });
       m.on("load", () => {
         setStatus("ready");
         sync.current();
       });
       m.on("style.load", () => {
         applyEditorialStyle(m, current.current.theme);
+        applyMapLanguage(m, langRef.current);
         styleReady.current = true;
         setStyleTheme(current.current.theme);
         sync.current();
@@ -273,12 +271,7 @@ export default function GLCanvas(props: MapProps) {
       });
       const disconnectLayout = observeMapLayout(host.current, () => {
         m.resize();
-        m.setPadding({
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: host.current ? mapBottomInset(host.current) : 0,
-        });
+        if (host.current) m.setPadding({ left: 0, right: 0, ...mapInsets(host.current) });
       });
       return () => {
         document.removeEventListener('visibilitychange', visibility);
@@ -305,6 +298,10 @@ export default function GLCanvas(props: MapProps) {
     }
   }, [props.theme]);
   useEffect(() => {
+    const m = map.current;
+    if (m && styleReady.current) applyMapLanguage(m, lang);
+  }, [lang]);
+  useEffect(() => {
     prepareRadar();
     sync.current();
   }, [
@@ -320,13 +317,10 @@ export default function GLCanvas(props: MapProps) {
   useEffect(() => {
     const m = map.current;
     if (!m) return;
-    if (
-      props.location.id !== initialLocation.current ||
-      props.location.country === "CN"
-    ) {
+    if (props.location.id !== initialLocation.current) {
       m.flyTo({
         center: [props.location.longitude, props.location.latitude],
-        zoom: 8,
+        zoom: Math.max(m.getZoom(), 7),
         essential: false,
         duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches
           ? 0
@@ -339,8 +333,8 @@ export default function GLCanvas(props: MapProps) {
     if (props.mapAction > 0)
       map.current?.flyTo({
         center: [props.location.longitude, props.location.latitude],
-        zoom: 9,
-        duration: 400,
+        zoom: 8,
+        duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 400,
         essential: false,
       });
   }, [props.mapAction, props.location]);
@@ -349,7 +343,7 @@ export default function GLCanvas(props: MapProps) {
       <div
         ref={host}
         className="map-canvas"
-        aria-label="แผนที่อากาศแบบโต้ตอบ"
+        aria-label={t("map.label")}
         data-map-engine="maplibre"
         data-theme={styleTheme ?? undefined}
         data-map-status={status}
@@ -357,40 +351,18 @@ export default function GLCanvas(props: MapProps) {
         data-weather-layer={props.layers.weather}
         data-air-layer={props.layers.air}
       />
-      {status !== "ready" && (
-        <div className="map-status" role="status">
-          {status === "loading" ? (
-            "กำลังโหลดแผนที่…"
-          ) : (
-            <>
-              โหลดแผนที่ไม่ได้{" "}
-              <button
-                onClick={() => {
-                  setStatus("loading");
-                  setRetry((v) => v + 1);
-                }}
-              >
-                ลองใหม่
-              </button>
-            </>
-          )}
+      {status === "loading" && (
+        <div className="map-status" role="status"><span className="ww-spin" aria-hidden="true" /> {t("map.loading")}</div>
+      )}
+      {status === "error" && (
+        <div className="map-status">
+          <StateBlock icon={MapPinOff} tone="bad" compact role="alert" title={t("map.error")} body={t("map.errorBody")}
+            action={<button className="ww-btn" onClick={() => { setStatus("loading"); setRetry((v) => v + 1); }}><RefreshCw size={15} /> {t("now.retry")}</button>} />
         </div>
       )}
       {radarError && props.layers.radar && (
-        <div className="tile-error" role="status">
-          โหลดภาพเรดาร์บางส่วนไม่สำเร็จ ภาพว่างไม่ยืนยันว่าไม่มีฝน
-        </div>
+        <div className="tile-error" role="status"><TriangleAlert size={14} aria-hidden="true" /> {t("map.radarTileError")}</div>
       )}
-      <button
-        className="map-locate icon-button"
-        title="ใช้ตำแหน่งของฉัน"
-        aria-label="ใช้ตำแหน่งของฉัน"
-        onClick={props.onLocate}
-      >
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-          <path d="m3 10 18-7-7 18-3-8z" />
-        </svg>
-      </button>
     </>
   );
 }
